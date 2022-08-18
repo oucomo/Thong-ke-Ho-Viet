@@ -10,8 +10,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       cache=TRUE,
                       tidy.opts=list(width.cutoff=60),
                       tidy=TRUE)
-library(knitr)
-library(rmarkdown)
+#library(rmarkdown)
+#library(knitr)
 library(markdown)
 
 library(stringr)
@@ -23,7 +23,7 @@ library(dplyr)
 library(ggplot2)
 library(Hmisc)
 library(gtsummary)
-library(flextable)
+#library(flextable)
 library(huxtable)
 
 library(data.table)
@@ -32,20 +32,19 @@ library(stringi)
 
 library(psych) # for describing the data
 library(tableone)
-library(compareGroups)
+#library(compareGroups)
 library(forcats)
 library(ggpubr)
 library(rstatix)
 
-library(dlookr)
-library(flextable)
+#library(dlookr)
+#library(flextable)
 
 library(haven)
 
 select<-dplyr::select
 filter<-dplyr::filter
 recode<-dplyr::recode
-flextable<-flextable::flextable
 
 options(scipen=999, digits = 3)
 ```
@@ -53,10 +52,10 @@ options(scipen=999, digits = 3)
 ## Load data
 
 ```{r load data}
-path_ho = file.path("D:/Viet/Thống kê Họ Việt/", "DanhSach_Ho.sav") 
-path_huyen = file.path("D:/Viet/Thống kê Họ Việt/", "Dm_Huyen.sav")
-path_tinh = file.path("D:/Viet/Thống kê Họ Việt/", "Dm_Tinh.sav")
-path_xa = file.path("D:/Viet/Thống kê Họ Việt/", "Dm_Xa.sav")
+path_ho = file.path("DanhSach_Ho.sav") 
+path_huyen = file.path("Dm_Huyen.sav")
+path_tinh = file.path("Dm_Tinh.sav")
+path_xa = file.path("Dm_Xa.sav")
 
 data_ho = read_sav(path_ho) %>% filter(Ho!="" & Ho!=" " & !is.na(Ho))
 data_huyen = read_sav(path_huyen)
@@ -75,10 +74,10 @@ load("vnm3_map.Rdata")
 ## Inspecting data
 
 ```{r, echo=FALSE}
-diagnose(data_ho) %>% flextable()
-diagnose_category(data_ho) %>% flextable()
-diagnose_numeric(data_ho) %>% flextable()
-diagnose_outlier(data_ho) %>% flextable()
+#diagnose(data_ho) %>% flextable()
+#diagnose_category(data_ho) %>% flextable()
+#diagnose_numeric(data_ho) %>% flextable()
+#diagnose_outlier(data_ho) %>% flextable()
 ```
 
 ## Cleaning
@@ -191,7 +190,7 @@ ggplot(data = data_ho_top50, aes(x = reorder(Ho, songuoi, decreasing=F), y =song
   geom_bar(stat = "identity", fill="red", width = 0.75) +
   #geom_text(aes(label = songuoi, y = songuoi + 50), size = 3) +
   scale_x_discrete(name = NULL) +
-  #scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 12000, by = 2000)) +
+  scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 30000000, by = 5000000)) +
   theme_bw() +
   theme(axis.text.y = element_text(size = 7),
         panel.grid.major = element_blank()) + coord_flip() +
@@ -413,15 +412,49 @@ vn_ho_tinh <- data_ho_tinh %>%
                       MATINH=="96" ~ 12)) %>% filter(MATINH!="" & Ho %in% data_ho_top200$Ho)
 ```
 
-```{r}
-memory.limit(size=1000000)
-
+```{r, message=FALSE, warning=FALSE}
+#memory.limit(size=1000000)
 ho_tinh = merge(vn, vn_ho_tinh, by="id")
+nguyen <- ho_tinh %>% filter(Ho=="Nguyễn")
+tran <- ho_tinh %>% filter(Ho=="Trần")
+le <- ho_tinh %>% filter(Ho=="Lê")
+du <- ho_tinh %>% filter(Ho=="Dư")
 ```
+
+## Họ Nguyễn
 
 ```{r}
-ggplot(data = vn_ho_tinh)
+ggplot(data = nguyen, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Nguyễn")
+ggsave(filename = file.path("Ho Nguyen.png"), width = 7, height = 5)
+```
+## Họ Trần
+
+```{r}
+ggplot(data = tran, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Trần")
+ggsave(filename = file.path("Ho Tran.png"), width = 7, height = 5) 
 ```
 
+## Họ Lê
 
+```{r}
+ggplot(data = le, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Lê")
+ggsave(filename = file.path("Ho Le.png"), width = 7, height = 5)
+```
+## Họ Dư
 
+```{r}
+ggplot(data = du, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Dư")
+ggsave(filename = file.path("Ho Du.png"), width = 7, height = 5)
+```
