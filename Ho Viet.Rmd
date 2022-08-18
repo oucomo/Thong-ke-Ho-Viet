@@ -425,6 +425,7 @@ phung <- ho_tinh %>% filter(Ho=="Phùng")
 khuc <- ho_tinh %>% filter(Ho=="Khúc")
 ngo <- ho_tinh %>% filter(Ho=="Ngô")
 doan <- ho_tinh %>% filter(Ho=="Đoàn")
+trieu <- ho_tinh %>% filter(Ho=="Triệu")
 ```
 
 ## Họ Nguyễn
@@ -521,6 +522,18 @@ ggplot(data = doan, aes(x=long, y=lat, group=group)) +
   ggtitle("Họ Đoàn")
 ggsave(filename = file.path("Ho Doan.png"), width = 7, height = 5)
 ```
+## Họ Triệu
 
+```{r}
+ggplot(data = trieu, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Triệu")
+ggsave(filename = file.path("Ho Trieu.png"), width = 7, height = 5)
+```
+
+```{r}
+credentials::set_github_pat("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")
+```
 
 
