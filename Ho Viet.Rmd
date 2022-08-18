@@ -419,6 +419,9 @@ nguyen <- ho_tinh %>% filter(Ho=="Nguyễn")
 tran <- ho_tinh %>% filter(Ho=="Trần")
 le <- ho_tinh %>% filter(Ho=="Lê")
 du <- ho_tinh %>% filter(Ho=="Dư")
+ly <- ho_tinh %>% filter(Ho=="Lý")
+mac <- ho_tinh %>% filter(Ho=="Mạc")
+phung <- ho_tinh %>% filter(Ho=="Phùng")
 ```
 
 ## Họ Nguyễn
