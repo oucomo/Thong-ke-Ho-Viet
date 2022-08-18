@@ -422,12 +422,9 @@ du <- ho_tinh %>% filter(Ho=="Dư")
 ly <- ho_tinh %>% filter(Ho=="Lý")
 mac <- ho_tinh %>% filter(Ho=="Mạc")
 phung <- ho_tinh %>% filter(Ho=="Phùng")
-<<<<<<< HEAD
-=======
 khuc <- ho_tinh %>% filter(Ho=="Khúc")
 ngo <- ho_tinh %>% filter(Ho=="Ngô")
 doan <- ho_tinh %>% filter(Ho=="Đoàn")
->>>>>>> f0299ae8601ec9f009233d98fec1925080ab7d1e
 ```
 
 ## Họ Nguyễn
