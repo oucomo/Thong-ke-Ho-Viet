@@ -1,0 +1,427 @@
+---
+title: "Ho Viet"
+author: "Duc Du"
+date: '2022-08-16'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+library(knitr)
+library(rmarkdown)
+library(markdown)
+
+library(stringr)
+library(forcats)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+library(flextable)
+library(huxtable)
+
+library(data.table)
+library(lubridate)
+library(stringi)
+
+library(psych) # for describing the data
+library(tableone)
+library(compareGroups)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+
+library(dlookr)
+library(flextable)
+
+library(haven)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+flextable<-flextable::flextable
+
+options(scipen=999, digits = 3)
+```
+
+## Load data
+
+```{r load data}
+path_ho = file.path("D:/Viet/Thống kê Họ Việt/", "DanhSach_Ho.sav") 
+path_huyen = file.path("D:/Viet/Thống kê Họ Việt/", "Dm_Huyen.sav")
+path_tinh = file.path("D:/Viet/Thống kê Họ Việt/", "Dm_Tinh.sav")
+path_xa = file.path("D:/Viet/Thống kê Họ Việt/", "Dm_Xa.sav")
+
+data_ho = read_sav(path_ho) %>% filter(Ho!="" & Ho!=" " & !is.na(Ho))
+data_huyen = read_sav(path_huyen)
+data_tinh = read_sav(path_tinh)
+data_xa = read_sav(path_xa)
+
+gadm36_VNM2 <- readRDS("gadm36_VNM_2_sp.rds")
+publicProvinces <- readRDS("publicProvinces.rds")
+
+load("geo_vnm.Rdata")
+load("pop_info.Rdata")
+load("vnm2_map.Rdata")
+load("vnm3_map.Rdata")
+```
+
+## Inspecting data
+
+```{r, echo=FALSE}
+diagnose(data_ho) %>% flextable()
+diagnose_category(data_ho) %>% flextable()
+diagnose_numeric(data_ho) %>% flextable()
+diagnose_outlier(data_ho) %>% flextable()
+```
+
+## Cleaning
+
+```{r}
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Bui|bùi|Bùi|Bùi|BÙI") == TRUE, "Bùi", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "cao|Cao|CAO") == TRUE, "Cao", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Chau|châu|Châu|CHÂU") == TRUE, "Châu", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "chu|Chu|CHU") == TRUE, "Chu", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đàm|Đàm|ĐÀM") == TRUE, "Đàm", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Đăng|đặng|Đặng|Đặng|ĐẶNG") == TRUE, "Đặng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "danh|Danh|DANH") == TRUE, "Danh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đào|Đào|Đào|ĐÀO") == TRUE, "Đào", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Dinh|đinh|Đinh|ĐINH") == TRUE, "Đinh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Do|Đô|đỗ|Đỗ|Đỗ|ĐỖ|Đổ") == TRUE, "Đỗ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đoàn|Đoàn|Đoàn|ĐOÀN") == TRUE, "Đoàn", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Duong|dương|Dương|DƯƠNG") == TRUE, "Dương", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "giàng|Giàng") == TRUE, "Giàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ha|hà|Hà|Hà|HÀ") == TRUE, "Hà", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ho|Hô|hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ho|Hô|hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hoang|hoàng|hoàng|Hoàng|Hoàng|HOÀNG") == TRUE, "Hoàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Huynh|huỳnh|Huỳnh|Huỳnh|HuỲNH|HUỲNH|Hùynh") == TRUE, "Huỳnh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kiều|Kiều") == TRUE, "Kiều", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lại|Lại|LẠI") == TRUE, "Lại", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lam|lâm|Lâm|LÂM") == TRUE, "Lâm", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Le|lê|Lê|LÊ") == TRUE, "Lê", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lo|lò|lò|Lò|Lò|LÒ") == TRUE, "Lò", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luong|lương|Lương|LƯƠNG") == TRUE, "Lương", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lường|Lường") == TRUE, "Lường", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lưu|Lưu|LƯU") == TRUE, "Lưu", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ly|lý|Lý|Lý|LÝ") == TRUE, "Lý", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "mai|Mai|MAI") == TRUE, "Mai", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ngo|ngô|Ngô|NGÔ") == TRUE, "Ngô", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguễn|Nguyễ|Nhuyễn|nguyen|Nguyen|NGUYEN|Nguyên|Nguyến|Nguyền|nguyễn|nguyễn|Nguyễn|Nguyễn|NguyễN|NguyỄn|NGUYỄN|NGUYỄN|Nguyển|Nguỹen|Ngyễn") == TRUE, "Nguyễn",  data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Pham|phạm|Phạm|Phạm|PHẠM|PHẠM") == TRUE, "Phạm", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phan|Phan|PHAN") == TRUE, "Phan", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phùng|Phùng|Phùng|PHÙNG") == TRUE, "Phùng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "quách|Quách|Quách|QUÁCH") == TRUE, "Quách", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "quàng|quàng|Quàng") == TRUE, "Quàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ta|tạ|Tạ|Tạ|TẠ") == TRUE, "Tạ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Thach|thạch|Thạch|Thạch|THẠCH") == TRUE, "Thạch", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "thái|Thái|Thái|THÁI") == TRUE, "Thái", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "thị|Thị|Thị|THỊ") == TRUE, "Thị", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tô|Tô|TÔ") == TRUE, "Tô", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tòng|Tòng") == TRUE, "Tòng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tống|Tống|TỐNG") == TRUE, "Tống", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Tran|Tràn|trần|trần|Trần|Trần|TRẦN") == TRUE, "Trần", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "triệu|Triệu|Triệu|TRIỆU") == TRUE, "Triệu", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "trịnh|Trịnh|Trịnh|TRỊNH") == TRUE, "Trịnh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Truong|trương|Trương|TRƯƠNG") == TRUE, "Trương", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Văn|VĂN") == TRUE, "Văn", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vàng|VÀNG") == TRUE, "Vàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vi|Vi|VI") == TRUE, "Vi", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vì|Vì") == TRUE, "Vì", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vo|võ|Võ|Võ|VÕ|Vỏ") == TRUE, "Võ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vu|vũ|Vũ|Vũ|VŨ") == TRUE, "Vũ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vừ|Vừ") == TRUE, "Vừ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vương|VƯƠNG") == TRUE, "Vương", data_ho$Ho)
+```
+
+## Tổng họ
+
+```{r}
+data_ho_overall <- data_ho %>%
+  group_by(Ho) %>%
+  summarise(songuoi=sum(songuoi))
+
+data_ho_tinh <- data_ho %>%
+  group_by(MATINH, Ho) %>%
+  summarise(songuoi=sum(songuoi))
+```
+
+```{r}
+data_ho_top500 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top500 <- head(data_ho_top500, n=500)
+
+data_ho_top200 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top200 <- head(data_ho_top200, n=200) %>%
+  mutate(rank = dense_rank(desc(songuoi)),
+         group=NA,
+         group=ifelse(rank %in% c(1:50), 1, ifelse(rank %in% c(51:100), 2, ifelse(rank %in% c(101:150), 3, ifelse(rank %in% c(151:200), 4, group)))),
+         group=factor(group, levels = c(1,2,3,4), labels = c("1-50","51-100","101-150","151-200")))
+
+data_ho_top150 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top150 <- data_ho_top150 %>% slice(101:150)
+
+data_ho_top100 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top100 <- data_ho_top100 %>% slice(51:100)
+
+data_ho_top50 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top50 <- head(data_ho_top50, n=50)
+
+data_ho_top20 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top20 <- head(data_ho_top20, n=20)
+
+data_ho_top10 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top10 <- head(data_ho_top10, n=10)
+```
+
+```{r}
+ggplot(data = data_ho_top50, aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
+  geom_bar(stat = "identity", fill="red", width = 0.75) +
+  #geom_text(aes(label = songuoi, y = songuoi + 50), size = 3) +
+  scale_x_discrete(name = NULL) +
+  #scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 12000, by = 2000)) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Top 50 họ có số người cao nhất")
+ggsave(filename = file.path("top50_ho.png"), width = 7, height = 5)
+```
+```{r}
+ggplot(data = data_ho_top100, aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
+  geom_bar(stat = "identity", fill="red", width = 0.75) +
+  #geom_text(aes(label = songuoi, y = songuoi + 50), size = 3) +
+  scale_x_discrete(name = NULL) +
+  #scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 12000, by = 2000)) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Top 50-100 họ có số người cao nhất")
+ggsave(filename = file.path("top100_ho.png"), width = 7, height = 5)
+```
+
+```{r}
+ggplot(data = data_ho_top150, aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
+  geom_bar(stat = "identity", fill="red", width = 0.75) +
+  #geom_text(aes(label = songuoi, y = songuoi + 50), size = 3) +
+  scale_x_discrete(name = NULL) +
+  #scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 12000, by = 2000)) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Top 100-150 họ có số người cao nhất")
+ggsave(filename = file.path("top150_ho.png"), width = 7, height = 5)
+```
+```{r}
+top1_100 <- data_ho_top200 %>% filter(rank %in% c(1:100)) %>%
+  ggplot(aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
+  geom_bar(stat = "identity", fill="red", width = 0.75) +
+  #geom_text(aes(label = songuoi, y = songuoi + 50), size = 3) +
+  scale_x_discrete(name = NULL) +
+  scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 30000000, by = 5000000)) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 15),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Top 100 họ có số người cao nhất") +
+  facet_wrap(~group, scales = "free_y")
+ggsave(filename = file.path("top100_ho.png"), width = 7, height = 5)
+top1_100
+```
+```{r}
+top101_200 <- data_ho_top200 %>% filter(rank %in% c(101:200)) %>%
+  ggplot(aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
+  geom_bar(stat = "identity", fill="red", width = 0.75) +
+  #geom_text(aes(label = songuoi, y = songuoi + 50), size = 3) +
+  scale_x_discrete(name = NULL) +
+  scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 30000000, by = 5000000)) +
+  ylim(0, 30000000) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 15),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Top 101-200 họ có số người cao nhất") +
+  facet_wrap(~group, scales = "free_y")
+ggsave(filename = file.path("top101-200_ho.png"), width = 7, height = 5)
+top101_200
+```
+
+## Tổng họ theo tỉnh
+
+## Bản đồ Việt Nam
+
+```{r, warning=FALSE, message=FALSE}
+libs <- c("maptools", "sp")
+lapply(libs, require, character.only = TRUE)
+
+geo63 <- readRDS("geo63.rds")
+spplot(geo63, "ID_1", main="63 tỉnh")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(raster)
+library(rgdal)
+library(viridis)
+
+## Get the Vietnam data - provincial level
+vnm = getData("GADM", country="Vietnam", level=1)
+
+## Clean up data
+vn = fortify(vnm, regions="VARNAME_1")
+head(vn)
+```
+
+```{r}
+ggplot(data=vn, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=id), col="grey30", show.legend = F)
+```
+
+```{r}
+vn_ho <- data_ho %>%
+  mutate(id=case_when(MATINH=="01" ~ 24,
+                      MATINH=="02" ~ 22,
+                      MATINH=="04" ~ 14,
+                      MATINH=="06" ~ 4,
+                      MATINH=="08" ~ 60,
+                      MATINH=="10" ~ 38,
+                      MATINH=="11" ~ 18,
+                      MATINH=="12" ~ 35,
+                      MATINH=="14" ~ 52,
+                      MATINH=="15" ~ 63,
+                      MATINH=="17" ~ 30,
+                      MATINH=="19" ~ 55,
+                      MATINH=="20" ~ 37,
+                      MATINH=="22" ~ 49,
+                      MATINH=="24" ~ 3,
+                      MATINH=="25" ~ 44,
+                      MATINH=="26" ~ 62,
+                      MATINH=="27" ~ 6,
+                      MATINH=="30" ~ 26,
+                      MATINH=="31" ~ 27,
+                      MATINH=="33" ~ 31,
+                      MATINH=="34" ~ 54,
+                      MATINH=="35" ~ 23,
+                      MATINH=="36" ~ 40,
+                      MATINH=="37" ~ 42,
+                      MATINH=="38" ~ 56,
+                      MATINH=="40" ~ 41,
+                      MATINH=="42" ~ 25,
+                      MATINH=="44" ~ 46,
+                      MATINH=="45" ~ 50,
+                      MATINH=="46" ~ 57,
+                      MATINH=="48" ~ 15,
+                      MATINH=="49" ~ 47,
+                      MATINH=="51" ~ 48,
+                      MATINH=="52" ~ 8,
+                      MATINH=="54" ~ 45,
+                      MATINH=="56" ~ 32,
+                      MATINH=="58" ~ 43,
+                      MATINH=="60" ~ 11,
+                      MATINH=="62" ~ 34,
+                      MATINH=="64" ~ 21,
+                      MATINH=="66" ~ 16,
+                      MATINH=="67" ~ 17,
+                      MATINH=="68" ~ 36,
+                      MATINH=="70" ~ 10,
+                      MATINH=="72" ~ 53,
+                      MATINH=="77" ~ 2,
+                      MATINH=="79" ~ 29,
+                      MATINH=="80" ~ 39,
+                      MATINH=="82" ~ 58,
+                      MATINH=="83" ~ 7,
+                      MATINH=="84" ~ 59,
+                      MATINH=="86" ~ 61,
+                      MATINH=="87" ~ 20,
+                      MATINH=="89" ~ 1,
+                      MATINH=="91" ~ 33,
+                      MATINH=="92" ~ 13,
+                      MATINH=="93" ~ 28,
+                      MATINH=="94" ~ 51,
+                      MATINH=="95" ~ 5,
+                      MATINH=="96" ~ 12))
+
+vn_ho_tinh <- data_ho_tinh %>%
+  mutate(id=case_when(MATINH=="01" ~ 24,
+                      MATINH=="02" ~ 22,
+                      MATINH=="04" ~ 14,
+                      MATINH=="06" ~ 4,
+                      MATINH=="08" ~ 60,
+                      MATINH=="10" ~ 38,
+                      MATINH=="11" ~ 18,
+                      MATINH=="12" ~ 35,
+                      MATINH=="14" ~ 52,
+                      MATINH=="15" ~ 63,
+                      MATINH=="17" ~ 30,
+                      MATINH=="19" ~ 55,
+                      MATINH=="20" ~ 37,
+                      MATINH=="22" ~ 49,
+                      MATINH=="24" ~ 3,
+                      MATINH=="25" ~ 44,
+                      MATINH=="26" ~ 62,
+                      MATINH=="27" ~ 6,
+                      MATINH=="30" ~ 26,
+                      MATINH=="31" ~ 27,
+                      MATINH=="33" ~ 31,
+                      MATINH=="34" ~ 54,
+                      MATINH=="35" ~ 23,
+                      MATINH=="36" ~ 40,
+                      MATINH=="37" ~ 42,
+                      MATINH=="38" ~ 56,
+                      MATINH=="40" ~ 41,
+                      MATINH=="42" ~ 25,
+                      MATINH=="44" ~ 46,
+                      MATINH=="45" ~ 50,
+                      MATINH=="46" ~ 57,
+                      MATINH=="48" ~ 15,
+                      MATINH=="49" ~ 47,
+                      MATINH=="51" ~ 48,
+                      MATINH=="52" ~ 8,
+                      MATINH=="54" ~ 45,
+                      MATINH=="56" ~ 32,
+                      MATINH=="58" ~ 43,
+                      MATINH=="60" ~ 11,
+                      MATINH=="62" ~ 34,
+                      MATINH=="64" ~ 21,
+                      MATINH=="66" ~ 16,
+                      MATINH=="67" ~ 17,
+                      MATINH=="68" ~ 36,
+                      MATINH=="70" ~ 10,
+                      MATINH=="72" ~ 53,
+                      MATINH=="77" ~ 2,
+                      MATINH=="79" ~ 29,
+                      MATINH=="80" ~ 39,
+                      MATINH=="82" ~ 58,
+                      MATINH=="83" ~ 7,
+                      MATINH=="84" ~ 59,
+                      MATINH=="86" ~ 61,
+                      MATINH=="87" ~ 20,
+                      MATINH=="89" ~ 1,
+                      MATINH=="91" ~ 33,
+                      MATINH=="92" ~ 13,
+                      MATINH=="93" ~ 28,
+                      MATINH=="94" ~ 51,
+                      MATINH=="95" ~ 5,
+                      MATINH=="96" ~ 12)) %>% filter(MATINH!="" & Ho %in% data_ho_top200$Ho)
+```
+
+```{r}
+memory.limit(size=1000000)
+
+ho_tinh = merge(vn, vn_ho_tinh, by="id")
+```
+
+```{r}
+ggplot(data = vn_ho_tinh)
+```
+
+
+
