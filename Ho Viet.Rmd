@@ -422,6 +422,12 @@ du <- ho_tinh %>% filter(Ho=="Dư")
 ly <- ho_tinh %>% filter(Ho=="Lý")
 mac <- ho_tinh %>% filter(Ho=="Mạc")
 phung <- ho_tinh %>% filter(Ho=="Phùng")
+<<<<<<< HEAD
+=======
+khuc <- ho_tinh %>% filter(Ho=="Khúc")
+ngo <- ho_tinh %>% filter(Ho=="Ngô")
+doan <- ho_tinh %>% filter(Ho=="Đoàn")
+>>>>>>> f0299ae8601ec9f009233d98fec1925080ab7d1e
 ```
 
 ## Họ Nguyễn
@@ -461,3 +467,63 @@ ggplot(data = du, aes(x=long, y=lat, group=group)) +
   ggtitle("Họ Dư")
 ggsave(filename = file.path("Ho Du.png"), width = 7, height = 5)
 ```
+
+## Họ Lý
+
+```{r}
+ggplot(data = ly, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Lý")
+ggsave(filename = file.path("Ho Ly.png"), width = 7, height = 5)
+```
+
+## Họ Mạc
+
+```{r}
+ggplot(data = mac, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Mạc")
+ggsave(filename = file.path("Ho Mac.png"), width = 7, height = 5)
+```
+
+## Họ Phùng
+
+```{r}
+ggplot(data = phung, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Phùng")
+ggsave(filename = file.path("Ho Phung.png"), width = 7, height = 5)
+```
+## Họ Khúc
+
+```{r}
+ggplot(data = khuc, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Khúc")
+ggsave(filename = file.path("Ho Khuc.png"), width = 7, height = 5)
+```
+## Họ Ngô
+
+```{r}
+ggplot(data = ngo, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Ngô")
+ggsave(filename = file.path("Ho Ngo.png"), width = 7, height = 5)
+```
+## Họ Đoàn
+
+```{r}
+ggplot(data = doan, aes(x=long, y=lat, group=group)) +
+  geom_polygon(aes(fill=songuoi), show.legend = T) +
+  scale_fill_viridis(direction=-1, option = "viridis") +
+  ggtitle("Họ Đoàn")
+ggsave(filename = file.path("Ho Doan.png"), width = 7, height = 5)
+```
+
+
+
