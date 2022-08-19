@@ -669,10 +669,45 @@ nguyen_plot <- nguyen_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
 #colnames(nguyen_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 plot(nguyen_plot)
 ggplot() + geom_sf() + geom_sf(data=nguyen_plot, aes(fill=pro.pop)) +
-  scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
 ggsave(filename = file.path("Ho Nguyen-PerPop.png"), width = 49, height = 33)
+```
+
+## Họ Trần
+
+```{r}
+tran_sf <- dat_sf %>% filter(Ho=="Trần")
+tran_plot <- tran_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=tran_plot, aes(fill=pro.pop)) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Trần")
+ggsave(filename = file.path("Ho Tran-PerPop.png"), width = 49, height = 33)
+```
+## Họ Lê
+
+```{r}
+le_sf <- dat_sf %>% filter(Ho=="Lê")
+le_plot <- le_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=le_plot, aes(fill=pro.pop)) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lê")
+ggsave(filename = file.path("Ho Le-PerPop.png"), width = 49, height = 33)
+```
+
+## Họ Dư
+
+```{r}
+du_sf <- dat_sf %>% filter(Ho=="Dư")
+du_plot <- du_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=du_plot, aes(fill=pro.pop)) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Dư")
+ggsave(filename = file.path("Ho Du-PerPop.png"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -682,7 +717,7 @@ ly_sf <- dat_sf %>% filter(Ho=="Lý")
 ly_plot <- ly_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
 #colnames(ly_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop)) +
-  scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
 ggsave(filename = file.path("Ho Ly-PerPop.png"), width = 49, height = 33)
@@ -693,10 +728,21 @@ doan_sf <- dat_sf %>% filter(Ho=="Đoàn")
 doan_plot <- doan_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
 #colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf(data=doan_plot, aes(fill=pro.pop)) +
-  scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
 ggsave(filename = file.path("Ho Doan-PerPop.png"), width = 49, height = 33)
+```
+## Họ Triệu
+
+```{r}
+trieu_sf <- dat_sf %>% filter(Ho=="Triệu")
+trieu_plot <- trieu_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop)) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Triệu")
+ggsave(filename = file.path("Ho Trieu-PerPop.png"), width = 49, height = 33)
 ```
 
 ```{r}
