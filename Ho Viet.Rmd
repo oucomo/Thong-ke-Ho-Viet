@@ -670,6 +670,7 @@ nguyen_plot <- nguyen_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
 plot(nguyen_plot)
 ggplot() + geom_sf() + geom_sf(data=nguyen_plot, aes(fill=pro.pop)) +
   scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
 ggsave(filename = file.path("Ho Nguyen-PerPop.png"), width = 49, height = 33)
 ```
@@ -682,6 +683,7 @@ ly_plot <- ly_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
 #colnames(ly_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop)) +
   scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
 ggsave(filename = file.path("Ho Ly-PerPop.png"), width = 49, height = 33)
 ```
@@ -691,7 +693,8 @@ doan_sf <- dat_sf %>% filter(Ho=="Đoàn")
 doan_plot <- doan_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
 #colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf(data=doan_plot, aes(fill=pro.pop)) +
-  scale_fill_viridis(direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
 ggsave(filename = file.path("Ho Doan-PerPop.png"), width = 49, height = 33)
 ```
