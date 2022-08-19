@@ -64,6 +64,8 @@ data_xa = read_sav(path_xa)
 
 gadm36_VNM2 <- readRDS("gadm36_VNM_2_sp.rds")
 gadm36_VNM3 <- readRDS("gadm36_VNM_3_sp.rds")
+
+gadm36_VNM3_sf <- readRDS("gadm36_VNM_3_sf.rds")
 publicProvinces <- readRDS("publicProvinces.rds")
 
 load("geo_vnm.Rdata")
@@ -84,6 +86,7 @@ load("vnm3_map.Rdata")
 ## Cleaning
 
 ```{r}
+data_ho$Ho <- trimws(gsub("\\s+", " ", data_ho$Ho))
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Bui|bùi|Bùi|Bùi|BÙI") == TRUE, "Bùi", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "cao|Cao|CAO") == TRUE, "Cao", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Chau|châu|Châu|CHÂU") == TRUE, "Châu", data_ho$Ho)
@@ -156,7 +159,7 @@ data_ho_xa <- data_ho %>%
   summarise(songuoi=sum(songuoi)) %>% filter(MATINH!="") %>%
   group_by(MAXA) %>%
   mutate(danso=sum(songuoi)) %>% ungroup() %>%
-  mutate(pro.pop=songuoi/danso)
+  mutate(pro.pop=(songuoi/danso)*100)
 ```
 ## Top Họ cả nước
 
@@ -563,7 +566,7 @@ data_pop <- cbind(data_pop, data_pop2) %>%
 
 ho_tinh_pop = merge(ho_tinh, data_pop, by="id")
 ho_tinh_pop <- ho_tinh_pop %>%
-  mutate(nguoi_pop=(songuoi/danso)*100)
+  mutate(nguoi_pop=songuoi/danso)
 
 namexa <- vnm3$VARNAME_3
 ```
@@ -593,108 +596,10 @@ ggplot(data = nguyen_pop, aes(x=long, y=lat, group=group)) +
   ggtitle("Họ Nguyễn")
 ggsave(filename = file.path("Ho Nguyen-Pop.png"), width = 7, height = 5)
 ```
-
-## Họ Trần
-
-```{r}
-ggplot(data = tran, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Trần")
-ggsave(filename = file.path("Ho Tran.png"), width = 7, height = 5) 
-```
-
-## Họ Lê
-
-```{r}
-ggplot(data = le, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Lê")
-ggsave(filename = file.path("Ho Le.png"), width = 7, height = 5)
-```
-## Họ Dư
-
-```{r}
-ggplot(data = du, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Dư")
-ggsave(filename = file.path("Ho Du.png"), width = 7, height = 5)
-```
-
-## Họ Lý
-
-```{r}
-ggplot(data = ly, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Lý")
-ggsave(filename = file.path("Ho Ly.png"), width = 7, height = 5)
-```
-
-## Họ Mạc
-
-```{r}
-ggplot(data = mac, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Mạc")
-ggsave(filename = file.path("Ho Mac.png"), width = 7, height = 5)
-```
-
-## Họ Phùng
-
-```{r}
-ggplot(data = phung, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Phùng")
-ggsave(filename = file.path("Ho Phung.png"), width = 7, height = 5)
-```
-## Họ Khúc
-
-```{r}
-ggplot(data = khuc, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Khúc")
-ggsave(filename = file.path("Ho Khuc.png"), width = 7, height = 5)
-```
-## Họ Ngô
-
-```{r}
-ggplot(data = ngo, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Ngô")
-ggsave(filename = file.path("Ho Ngo.png"), width = 7, height = 5)
-```
-
-## Họ Đoàn
-
-```{r}
-ggplot(data = doan, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Đoàn")
-ggsave(filename = file.path("Ho Doan.png"), width = 7, height = 5)
-```
-
-## Họ Triệu
-
-```{r}
-ggplot(data = trieu, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=songuoi), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Triệu")
-ggsave(filename = file.path("Ho Trieu.png"), width = 7, height = 5)
-```
 ## Tỉ lệ % họ tính đến xã
 
 ```{r}
 ## merge TENTINH, TENHUYEN, TENXA
-
 tinh = merge(data_ho_xa, data_tinh %>% select(MATINH, TENTINH), by="MATINH")
 huyen = merge(tinh, data_huyen %>% select(MAHUYEN, TENHUYEN), by="MAHUYEN")
 xa = merge(huyen, data_xa %>% select(MAXA, TENXA), by="MAXA")
@@ -710,10 +615,10 @@ xa$TENHUYEN <- gsub("Thành Phố", "", xa$TENHUYEN)
 xa$TENHUYEN <- gsub("Thị xã", "", xa$TENHUYEN)
 xa$TENHUYEN <- gsub("Thị Xã", "", xa$TENHUYEN)
 
-xa$TENXA <- gsub("Phường", "", xa$TENXA)
-xa$TENXA <- gsub("Xã", "", xa$TENXA)
-xa$TENXA <- gsub("Thị trấn", "", xa$TENXA)
-xa$TENXA <- gsub("Huyện", "", xa$TENXA)
+#xa$TENXA <- gsub("Phường", "", xa$TENXA)
+#xa$TENXA <- gsub("Xã", "", xa$TENXA)
+#xa$TENXA <- gsub("Thị trấn", "", xa$TENXA)
+#xa$TENXA <- gsub("Huyện", "", xa$TENXA)
 
 #xa$TENXA <- stri_trans_general(xa$TENXA, "Latin-ASCII")
 
@@ -725,16 +630,70 @@ namexa <- vnm3$NAME_3
 #namexa <- stri_trans_general(namexa, "Latin-ASCII")
 
 xa2 <- xa %>% rename(NAME_1=TENTINH, NAME_2=TENHUYEN, NAME_3=TENXA)
-
-## Convert back to a normal data.frame
-vnm3_DF <- as.data.frame(vnm3)
-
-vn3 = fortify(vnm3, regions="VARNAME_3")
-head(vn3)
+#gadm36_VNM3_sf <- readRDS("gadm36_VNM_3_sf.rds")
 
 ## Merge all data
-dat <- vnm3_DF %>% right_join(xa2, by=c("NAME_1", "NAME_2", "NAME_3"))
 
+xa2$NAME_1 <- stri_trans_general(xa2$NAME_1, "Latin-ASCII")
+xa2$NAME_2 <- stri_trans_general(xa2$NAME_2, "Latin-ASCII")
+xa2$NAME_3 <- stri_trans_general(xa2$NAME_3, "Latin-ASCII")
+xa2$NAME_1 <- trimws(gsub("\\s+", " ", xa2$NAME_1))
+xa2$NAME_2 <- trimws(gsub("\\s+", " ", xa2$NAME_2))
+xa2$NAME_3 <- trimws(gsub("\\s+", " ", xa2$NAME_3))
+
+gadm_sf <- gadm36_VNM3_sf[,c("NAME_1", "NAME_2", "NAME_3", "TYPE_3", "geometry")]
+gadm_sf <- data.frame(gadm_sf)
+
+gadm_sf$NAME_3 <- paste(gadm_sf$TYPE_3, gadm_sf$NAME_3)
+gadm_sf$NAME_1 <- trimws(gsub("\\s+", " ", gadm_sf$NAME_1))
+gadm_sf$NAME_2 <- trimws(gsub("\\s+", " ", gadm_sf$NAME_2))
+gadm_sf$NAME_3 <- trimws(gsub("\\s+", " ", gadm_sf$NAME_3))
+gadm_sf$NAME_1 <- stri_trans_general(gadm_sf$NAME_1, "Latin-ASCII")
+gadm_sf$NAME_2 <- stri_trans_general(gadm_sf$NAME_2, "Latin-ASCII")
+gadm_sf$NAME_3 <- stri_trans_general(gadm_sf$NAME_3, "Latin-ASCII")
+
+xa2 <- xa2 %>% distinct(., NAME_1, NAME_2, NAME_3, Ho, .keep_all = T)
+gadm_sf <- gadm_sf %>% distinct(., NAME_1, NAME_2, NAME_3, .keep_all = T)
+
+dat_sf <- merge(xa2, gadm_sf, by=c("NAME_1", "NAME_2", "NAME_3"))
+
+table(xa2$NAME_1 %in% gadm_sf$NAME_1)
+head(xa2$NAME_1)
+```
+## Họ Nguyễn
+
+```{r}
+library(sf)
+nguyen_sf <- dat_sf %>% filter(Ho=="Nguyễn")
+nguyen_plot <- nguyen_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
+#colnames(nguyen_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+plot(nguyen_plot)
+ggplot() + geom_sf() + geom_sf(data=nguyen_plot, aes(fill=pro.pop)) +
+  scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  ggtitle("Họ Nguyễn")
+ggsave(filename = file.path("Ho Nguyen-PerPop.png"), width = 49, height = 33)
+```
+
+## Họ Lý
+
+```{r}
+ly_sf <- dat_sf %>% filter(Ho=="Lý")
+ly_plot <- ly_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
+#colnames(ly_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop)) +
+  scale_fill_viridis("Tỉ lệ trên dân số", direction = -1, option = "viridis") +
+  ggtitle("Họ Lý")
+ggsave(filename = file.path("Ho Ly-PerPop.png"), width = 49, height = 33)
+```
+
+```{r}
+doan_sf <- dat_sf %>% filter(Ho=="Đoàn")
+doan_plot <- doan_sf %>% select(pro.pop, geometry) %>% st_as_sf(crs = 4326)
+#colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf(data=doan_plot, aes(fill=pro.pop)) +
+  scale_fill_viridis(direction = -1, option = "viridis") +
+  ggtitle("Họ Đoàn")
+ggsave(filename = file.path("Ho Doan-PerPop.png"), width = 49, height = 33)
 ```
 
 ```{r}
