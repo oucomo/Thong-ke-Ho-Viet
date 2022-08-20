@@ -841,7 +841,25 @@ ggplot() + geom_sf() + geom_sf(data=ho_plot, aes(fill=pro.pop)) +
   ggtitle("Họ Hồ")
 ggsave(filename = file.path("Ho Ho-PerPop.png"), width = 49, height = 33)
 ```
+## Họ Tôn
 
+```{r}
+ton_sf <- dat_sf %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
+ton_plot <- ton_sf %>% select(pro.pop, prop.ton, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ton_plot, aes(fill=pro.pop)) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Tôn")
+ggsave(filename = file.path("Ho Ton-PerPop.png"), width = 49, height = 33)
+```
+## AREA
+
+```{r}
+library(sf)
+f <- st_read("shapefile.shp")
+f$area <- st_area(f) #Take care of units
+```
 
 ```{r}
 credentials::set_github_pat("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")
