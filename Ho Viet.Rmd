@@ -716,6 +716,19 @@ ggplot() + geom_sf() + geom_sf(data=du_plot, aes(fill=pro.pop), lwd=0) +
 ggsave(filename = file.path("Ho Du-PerPop.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Du-PerPop.jpeg"), width = 49, height = 33)
 ```
+## Họ Dương
+
+```{r}
+duong_sf <- dat_sf %>% mutate(prop.duong=(sum(subset(., Ho=="Dương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Dương")
+duong_plot <- duong_sf %>% select(pro.pop, prop.duong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=duong_plot, aes(fill=pro.pop), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(duong_plot$prop.duong[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Dương")
+ggsave(filename = file.path("Ho Duong-PerPop.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Duong-PerPop.jpeg"), width = 49, height = 33)
+```
 
 ## Họ Lý
 
@@ -1092,6 +1105,19 @@ ggplot() + geom_sf() + geom_sf(data=du_plotf, aes(fill=songuoi_km), lwd=0) +
 ggsave(filename = file.path("Ho Du-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Du-PerArea.jpeg"), width = 49, height = 33)
 ```
+## Họ Dương
+
+```{r}
+duong_sff <- dat_sff %>% mutate(prop.duong=(sum(subset(., Ho=="Dương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Dương")
+duong_plotf <- duong_sff %>% select(songuoi_km, prop.duong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=duong_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(duong_plot$prop.duong[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Dương")
+ggsave(filename = file.path("Ho Duong-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Duong-PerArea.jpeg"), width = 49, height = 33)
+```
 
 ## Họ Lý
 
@@ -1291,8 +1317,8 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Huỳnh")
-ggsave(filename = file.path("Ho Huyen-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Huyen-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Huynh-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Huynh-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phan
 
