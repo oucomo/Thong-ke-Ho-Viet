@@ -902,7 +902,7 @@ ggplot() + geom_sf() + geom_sf(data=nguyen_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
 ggsave(filename = file.path("Ho Nguyen-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Nguyen-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Nguyen-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
