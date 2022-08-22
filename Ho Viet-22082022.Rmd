@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
 knitr::opts_chunk$set(echo = FALSE, 
                       cache=TRUE,
                       tidy.opts=list(width.cutoff=60),
@@ -95,16 +96,15 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đàm|Đàm|ĐÀM|Đàm|Đàm") ==
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Đăng|đặng|Đặng|Đặng|ĐẶNG") == TRUE, "Đặng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "danh|Danh|DANH") == TRUE, "Danh", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đào|Đào|Đào|ĐÀO") == TRUE, "Đào", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Dinh|đinh|Đinh|ĐINH") == TRUE, "Đinh", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Do|Đô|đỗ|Đỗ|Đỗ|ĐỖ|Đổ|ĐỖ") == TRUE, "Đỗ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đinh|Đinh|ĐINH") == TRUE, "Đinh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đỗ|Đỗ|Đỗ|ĐỖ|Đổ|ĐỖ") == TRUE, "Đỗ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đoàn|Đoàn|Đoàn|ĐOÀN") == TRUE, "Đoàn", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "dư|Dư|DƯ|Dừ") == TRUE, "Dư", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Duong|dương|Dương|DƯƠNG") == TRUE, "Dương", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "dư" | data_ho$Ho == "Dư" | data_ho$Ho == "DƯ"), "Dư", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "Duong" | data_ho$Ho == "dương" | data_ho$Ho == "Dương" | data_ho$Ho == "DƯƠNG"), "Dương", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đường|Đường|ĐƯỜNG") == TRUE, "Đường", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "giàng|Giàng|Giàng|Giàng|GIÀNG") == TRUE, "Giàng", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ha|hà|Hà|Hà|HÀ|hà|Hà|HÀ") == TRUE, "Hà", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ho|Hô|hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ho|Hô|hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "hà|Hà|Hà|HÀ|hà|Hà|HÀ") == TRUE, "Hà", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hoang|hoàng|hoàng|Hoàng|Hoàng|HOÀNG|Hoàng|HOÀNG|Hòang") == TRUE, "Hoàng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Huynh|huỳnh|Huỳnh|Huỳnh|HuỲNH|HUỲNH|Hùynh|huỳnh|Huỳnh|HUỲNH") == TRUE, "Huỳnh", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kiều|Kiều|Kiều|Kiều|KIỀU") == TRUE, "Kiều", data_ho$Ho)
@@ -116,9 +116,10 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luong|lương|Lương|LƯƠNG") == 
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lường|Lường|lường|Lường|Lường|LƯỜNG") == TRUE, "Lường", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luu|lưu|Lưu|LƯU") == TRUE, "Lưu", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ly|lý|Lý|Lý|LÝ|ly|LY|lý|Lý") == TRUE, "Lý", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Mạc|Mạc|MẠC") == TRUE, "Mạc", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "mai|Mai|MAI") == TRUE, "Mai", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ngo|ngô|Ngô|NGÔ|NGô") == TRUE, "Ngô", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguễn|Nguyễ|Nhuyễn|nguyen|Nguyen|NGUYEN|Nguyên|Nguyến|Nguyền|nguyễn|nguyễn|Nguyễn|Nguyễn|NguyễN|NguyỄn|NGUYỄN|NGUYỄN|Nguyển|Nguỹen|Ngyễn|Nguyê|Nguyêễn|nguyên|NGUYÊN|Nguyêñ|Nguyễn|nguyển|NGUYỂN|Nguyện|Nguỹên") == TRUE, "Nguyễn", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguễn|Nguyễ|Nhuyễn|nguyen|Nguyen|NGUYEN|Nguyên|Nguyến|Nguyền|nguyễn|nguyễn|Nguyễn|Nguyễn|NguyễN|NguyỄn|NGUYỄN|NGUYỄN|Nguyển|Nguỹen|Ngyễn|Nguyê|Nguyêễn|nguyên|NGUYÊN|Nguyêñ|Nguyễn|nguyển|NGUYỂN|Nguyện|Nguỹên|Nguyênc|Nguyễnthanh|NguyễnThị") == TRUE, "Nguyễn", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Pham|phạm|Phạm|Phạm|PHẠM|PHẠM|Phaạm|pham|PHAM|phạm|Phạm") == TRUE, "Phạm", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phan|Phan|PHAN|pHAN|Phan") == TRUE, "Phan", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phùng|Phùng|Phùng|PHÙNG|Phùn|Phung|Phùng|Phủng") == TRUE, "Phùng", data_ho$Ho)
@@ -128,7 +129,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ta|tạ|Tạ|Tạ|TẠ") == TRUE, "
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Thach|thạch|Thạch|Thạch|THẠCH") == TRUE, "Thạch", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "thái|Thái|Thái|THÁI|Thái|THÁI") == TRUE, "Thái", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "thị|Thị|Thị|THỊ") == TRUE, "Thị", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tô|Tô|TÔ") == TRUE, "Tô", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tôn|Tôn|TÔN") == TRUE, "Tôn", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tòng|Tòng|tòng|Tòng|TÒNG") == TRUE, "Tòng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tống|Tống|TỐNG") == TRUE, "Tống", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Tran|Tràn|trần|trần|Trần|Trần|TRẦN|Trầ|Trằn|trân|Trân|TRÂN|Trần|TrầN|TrẦn|TRần|TRầN|TRẦN") == TRUE, "Trần", data_ho$Ho)
@@ -139,10 +140,10 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Văn|VĂN|văn|Văn") == TRUE, "Vă
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vàng|VÀNG|vàng|Vàng|Vàng") == TRUE, "Vàng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vi|Vi|VI") == TRUE, "Vi", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vì|Vì") == TRUE, "Vì", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vo|võ|Võ|Võ|VÕ|Vỏ|Vỗ|võ|Võ|VÕ|vỏ") == TRUE, "Võ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vu|vũ|Vũ|Vũ|VŨ|vũ|Vũ|Vủ") == TRUE, "Vũ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "võ|Võ|Võ|VÕ|Vỏ|Vỗ|võ|Võ|VÕ|vỏ") == TRUE, "Võ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vũ|Vũ|Vũ|VŨ|vũ|Vũ|Vủ") == TRUE, "Vũ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vừ|Vừ|Vừ|Vừ|VỪ") == TRUE, "Vừ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vương|VƯƠNG|vương|Vương|Vưu") == TRUE, "Vương", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vuong|Vương|VƯƠNG|vương|Vương") == TRUE, "Vương", data_ho$Ho)
 ```
 
 ## Tổng họ
@@ -593,15 +594,6 @@ doan_pop <- ho_tinh_pop %>% filter(Ho=="Đoàn")
 trieu_pop <- ho_tinh_pop %>% filter(Ho=="Triệu")
 ```
 
-## Họ Nguyễn
-
-```{r}
-ggplot(data = nguyen_pop, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=nguoi_pop), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Nguyễn")
-ggsave(filename = file.path("Ho Nguyen-Pop.png"), width = 7, height = 5)
-```
 ## Tỉ lệ % họ tính đến xã
 
 ```{r}
@@ -867,7 +859,7 @@ ggsave(filename = file.path("Ho Ho-PerPop.jpeg"), width = 49, height = 33)
 ton_sf <- dat_sf %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
 ton_plot <- ton_sf %>% select(pro.pop, prop.ton, geometry) %>% st_as_sf(crs = 4326)
 ggplot() + geom_sf() + geom_sf(data=ton_plot, aes(fill=pro.pop), lwd=0) +
-  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],1), "% dân số", sep = "")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],2), "% dân số", sep = "")) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Tôn")
@@ -1258,6 +1250,21 @@ ggplot() + geom_sf() + geom_sf(data=ho_plotf, aes(fill=songuoi_km), lwd=0) +
 ggsave(filename = file.path("Ho Ho-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Ho-PerArea.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Tôn
+
+```{r}
+ton_sff <- dat_sff %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
+ton_plotf <- ton_sff %>% select(songuoi_km, prop.ton, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ton_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plotf$prop.ton[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Tôn")
+ggsave(filename = file.path("Ho Ton-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Ton-PerArea.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Bùi
 
 ```{r}
@@ -1408,8 +1415,8 @@ ggsave(filename = file.path("Ho Vo-PerArea.jpeg"), width = 49, height = 33)
 
 ```{r}
 #rivers <- st_read(file.path("GloRiC_v10_shapefile", "GloRiC_v10.shp"))
-river1 <- st_read(file.path("ThuyHeVN2000.shp")) #https://data.opendevelopmentmekong.net/dataset/mng-li-thy-vn
-river2 <- st_read(file.path("river.shp")) #https://www.greatermekong.org/gms-main-rivers
+#river1 <- st_read(file.path("ThuyHeVN2000.shp")) #https://data.opendevelopmentmekong.net/dataset/mng-li-thy-vn
+#river2 <- st_read(file.path("river.shp")) #https://www.greatermekong.org/gms-main-rivers
 river3 <- st_read(file.path("fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
 ```
 
@@ -1427,8 +1434,8 @@ ggplot() + geom_sf() + geom_sf(data=nguyen_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
-ggsave(filename = file.path("figures", "Ho Nguyen-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Nguyen-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Nguyen-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Nguyen-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -1442,8 +1449,8 @@ ggplot() + geom_sf() + geom_sf(data=tran_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trần")
-ggsave(filename = file.path("figures", "Ho Tran-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Tran-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Tran-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Tran-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Lê
 
@@ -1456,8 +1463,8 @@ ggplot() + geom_sf() + geom_sf(data=le_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lê")
-ggsave(filename = file.path("figures", "Ho Le-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Le-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Le-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Le-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -1471,8 +1478,8 @@ ggplot() + geom_sf() + geom_sf(data=du_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dư")
-ggsave(filename = file.path("figures", "Ho Du-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Du-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Du-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Du-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Dương
 
@@ -1485,8 +1492,8 @@ ggplot() + geom_sf() + geom_sf(data=duong_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dương")
-ggsave(filename = file.path("figures", "Ho Duong-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Duong-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Duong-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Duong-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -1501,8 +1508,8 @@ ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
-ggsave(filename = file.path("figures", "Ho Ly-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Ly-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ly-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ly-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đoàn
@@ -1517,8 +1524,8 @@ ggplot() + geom_sf(data=doan_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
-ggsave(filename = file.path("figures", "Ho Doan-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Doan-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Doan-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Doan-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Ngô
@@ -1533,8 +1540,8 @@ ggplot() + geom_sf(data=ngo_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Ngô")
-ggsave(filename = file.path("figures", "Ho Ngo-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Ngo-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ngo-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ngo-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Triệu
@@ -1548,8 +1555,8 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Triệu")
-ggsave(filename = file.path("figures", "Ho Trieu-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Trieu-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trieu-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trieu-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Mạc
@@ -1563,8 +1570,8 @@ ggplot() + geom_sf() + geom_sf(data=mac_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mạc")
-ggsave(filename = file.path("figures", "Ho Mac-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Mac-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Mac-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Mac-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phùng
 
@@ -1577,8 +1584,8 @@ ggplot() + geom_sf() + geom_sf(data=phung_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phùng")
-ggsave(filename = file.path("figures", "Ho Phung-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Phung-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phung-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phung-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Khúc
 
@@ -1591,8 +1598,8 @@ ggplot() + geom_sf() + geom_sf(data=khuc_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Khúc")
-ggsave(filename = file.path("figures", "Ho Khuc-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Khuc-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Khuc-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Khuc-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phạm
 
@@ -1605,8 +1612,8 @@ ggplot() + geom_sf() + geom_sf(data=pham_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phạm")
-ggsave(filename = file.path("figures", "Ho Pham-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Pham-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Pham-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Pham-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Hồ
@@ -1620,8 +1627,8 @@ ggplot() + geom_sf() + geom_sf(data=ho_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hồ")
-ggsave(filename = file.path("figures", "Ho Ho-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Ho-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ho-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ho-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Tôn
@@ -1631,12 +1638,12 @@ ton_sf <- dat_sf %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/su
 ton_plot <- ton_sf %>% select(pro.pop, prop.ton, geometry) %>% st_as_sf(crs = 4326)
 ggplot() + geom_sf() + geom_sf(data=ton_plot, aes(fill=pro.pop), lwd=0) +
   geom_sf(data=river3) +
-  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],1), "% dân số", sep = "")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],2), "% dân số", sep = "")) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Tôn")
-ggsave(filename = file.path("figures", "Ho Ton-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Ton-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ton-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ton-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Bùi
 
@@ -1649,8 +1656,8 @@ ggplot() + geom_sf() + geom_sf(data=bui_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Bùi")
-ggsave(filename = file.path("figures", "Ho Bui-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Bui-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Bui-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Bui-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đào
 
@@ -1663,8 +1670,8 @@ ggplot() + geom_sf() + geom_sf(data=dao_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đào")
-ggsave(filename = file.path("figures", "Ho Dao-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Dao-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dao-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dao-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đinh
@@ -1678,8 +1685,8 @@ ggplot() + geom_sf() + geom_sf(data=dinh_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đinh")
-ggsave(filename = file.path("figures", "Ho Dinh-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Dinh-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dinh-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dinh-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đỗ
 
@@ -1692,8 +1699,8 @@ ggplot() + geom_sf() + geom_sf(data=do_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đỗ")
-ggsave(filename = file.path("figures", "Ho Do-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Do-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Do-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Do-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hoàng
 
@@ -1706,8 +1713,8 @@ ggplot() + geom_sf() + geom_sf(data=hoang_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hoàng")
-ggsave(filename = file.path("figures", "Ho Hoang-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Hoang-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Hoang-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Hoang-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Huỳnh
 
@@ -1720,8 +1727,8 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Huỳnh")
-ggsave(filename = file.path("figures", "Ho Huynh-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Huynh-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Huynh-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Huynh-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phan
 
@@ -1734,8 +1741,8 @@ ggplot() + geom_sf() + geom_sf(data=phan_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phan")
-ggsave(filename = file.path("figures", "Ho Phan-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Phan-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phan-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phan-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trịnh
@@ -1749,8 +1756,8 @@ ggplot() + geom_sf() + geom_sf(data=trinh_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trịnh")
-ggsave(filename = file.path("figures", "Ho Trinh-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Trinh-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trinh-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trinh-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trương
@@ -1764,8 +1771,8 @@ ggplot() + geom_sf() + geom_sf(data=truong_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trương")
-ggsave(filename = file.path("figures", "Ho Truong-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Truong-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Truong-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Truong-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -1779,8 +1786,8 @@ ggplot() + geom_sf() + geom_sf(data=vu_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Vũ")
-ggsave(filename = file.path("figures", "Ho Vu-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Vu-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vu-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vu-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Võ
 
@@ -1793,8 +1800,8 @@ ggplot() + geom_sf() + geom_sf(data=vo_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Võ")
-ggsave(filename = file.path("figures", "Ho Vo-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Vo-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vo-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vo-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Nguyễn
@@ -1810,8 +1817,8 @@ ggplot() + geom_sf() + geom_sf(data=nguyen_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
-ggsave(filename = file.path("figures", "Ho Nguyen-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Nguyen-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Nguyen-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Nguyen-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -1825,8 +1832,8 @@ ggplot() + geom_sf() + geom_sf(data=tran_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trần")
-ggsave(filename = file.path("figures", "Ho Tran-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Tran-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Tran-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Tran-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Lê
 
@@ -1839,8 +1846,8 @@ ggplot() + geom_sf() + geom_sf(data=le_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lê")
-ggsave(filename = file.path("figures", "Ho Le-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Le-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Le-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Le-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -1854,8 +1861,8 @@ ggplot() + geom_sf() + geom_sf(data=du_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dư")
-ggsave(filename = file.path("figures", "Ho Du-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Du-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Du-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Du-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Dương
 
@@ -1868,8 +1875,8 @@ ggplot() + geom_sf() + geom_sf(data=duong_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dương")
-ggsave(filename = file.path("figures", "Ho Duong-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Duong-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Duong-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Duong-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -1884,8 +1891,8 @@ ggplot() + geom_sf() + geom_sf(data=ly_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
-ggsave(filename = file.path("figures", "Ho Ly-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Ly-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ly-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ly-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đoàn
 
@@ -1899,8 +1906,8 @@ ggplot() + geom_sf(data=doan_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
-ggsave(filename = file.path("figures", "Ho Doan-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Doan-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Doan-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Doan-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Ngô
@@ -1915,8 +1922,8 @@ ggplot() + geom_sf(data=ngo_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Ngô")
-ggsave(filename = file.path("figures", "Ho Ngo-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Ngo-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ngo-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ngo-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Triệu
 
@@ -1929,8 +1936,8 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Triệu")
-ggsave(filename = file.path("figures", "Ho Trieu-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Trieu-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trieu-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trieu-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mạc
 
@@ -1943,8 +1950,8 @@ ggplot() + geom_sf() + geom_sf(data=mac_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mạc")
-ggsave(filename = file.path("figures", "Ho Mac-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Mac-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Mac-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Mac-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phùng
 
@@ -1957,8 +1964,8 @@ ggplot() + geom_sf() + geom_sf(data=phung_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phùng")
-ggsave(filename = file.path("figures", "Ho Phung-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Phung-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phung-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phung-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Khúc
 
@@ -1971,8 +1978,8 @@ ggplot() + geom_sf() + geom_sf(data=khuc_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Khúc")
-ggsave(filename = file.path("figures", "Ho Khuc-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Khuc-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Khuc-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Khuc-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phạm
 
@@ -1985,8 +1992,8 @@ ggplot() + geom_sf() + geom_sf(data=pham_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phạm")
-ggsave(filename = file.path("figures", "Ho Pham-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Pham-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Pham-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Pham-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Hồ
@@ -2000,9 +2007,25 @@ ggplot() + geom_sf() + geom_sf(data=ho_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hồ")
-ggsave(filename = file.path("figures", "Ho Ho-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Ho-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ho-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ho-PerArea-River.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Tôn
+
+```{r}
+ton_sff <- dat_sff %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
+ton_plotf <- ton_sff %>% select(songuoi_km, prop.ton, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ton_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plotf$prop.ton[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Tôn")
+ggsave(filename = file.path("figures", "Ton-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ton-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Bùi
 
 ```{r}
@@ -2014,8 +2037,8 @@ ggplot() + geom_sf() + geom_sf(data=bui_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Bùi")
-ggsave(filename = file.path("figures", "Ho Bui-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Bui-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Bui-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Bui-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đào
 
@@ -2028,8 +2051,8 @@ ggplot() + geom_sf() + geom_sf(data=dao_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đào")
-ggsave(filename = file.path("figures", "Ho Dao-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Dao-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dao-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dao-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đinh
@@ -2043,8 +2066,8 @@ ggplot() + geom_sf() + geom_sf(data=dinh_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đinh")
-ggsave(filename = file.path("figures", "Ho Dinh-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Dinh-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dinh-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dinh-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đỗ
 
@@ -2057,8 +2080,8 @@ ggplot() + geom_sf() + geom_sf(data=do_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đỗ")
-ggsave(filename = file.path("figures", "Ho Do-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Do-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Do-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Do-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hoàng
 
@@ -2071,8 +2094,8 @@ ggplot() + geom_sf() + geom_sf(data=hoang_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hoàng")
-ggsave(filename = file.path("figures", "Ho Hoang-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Hoang-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Hoang-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Huỳnh
 
@@ -2085,8 +2108,8 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Huỳnh")
-ggsave(filename = file.path("figures", "Ho Huynh-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Huynh-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Huynh-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Huynh-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phan
 
@@ -2099,8 +2122,8 @@ ggplot() + geom_sf() + geom_sf(data=phan_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phan")
-ggsave(filename = file.path("figures", "Ho Phan-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Phan-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phan-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phan-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Trịnh
 
@@ -2113,8 +2136,8 @@ ggplot() + geom_sf() + geom_sf(data=trinh_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trịnh")
-ggsave(filename = file.path("figures", "Ho Trinh-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Trinh-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trinh-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trinh-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Trương
 
@@ -2127,8 +2150,8 @@ ggplot() + geom_sf() + geom_sf(data=truong_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trương")
-ggsave(filename = file.path("figures", "Ho Truong-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Truong-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Truong-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Truong-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -2142,8 +2165,8 @@ ggplot() + geom_sf() + geom_sf(data=vu_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Vũ")
-ggsave(filename = file.path("figures", "Ho Vu-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Vu-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vu-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vu-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Võ
 
@@ -2156,8 +2179,8 @@ ggplot() + geom_sf() + geom_sf(data=vo_plotf, aes(fill=songuoi_km), lwd=0) +
   scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Võ")
-ggsave(filename = file.path("figures", "Ho Vo-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho Vo-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vo-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vo-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 
