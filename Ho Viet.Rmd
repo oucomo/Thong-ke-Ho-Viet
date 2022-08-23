@@ -2185,7 +2185,10 @@ ggsave(filename = file.path("figures", "Vo-PerArea-River.jpeg"), width = 49, hei
 
 
 ```{r}
-credentials::set_github_pat("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")
+credentials::set_github_pat("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")
+#git remote set-url origin https://github.com/oucomo/Thong-ke-Ho-Viet.git
+#git remote -v
 ```
 
 
+https://github.com/oucomo/Thong-ke-Ho-Viet.git
