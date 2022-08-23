@@ -948,6 +948,7 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plot, aes(fill=pro.pop), lwd=0) +
 ggsave(filename = file.path("Ho Huynh-PerPop.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Huynh-PerPop.jpeg"), width = 49, height = 33)
 ```
+
 ## Họ Phan
 
 ```{r}
@@ -960,6 +961,20 @@ ggplot() + geom_sf() + geom_sf(data=phan_plot, aes(fill=pro.pop), lwd=0) +
   ggtitle("Họ Phan")
 ggsave(filename = file.path("Ho Phan-PerPop.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Phan-PerPop.jpeg"), width = 49, height = 33)
+```
+
+## Họ Quách
+
+```{r}
+quach_sf <- dat_sf %>% mutate(prop.quach=(sum(subset(., Ho=="Quách")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Quách")
+quach_plot <- quach_sf %>% select(pro.pop, prop.quach, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=quach_plot, aes(fill=pro.pop), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(quach_plot$prop.quach[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Quách")
+ggsave(filename = file.path("Ho Quach-PerPop.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Quach-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trịnh
@@ -1360,6 +1375,21 @@ ggplot() + geom_sf() + geom_sf(data=phan_plotf, aes(fill=songuoi_km), lwd=0) +
 ggsave(filename = file.path("Ho Phan-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Phan-PerArea.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Quách
+
+```{r}
+quach_sff <- dat_sff %>% mutate(prop.quach=(sum(subset(., Ho=="Quách")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Quách")
+quach_plotf <- quach_sff %>% select(songuoi_km, prop.quach, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=quach_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(quach_plotf$prop.quach[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Quách")
+ggsave(filename = file.path("Ho Quach-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Quach-PerArea.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Trịnh
 
 ```{r}
@@ -1748,6 +1778,21 @@ ggsave(filename = file.path("figures", "Phan-PerPop-River.png"), width = 49, hei
 ggsave(filename = file.path("figures", "Phan-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
+## Họ Quách
+
+```{r}
+quach_sf <- dat_sf %>% mutate(prop.quach=(sum(subset(., Ho=="Quách")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Quách")
+quach_plot <- quach_sf %>% select(pro.pop, prop.quach, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=quach_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(quach_plot$prop.quach[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Quách")
+ggsave(filename = file.path("figures", "Quach-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Quach-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Trịnh
 
 ```{r}
@@ -2128,6 +2173,22 @@ ggplot() + geom_sf() + geom_sf(data=phan_plotf, aes(fill=songuoi_km), lwd=0) +
 ggsave(filename = file.path("figures", "Phan-PerArea-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "Phan-PerArea-River.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Quách
+
+```{r}
+quach_sff <- dat_sff %>% mutate(prop.quach=(sum(subset(., Ho=="Quách")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Quách")
+quach_plotf <- quach_sff %>% select(songuoi_km, prop.quach, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=quach_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(quach_plotf$prop.quach[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Quách")
+ggsave(filename = file.path("figures", "Quach-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Quach-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Trịnh
 
 ```{r}
