@@ -2188,9 +2188,16 @@ ggsave(filename = file.path("figures", "Vo-PerArea-River.jpeg"), width = 49, hei
 
 
 ```{r}
-credentials::set_github_pat("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")
+#Github
+credentials::set_github_pat("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")
 #git remote set-url origin https://github.com/oucomo/Thong-ke-Ho-Viet.git
 #git remote -v
+#git remote set-url origin ssh://git@github.com:oucomo/Thong-ke-Ho-Viet.git
+#git config --global user.email ducdh@oucru.org
+#git config --global user.name duhongduc
+#ssh -T git@github.com
+#git remote set-url origin git@github.com:oucomo/Thong-ke-Ho-Viet.git
+#git push -u origin main
 ```
 
 
