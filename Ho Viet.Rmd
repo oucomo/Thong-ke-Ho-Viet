@@ -1,11 +1,12 @@
 ---
 title: "Ho Viet"
 author: "Duc Du"
-date: '2022-08-16'
+date: '2022-08-22'
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
 knitr::opts_chunk$set(echo = FALSE, 
                       cache=TRUE,
                       tidy.opts=list(width.cutoff=60),
@@ -87,60 +88,62 @@ load("vnm3_map.Rdata")
 
 ```{r}
 data_ho$Ho <- trimws(gsub("\\s+", " ", data_ho$Ho))
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Bui|bùi|Bùi|Bùi|BÙI") == TRUE, "Bùi", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "bui|Buì|Bui|bùi|Bùi|Bùi|BÙI") == TRUE, "Bùi", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "cao|Cao|CAO") == TRUE, "Cao", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Chau|châu|Châu|CHÂU") == TRUE, "Châu", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "chu|Chu|CHU") == TRUE, "Chu", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đàm|Đàm|ĐÀM") == TRUE, "Đàm", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đàm|Đàm|ĐÀM|Đàm|Đàm") == TRUE, "Đàm", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Đăng|đặng|Đặng|Đặng|ĐẶNG") == TRUE, "Đặng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "danh|Danh|DANH") == TRUE, "Danh", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đào|Đào|Đào|ĐÀO") == TRUE, "Đào", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Dinh|đinh|Đinh|ĐINH") == TRUE, "Đinh", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Do|Đô|đỗ|Đỗ|Đỗ|ĐỖ|Đổ") == TRUE, "Đỗ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đinh|Đinh|ĐINH") == TRUE, "Đinh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đỗ|Đỗ|Đỗ|ĐỖ|Đổ|ĐỖ") == TRUE, "Đỗ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đoàn|Đoàn|Đoàn|ĐOÀN") == TRUE, "Đoàn", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Duong|dương|Dương|DƯƠNG") == TRUE, "Dương", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "giàng|Giàng") == TRUE, "Giàng", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ha|hà|Hà|Hà|HÀ") == TRUE, "Hà", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ho|Hô|hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ho|Hô|hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hoang|hoàng|hoàng|Hoàng|Hoàng|HOÀNG") == TRUE, "Hoàng", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Huynh|huỳnh|Huỳnh|Huỳnh|HuỲNH|HUỲNH|Hùynh") == TRUE, "Huỳnh", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kiều|Kiều") == TRUE, "Kiều", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lại|Lại|LẠI") == TRUE, "Lại", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "dư" | data_ho$Ho == "Dư" | data_ho$Ho == "DƯ"), "Dư", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "Duong" | data_ho$Ho == "dương" | data_ho$Ho == "Dương" | data_ho$Ho == "DƯƠNG"), "Dương", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đường|Đường|ĐƯỜNG") == TRUE, "Đường", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "giàng|Giàng|Giàng|Giàng|GIÀNG") == TRUE, "Giàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "hà|Hà|Hà|HÀ|hà|Hà|HÀ") == TRUE, "Hà", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "hồ|Hồ̀|HỒ") == TRUE, "Hồ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hoang|hoàng|hoàng|Hoàng|Hoàng|HOÀNG|Hoàng|HOÀNG|Hòang") == TRUE, "Hoàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Huynh|huỳnh|Huỳnh|Huỳnh|HuỲNH|HUỲNH|Hùynh|huỳnh|Huỳnh|HUỲNH") == TRUE, "Huỳnh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kiều|Kiều|Kiều|Kiều|KIỀU") == TRUE, "Kiều", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lại|Lại|LẠI|Lại|Lại") == TRUE, "Lại", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lam|lâm|Lâm|LÂM") == TRUE, "Lâm", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Le|lê|Lê|LÊ") == TRUE, "Lê", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Le|lê|Lê|LÊ|le|LE|Lê") == TRUE, "Lê", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lo|lò|lò|Lò|Lò|LÒ") == TRUE, "Lò", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luong|lương|Lương|LƯƠNG") == TRUE, "Lương", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lường|Lường") == TRUE, "Lường", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lưu|Lưu|LƯU") == TRUE, "Lưu", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ly|lý|Lý|Lý|LÝ") == TRUE, "Lý", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lường|Lường|lường|Lường|Lường|LƯỜNG") == TRUE, "Lường", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luu|lưu|Lưu|LƯU") == TRUE, "Lưu", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ly|lý|Lý|Lý|LÝ|ly|LY|lý|Lý") == TRUE, "Lý", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Mạc|Mạc|MẠC") == TRUE, "Mạc", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "mai|Mai|MAI") == TRUE, "Mai", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ngo|ngô|Ngô|NGÔ") == TRUE, "Ngô", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguễn|Nguyễ|Nhuyễn|nguyen|Nguyen|NGUYEN|Nguyên|Nguyến|Nguyền|nguyễn|nguyễn|Nguyễn|Nguyễn|NguyễN|NguyỄn|NGUYỄN|NGUYỄN|Nguyển|Nguỹen|Ngyễn") == TRUE, "Nguyễn",  data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Pham|phạm|Phạm|Phạm|PHẠM|PHẠM") == TRUE, "Phạm", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phan|Phan|PHAN") == TRUE, "Phan", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phùng|Phùng|Phùng|PHÙNG") == TRUE, "Phùng", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "quách|Quách|Quách|QUÁCH") == TRUE, "Quách", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "quàng|quàng|Quàng") == TRUE, "Quàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ngo|ngô|Ngô|NGÔ|NGô") == TRUE, "Ngô", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguễn|Nguyễ|Nhuyễn|nguyen|Nguyen|NGUYEN|Nguyên|Nguyến|Nguyền|nguyễn|nguyễn|Nguyễn|Nguyễn|NguyễN|NguyỄn|NGUYỄN|NGUYỄN|Nguyển|Nguỹen|Ngyễn|Nguyê|Nguyêễn|nguyên|NGUYÊN|Nguyêñ|Nguyễn|nguyển|NGUYỂN|Nguyện|Nguỹên|Nguyênc|Nguyễnthanh|NguyễnThị") == TRUE, "Nguyễn", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Pham|phạm|Phạm|Phạm|PHẠM|PHẠM|Phaạm|pham|PHAM|phạm|Phạm") == TRUE, "Phạm", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phan|Phan|PHAN|pHAN|Phan") == TRUE, "Phan", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phùng|Phùng|Phùng|PHÙNG|Phùn|Phung|Phùng|Phủng") == TRUE, "Phùng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "quách|Quách|Quách|QUÁCH|Quach|Quách") == TRUE, "Quách", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "quàng|quàng|Quàng|Quàng|QUÀNG") == TRUE, "Quàng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ta|tạ|Tạ|Tạ|TẠ") == TRUE, "Tạ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Thach|thạch|Thạch|Thạch|THẠCH") == TRUE, "Thạch", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "thái|Thái|Thái|THÁI") == TRUE, "Thái", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "thái|Thái|Thái|THÁI|Thái|THÁI") == TRUE, "Thái", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "thị|Thị|Thị|THỊ") == TRUE, "Thị", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tô|Tô|TÔ") == TRUE, "Tô", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tòng|Tòng") == TRUE, "Tòng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tôn|Tôn|TÔN") == TRUE, "Tôn", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tòng|Tòng|tòng|Tòng|TÒNG") == TRUE, "Tòng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tống|Tống|TỐNG") == TRUE, "Tống", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Tran|Tràn|trần|trần|Trần|Trần|TRẦN") == TRUE, "Trần", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "triệu|Triệu|Triệu|TRIỆU") == TRUE, "Triệu", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "trịnh|Trịnh|Trịnh|TRỊNH") == TRUE, "Trịnh", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Truong|trương|Trương|TRƯƠNG") == TRUE, "Trương", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Văn|VĂN") == TRUE, "Văn", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vàng|VÀNG") == TRUE, "Vàng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Tran|Tràn|trần|trần|Trần|Trần|TRẦN|Trầ|Trằn|trân|Trân|TRÂN|Trần|TrầN|TrẦn|TRần|TRầN|TRẦN") == TRUE, "Trần", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "triệu|Triệu|Triệu|TRIỆU|Trieu|Triêu|Triệu") == TRUE, "Triệu", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "trịnh|Trịnh|Trịnh|TRỊNH|Trịnh|TRỊNH") == TRUE, "Trịnh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Truong|trương|Trương|TRƯƠNG|truong") == TRUE, "Trương", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Văn|VĂN|văn|Văn") == TRUE, "Văn", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vàng|VÀNG|vàng|Vàng|Vàng") == TRUE, "Vàng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vi|Vi|VI") == TRUE, "Vi", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vì|Vì") == TRUE, "Vì", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vo|võ|Võ|Võ|VÕ|Vỏ") == TRUE, "Võ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vu|vũ|Vũ|Vũ|VŨ") == TRUE, "Vũ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vừ|Vừ") == TRUE, "Vừ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vương|VƯƠNG") == TRUE, "Vương", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "võ|Võ|Võ|VÕ|Vỏ|Vỗ|võ|Võ|VÕ|vỏ") == TRUE, "Võ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vũ|Vũ|Vũ|VŨ|vũ|Vũ|Vủ") == TRUE, "Vũ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vừ|Vừ|Vừ|Vừ|VỪ") == TRUE, "Vừ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vuong|Vương|VƯƠNG|vương|Vương") == TRUE, "Vương", data_ho$Ho)
 ```
 
 ## Tổng họ
@@ -164,6 +167,10 @@ data_ho_xa <- data_ho %>%
 ## Top Họ cả nước
 
 ```{r}
+data_ho_top1000 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top1000 <- head(data_ho_top1000, n=1000)
+
 data_ho_top500 <- data_ho_overall %>%
   arrange(desc(songuoi))
 data_ho_top500 <- head(data_ho_top500, n=500)
@@ -587,15 +594,6 @@ doan_pop <- ho_tinh_pop %>% filter(Ho=="Đoàn")
 trieu_pop <- ho_tinh_pop %>% filter(Ho=="Triệu")
 ```
 
-## Họ Nguyễn
-
-```{r}
-ggplot(data = nguyen_pop, aes(x=long, y=lat, group=group)) +
-  geom_polygon(aes(fill=nguoi_pop), show.legend = T) +
-  scale_fill_viridis(direction=-1, option = "viridis") +
-  ggtitle("Họ Nguyễn")
-ggsave(filename = file.path("Ho Nguyen-Pop.png"), width = 7, height = 5)
-```
 ## Tỉ lệ % họ tính đến xã
 
 ```{r}
@@ -630,7 +628,7 @@ namexa <- vnm3$NAME_3
 #namexa <- stri_trans_general(namexa, "Latin-ASCII")
 
 xa2 <- xa %>% rename(NAME_1=TENTINH, NAME_2=TENHUYEN, NAME_3=TENXA)
-#gadm36_VNM3_sf <- readRDS("gadm36_VNM_3_sf.rds")
+gadm36_VNM3_sf <- readRDS("gadm36_VNM_3_sf.rds")
 
 ## Merge all data
 
@@ -652,6 +650,7 @@ gadm_sf$NAME_1 <- stri_trans_general(gadm_sf$NAME_1, "Latin-ASCII")
 gadm_sf$NAME_2 <- stri_trans_general(gadm_sf$NAME_2, "Latin-ASCII")
 gadm_sf$NAME_3 <- stri_trans_general(gadm_sf$NAME_3, "Latin-ASCII")
 
+library(sf)
 xa2 <- xa2 %>% distinct(., NAME_1, NAME_2, NAME_3, Ho, .keep_all = T)
 gadm_sf <- gadm_sf %>% distinct(., NAME_1, NAME_2, NAME_3, .keep_all = T)
 
@@ -737,19 +736,13 @@ ly_sf <- dat_sf %>% mutate(prop.ly=(sum(subset(., Ho=="Lý")[, "songuoi"])/sum(s
 ly_plot <- ly_sf %>% select(pro.pop, prop.ly, geometry) %>% st_as_sf(crs = 4326)
 #colnames(ly_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop), lwd=0) +
+  #geom_sf(data=river3) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ly_plot$prop.ly[1],1), "% dân số", sep = "")) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
 ggsave(filename = file.path("Ho Ly-PerPop.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Ly-PerPop.jpeg"), width = 49, height = 33)
-
-library(htmlwidgets) 
-library(tmap)
-tm_shape(ly_plot) +
-  tm_grid(col ="lightgray", line = TRUE) +
-  tm_iso(col = "blue", text = "DEPTH",  fontface = "bold") +
-  tm_layout(frame = TRUE, inner.margins = 0) 
 ```
 ## Họ Đoàn
 
@@ -866,7 +859,7 @@ ggsave(filename = file.path("Ho Ho-PerPop.jpeg"), width = 49, height = 33)
 ton_sf <- dat_sf %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
 ton_plot <- ton_sf %>% select(pro.pop, prop.ton, geometry) %>% st_as_sf(crs = 4326)
 ggplot() + geom_sf() + geom_sf(data=ton_plot, aes(fill=pro.pop), lwd=0) +
-  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],1), "% dân số", sep = "")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],2), "% dân số", sep = "")) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Tôn")
@@ -1021,7 +1014,16 @@ ggsave(filename = file.path("Ho Vo-PerPop.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Vo-PerPop.jpeg"), width = 49, height = 33)
 ```
 
+```{r}
+# Add contour
+#library(htmlwidgets) 
+#library(tmap)
+#tm_shape(ly_plot) +
+#  tm_grid(col ="lightgray", line = TRUE) +
+#  tm_iso(col = "blue", text = "DEPTH",  fontface = "bold") +
+#  tm_layout(frame = TRUE, inner.margins = 0) 
 ## AREA
+```
 
 ```{r}
 library(sf)
@@ -1248,6 +1250,21 @@ ggplot() + geom_sf() + geom_sf(data=ho_plotf, aes(fill=songuoi_km), lwd=0) +
 ggsave(filename = file.path("Ho Ho-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("Ho Ho-PerArea.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Tôn
+
+```{r}
+ton_sff <- dat_sff %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
+ton_plotf <- ton_sff %>% select(songuoi_km, prop.ton, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ton_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plotf$prop.ton[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Tôn")
+ggsave(filename = file.path("Ho Ton-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("Ho Ton-PerArea.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Bùi
 
 ```{r}
@@ -1397,40 +1414,774 @@ ggsave(filename = file.path("Ho Vo-PerArea.jpeg"), width = 49, height = 33)
 ## Get river data
 
 ```{r}
-#windowsFonts(georg = windowsFont('Georgia'))
-
-libs <- c("httr", "tidyverse", "sf")
-
-installed_libs <- libs %in% rownames(installed.packages())
-if (any(installed_libs == F)) {
-  install.packages(libs[!installed_libs])
-}
-
-invisible(lapply(libs, library, character.only = T))
+#rivers <- st_read(file.path("GloRiC_v10_shapefile", "GloRiC_v10.shp"))
+#river1 <- st_read(file.path("ThuyHeVN2000.shp")) #https://data.opendevelopmentmekong.net/dataset/mng-li-thy-vn
+#river2 <- st_read(file.path("river.shp")) #https://www.greatermekong.org/gms-main-rivers
+river3 <- st_read(file.path("fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
 ```
+
+## Họ Nguyễn
 
 ```{r}
-# 1. GET RIVERS DATA
-#---------
-
-get_data <- function(url, res, filenames, riv_list) {
-
-  url <- "https://m201.syncusercontent1.com/mfs-60:cb0f370cfc9aad110e47af0c14c6d6a0=============================/p/HydroRIVERS_v10_eu_shp.zip?allowdd=0&datakey=ge8BrffNb5ff90cF/3Dr8CGlfSRTS2g+I3poOJEOpd65Nwv0agBsI6yzqEFKLIDb/9iORBIKcrW+jONfWXU+Dm2WNnWn2KcP3R2WQMtiHUpSXuIg9e3gkGUd+nMSCIDRVvkSLQfFifZAeYjNKnNMSWPKn5mJIC/0RZ3kWGVVfDgZRYHLVgMMtxn+47XRsMbvz2WOE8R8J4n0RB7xVI5tlpmFR8Bv3nZB0HYc43cdyYSW5DqyKGji5CkoYTBNzE/jow5oBri2TOZWNxWVV9ET/9/udwd8KuOH++GoRzpgVJZ5WH1LgW7IBaHnDPTHdYENxRe/4JNlXanhauLfqOMNMQ&engine=ln-1.11.18&errurl=GLK4RA2KpWnRCSNSKOrDC8T6XxhjDIuUGGVvUo/zJAGGma48px5C67R8o6en+Qmegmceb/EJkpCEYm4SRBZDNMs+CgNFjFgEYdN4byFeygcAnvSAclpxktxsJc18rczzZtNuL4oyVr7SxjPeDdyHsveNgnibmLp1UWA45i5K12NRlbfK55BDYGOrwLu2RRJUm4AWUNeYpo4f8yqZ8zxQGUuLcKGx68bKP5I7ri8Lf8nkGsxRvT/axtcNmUiaZ706TofwP6mkzzaDZs+xin46q3P//GOuLornz7vN+q/d89qYsgpm5KsqyqEV+DePj2K6/vMDT4BLYWtxLeY1ESZgyg==&header1=Q29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi96aXA&header2=Q29udGVudC1EaXNwb3NpdGlvbjogYXR0YWNobWVudDsgZmlsZW5hbWU9Ikh5ZHJvUklWRVJTX3YxMF9ldV9zaHAuemlwIjtmaWxlbmFtZSo9VVRGLTgnJ0h5ZHJvUklWRVJTX3YxMF9ldV9zaHAuemlwOw&ipaddress=1398165091&linkcachekey=89159c590&linkoid=51000013&mode=101&sharelink_id=3443504720013&timestamp=1649430246943&uagent=0c3c442ba67c66fa3227e09aeb8c763c79676604&signature=1cdeb688c90dc709eb9e652f6ccaf3beaa64197c&cachekey=60:cb0f370cfc9aad110e47af0c14c6d6a0============================="
-
-  res <- GET(url,
-             write_disk("eu_rivers.zip"),
-             progress())
-  unzip("eu_rivers.zip")
-  filenames <- list.files("HydroRIVERS_v10_eu_shp", pattern="*.shp", full.names=T)
-
-  riv_list <- lapply(filenames, st_read)
-
-  return(riv_list)
-}
+library(sf)
+nguyen_sf <- dat_sf %>% mutate(prop.nguyen=(sum(subset(., Ho=="Nguyễn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Nguyễn")
+nguyen_plot <- nguyen_sf %>% select(pro.pop, prop.nguyen, geometry) %>% st_as_sf(crs = 4326)
+#colnames(nguyen_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+#plot(nguyen_plot)
+ggplot() + geom_sf() + geom_sf(data=nguyen_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(nguyen_plot$prop.nguyen[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Nguyễn")
+ggsave(filename = file.path("figures", "Nguyen-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Nguyen-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
+## Họ Trần
 
+```{r}
+tran_sf <- dat_sf %>% mutate(prop.tran=(sum(subset(., Ho=="Trần")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trần")
+tran_plot <- tran_sf %>% select(pro.pop, prop.tran, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=tran_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Trần")
+ggsave(filename = file.path("figures", "Tran-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Tran-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Lê
 
+```{r}
+le_sf <- dat_sf %>% mutate(prop.le=(sum(subset(., Ho=="Lê")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lê")
+le_plot <- le_sf %>% select(pro.pop, prop.le, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=le_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(le_plot$prop.le[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lê")
+ggsave(filename = file.path("figures", "Le-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Le-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Dư
+
+```{r}
+du_sf <- dat_sf %>% mutate(prop.du=(sum(subset(., Ho=="Dư")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Dư")
+du_plot <- du_sf %>% select(pro.pop, prop.du, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=du_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(du_plot$prop.du[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Dư")
+ggsave(filename = file.path("figures", "Du-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Du-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Dương
+
+```{r}
+duong_sf <- dat_sf %>% mutate(prop.duong=(sum(subset(., Ho=="Dương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Dương")
+duong_plot <- duong_sf %>% select(pro.pop, prop.duong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=duong_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(duong_plot$prop.duong[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Dương")
+ggsave(filename = file.path("figures", "Duong-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Duong-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lý
+
+```{r}
+ly_sf <- dat_sf %>% mutate(prop.ly=(sum(subset(., Ho=="Lý")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lý")
+ly_plot <- ly_sf %>% select(pro.pop, prop.ly, geometry) %>% st_as_sf(crs = 4326)
+#colnames(ly_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ly_plot$prop.ly[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lý")
+ggsave(filename = file.path("figures", "Ly-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ly-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Đoàn
+
+```{r}
+doan_sf <- dat_sf %>% mutate(prop.doan=(sum(subset(., Ho=="Đoàn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+doan_plot <- doan_sf %>% select(pro.pop, prop.doan, geometry) %>% st_as_sf(crs = 4326)
+#colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf(data=doan_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(doan_plot$prop.doan[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đoàn")
+ggsave(filename = file.path("figures", "Doan-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Doan-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Ngô
+
+```{r}
+ngo_sf <- dat_sf %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+ngo_plot <- ngo_sf %>% select(pro.pop, prop.ngo, geometry) %>% st_as_sf(crs = 4326)
+#colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf(data=ngo_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ngo_plot$prop.ngo[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Ngô")
+ggsave(filename = file.path("figures", "Ngo-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ngo-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Triệu
+
+```{r}
+trieu_sf <- dat_sf %>% mutate(prop.trieu=(sum(subset(., Ho=="Triệu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Triệu")
+trieu_plot <- trieu_sf %>% select(pro.pop, prop.trieu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(trieu_plot$prop.trieu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Triệu")
+ggsave(filename = file.path("figures", "Trieu-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trieu-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Mạc
+
+```{r}
+mac_sf <- dat_sf %>% mutate(prop.mac=(sum(subset(., Ho=="Mạc")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mạc")
+mac_plot <- mac_sf %>% select(pro.pop, prop.mac, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=mac_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(mac_plot$prop.mac[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Mạc")
+ggsave(filename = file.path("figures", "Mac-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Mac-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Phùng
+
+```{r}
+phung_sf <- dat_sf %>% mutate(prop.phung=(sum(subset(., Ho=="Phùng")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phùng")
+phung_plot <- phung_sf %>% select(pro.pop, prop.phung, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=phung_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phung_plot$prop.phung[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Phùng")
+ggsave(filename = file.path("figures", "Phung-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phung-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Khúc
+
+```{r}
+khuc_sf <- dat_sf %>% mutate(prop.khuc=(sum(subset(., Ho=="Khúc")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+khuc_plot <- khuc_sf %>% select(pro.pop, prop.khuc, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=khuc_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(khuc_plot$prop.khuc[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Khúc")
+ggsave(filename = file.path("figures", "Khuc-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Khuc-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Phạm
+
+```{r}
+pham_sf <- dat_sf %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+pham_plot <- pham_sf %>% select(pro.pop, prop.pham, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=pham_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(pham_plot$prop.pham[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Phạm")
+ggsave(filename = file.path("figures", "Pham-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Pham-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Hồ
+
+```{r}
+ho_sf <- dat_sf %>% mutate(prop.ho=(sum(subset(., Ho=="Hồ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Hồ")
+ho_plot <- ho_sf %>% select(pro.pop, prop.ho, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ho_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ho_plot$prop.ho[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Hồ")
+ggsave(filename = file.path("figures", "Ho-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ho-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Tôn
+
+```{r}
+ton_sf <- dat_sf %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
+ton_plot <- ton_sf %>% select(pro.pop, prop.ton, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ton_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Tôn")
+ggsave(filename = file.path("figures", "Ton-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ton-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Bùi
+
+```{r}
+bui_sf <- dat_sf %>% mutate(prop.bui=(sum(subset(., Ho=="Bùi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Bùi")
+bui_plot <- bui_sf %>% select(pro.pop, prop.bui, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=bui_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Bùi")
+ggsave(filename = file.path("figures", "Bui-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Bui-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Đào
+
+```{r}
+dao_sf <- dat_sf %>% mutate(prop.dao=(sum(subset(., Ho=="Đào")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đào")
+dao_plot <- dao_sf %>% select(pro.pop, prop.dao, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=dao_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(dao_plot$prop.dao[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đào")
+ggsave(filename = file.path("figures", "Dao-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dao-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Đinh
+
+```{r}
+dinh_sf <- dat_sf %>% mutate(prop.dinh=(sum(subset(., Ho=="Đinh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đinh")
+dinh_plot <- dinh_sf %>% select(pro.pop, prop.dinh, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=dinh_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(dinh_plot$prop.dinh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đinh")
+ggsave(filename = file.path("figures", "Dinh-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dinh-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Đỗ
+
+```{r}
+do_sf <- dat_sf %>% mutate(prop.do=(sum(subset(., Ho=="Đỗ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đỗ")
+do_plot <- do_sf %>% select(pro.pop, prop.do, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=do_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(do_plot$prop.do[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đỗ")
+ggsave(filename = file.path("figures", "Do-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Do-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Hoàng
+
+```{r}
+hoang_sf <- dat_sf %>% mutate(prop.hoang=(sum(subset(., Ho=="Hoàng")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Hoàng")
+hoang_plot <- hoang_sf %>% select(pro.pop, prop.hoang, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=hoang_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(hoang_plot$prop.hoang[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Hoàng")
+ggsave(filename = file.path("figures", "Hoang-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Hoang-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Huỳnh
+
+```{r}
+huynh_sf <- dat_sf %>% mutate(prop.huynh=(sum(subset(., Ho=="Huỳnh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Huỳnh")
+huynh_plot <- huynh_sf %>% select(pro.pop, prop.huynh, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=huynh_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(huynh_plot$prop.huynh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Huỳnh")
+ggsave(filename = file.path("figures", "Huynh-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Huynh-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Phan
+
+```{r}
+phan_sf <- dat_sf %>% mutate(prop.phan=(sum(subset(., Ho=="Phan")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phan")
+phan_plot <- phan_sf %>% select(pro.pop, prop.phan, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=phan_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phan_plot$prop.phan[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Phan")
+ggsave(filename = file.path("figures", "Phan-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phan-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Trịnh
+
+```{r}
+trinh_sf <- dat_sf %>% mutate(prop.trinh=(sum(subset(., Ho=="Trịnh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trịnh")
+trinh_plot <- trinh_sf %>% select(pro.pop, prop.trinh, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=trinh_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(trinh_plot$prop.trinh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Trịnh")
+ggsave(filename = file.path("figures", "Trinh-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trinh-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Trương
+
+```{r}
+truong_sf <- dat_sf %>% mutate(prop.truong=(sum(subset(., Ho=="Trương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trương")
+truong_plot <- truong_sf %>% select(pro.pop, prop.truong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=truong_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(truong_plot$prop.truong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Trương")
+ggsave(filename = file.path("figures", "Truong-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Truong-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Vũ
+
+```{r}
+vu_sf <- dat_sf %>% mutate(prop.vu=(sum(subset(., Ho=="Vũ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Vũ")
+vu_plot <- vu_sf %>% select(pro.pop, prop.vu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=vu_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vu_plot$prop.vu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Vũ")
+ggsave(filename = file.path("figures", "Vu-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vu-PerPop-River.jpeg"), width = 49, height = 33)
+```
+## Họ Võ
+
+```{r}
+vo_sf <- dat_sf %>% mutate(prop.vo=(sum(subset(., Ho=="Võ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Võ")
+vo_plot <- vo_sf %>% select(pro.pop, prop.vo, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=vo_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vo_plot$prop.vo[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Võ")
+ggsave(filename = file.path("figures", "Vo-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vo-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Nguyễn
+
+```{r}
+library(sf)
+nguyen_sff <- dat_sff %>% mutate(prop.nguyen=(sum(subset(., Ho=="Nguyễn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Nguyễn")
+nguyen_plotf <- nguyen_sff %>% select(songuoi_km, prop.nguyen, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=nguyen_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(nguyen_plotf$prop.nguyen[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Nguyễn")
+ggsave(filename = file.path("figures", "Nguyen-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Nguyen-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Trần
+
+```{r}
+tran_sff <- dat_sff %>% mutate(prop.tran=(sum(subset(., Ho=="Trần")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trần")
+tran_plotf <- tran_sff %>% select(songuoi_km, prop.tran, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=tran_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Trần")
+ggsave(filename = file.path("figures", "Tran-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Tran-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Lê
+
+```{r}
+le_sff <- dat_sff %>% mutate(prop.le=(sum(subset(., Ho=="Lê")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lê")
+le_plotf <- le_sff %>% select(songuoi_km, prop.le, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=le_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(le_plot$prop.le[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lê")
+ggsave(filename = file.path("figures", "Le-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Le-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Dư
+
+```{r}
+du_sff <- dat_sff %>% mutate(prop.du=(sum(subset(., Ho=="Dư")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Dư")
+du_plotf <- du_sff %>% select(songuoi_km, prop.du, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=du_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(du_plot$prop.du[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Dư")
+ggsave(filename = file.path("figures", "Du-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Du-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Dương
+
+```{r}
+duong_sff <- dat_sff %>% mutate(prop.duong=(sum(subset(., Ho=="Dương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Dương")
+duong_plotf <- duong_sff %>% select(songuoi_km, prop.duong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=duong_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(duong_plot$prop.duong[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Dương")
+ggsave(filename = file.path("figures", "Duong-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Duong-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lý
+
+```{r}
+ly_sff <- dat_sff %>% mutate(prop.ly=(sum(subset(., Ho=="Lý")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lý")
+ly_plotf <- ly_sff %>% select(songuoi_km, prop.ly, geometry) %>% st_as_sf(crs = 4326)
+#colnames(ly_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf() + geom_sf(data=ly_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ly_plot$prop.ly[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lý")
+ggsave(filename = file.path("figures", "Ly-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ly-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Đoàn
+
+```{r}
+doan_sff <- dat_sff %>% mutate(prop.doan=(sum(subset(., Ho=="Đoàn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+doan_plotf <- doan_sff %>% select(songuoi_km, prop.doan, geometry) %>% st_as_sf(crs = 4326)
+#colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf(data=doan_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(doan_plot$prop.doan[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đoàn")
+ggsave(filename = file.path("figures", "Doan-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Doan-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Ngô
+
+```{r}
+ngo_sff <- dat_sff %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+ngo_plotf <- ngo_sff %>% select(songuoi_km, prop.ngo, geometry) %>% st_as_sf(crs = 4326)
+#colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
+ggplot() + geom_sf(data=ngo_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ngo_plot$prop.ngo[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Ngô")
+ggsave(filename = file.path("figures", "Ngo-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ngo-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Triệu
+
+```{r}
+trieu_sff <- dat_sff %>% mutate(prop.trieu=(sum(subset(., Ho=="Triệu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Triệu")
+trieu_plotf <- trieu_sff %>% select(songuoi_km, prop.trieu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=trieu_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(trieu_plot$prop.trieu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Triệu")
+ggsave(filename = file.path("figures", "Trieu-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trieu-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Mạc
+
+```{r}
+mac_sff <- dat_sff %>% mutate(prop.mac=(sum(subset(., Ho=="Mạc")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mạc")
+mac_plotf <- mac_sff %>% select(songuoi_km, prop.mac, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=mac_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(mac_plot$prop.mac[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Mạc")
+ggsave(filename = file.path("figures", "Mac-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Mac-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Phùng
+
+```{r}
+phung_sff <- dat_sff %>% mutate(prop.phung=(sum(subset(., Ho=="Phùng")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phùng")
+phung_plotf <- phung_sff %>% select(songuoi_km, prop.phung, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=phung_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phung_plot$prop.phung[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Phùng")
+ggsave(filename = file.path("figures", "Phung-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phung-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Khúc
+
+```{r}
+khuc_sff <- dat_sff %>% mutate(prop.khuc=(sum(subset(., Ho=="Khúc")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+khuc_plotf <- khuc_sff %>% select(songuoi_km, prop.khuc, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=khuc_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(khuc_plot$prop.khuc[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Khúc")
+ggsave(filename = file.path("figures", "Khuc-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Khuc-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Phạm
+
+```{r}
+pham_sff <- dat_sff %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+pham_plotf <- pham_sff %>% select(songuoi_km, prop.pham, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=pham_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(pham_plot$prop.pham[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Phạm")
+ggsave(filename = file.path("figures", "Pham-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Pham-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Hồ
+
+```{r}
+ho_sff <- dat_sff %>% mutate(prop.ho=(sum(subset(., Ho=="Hồ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Hồ")
+ho_plotf <- ho_sff %>% select(songuoi_km, prop.ho, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ho_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ho_plotf$prop.ho[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Hồ")
+ggsave(filename = file.path("figures", "Ho-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ho-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Tôn
+
+```{r}
+ton_sff <- dat_sff %>% mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Tôn")
+ton_plotf <- ton_sff %>% select(songuoi_km, prop.ton, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ton_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plotf$prop.ton[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Tôn")
+ggsave(filename = file.path("figures", "Ton-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Ton-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Bùi
+
+```{r}
+bui_sff <- dat_sff %>% mutate(prop.bui=(sum(subset(., Ho=="Bùi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Bùi")
+bui_plotf <- bui_sff %>% select(songuoi_km, prop.bui, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=bui_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(bui_plotf$prop.bui[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Bùi")
+ggsave(filename = file.path("figures", "Bui-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Bui-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Đào
+
+```{r}
+dao_sff <- dat_sff %>% mutate(prop.dao=(sum(subset(., Ho=="Đào")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đào")
+dao_plotf <- dao_sff %>% select(songuoi_km, prop.dao, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=dao_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(dao_plotf$prop.dao[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đào")
+ggsave(filename = file.path("figures", "Dao-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dao-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Đinh
+
+```{r}
+dinh_sff <- dat_sff %>% mutate(prop.dinh=(sum(subset(., Ho=="Đinh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đinh")
+dinh_plotf <- dinh_sff %>% select(songuoi_km, prop.dinh, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=dinh_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(dinh_plotf$prop.dinh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đinh")
+ggsave(filename = file.path("figures", "Dinh-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Dinh-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Đỗ
+
+```{r}
+do_sff <- dat_sff %>% mutate(prop.do=(sum(subset(., Ho=="Đỗ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đỗ")
+do_plotf <- do_sff %>% select(songuoi_km, prop.do, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=do_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(do_plotf$prop.do[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Đỗ")
+ggsave(filename = file.path("figures", "Do-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Do-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Hoàng
+
+```{r}
+hoang_sff <- dat_sff %>% mutate(prop.hoang=(sum(subset(., Ho=="Hoàng")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Hoàng")
+hoang_plotf <- hoang_sff %>% select(songuoi_km, prop.hoang, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=hoang_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(hoang_plotf$prop.hoang[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Hoàng")
+ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Hoang-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Huỳnh
+
+```{r}
+huynh_sff <- dat_sff %>% mutate(prop.huynh=(sum(subset(., Ho=="Huỳnh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Huỳnh")
+huynh_plotf <- huynh_sff %>% select(songuoi_km, prop.huynh, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=huynh_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(huynh_plotf$prop.huynh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Huỳnh")
+ggsave(filename = file.path("figures", "Huynh-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Huynh-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Phan
+
+```{r}
+phan_sff <- dat_sff %>% mutate(prop.phan=(sum(subset(., Ho=="Phan")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phan")
+phan_plotf <- phan_sff %>% select(songuoi_km, prop.phan, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=phan_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phan_plotf$prop.phan[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Phan")
+ggsave(filename = file.path("figures", "Phan-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Phan-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Trịnh
+
+```{r}
+trinh_sff <- dat_sff %>% mutate(prop.trinh=(sum(subset(., Ho=="Trịnh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trịnh")
+trinh_plotf <- trinh_sff %>% select(songuoi_km, prop.trinh, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=trinh_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(trinh_plotf$prop.trinh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Trịnh")
+ggsave(filename = file.path("figures", "Trinh-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Trinh-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Trương
+
+```{r}
+truong_sff <- dat_sff %>% mutate(prop.truong=(sum(subset(., Ho=="Trương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trương")
+truong_plotf <- truong_sff %>% select(songuoi_km, prop.truong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=truong_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(truong_plotf$prop.truong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Trương")
+ggsave(filename = file.path("figures", "Truong-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Truong-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Vũ
+
+```{r}
+vu_sff <- dat_sff %>% mutate(prop.vu=(sum(subset(., Ho=="Vũ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Vũ")
+vu_plotf <- vu_sff %>% select(songuoi_km, prop.vu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=vu_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vu_plotf$prop.vu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Vũ")
+ggsave(filename = file.path("figures", "Vu-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vu-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Võ
+
+```{r}
+vo_sff <- dat_sff %>% mutate(prop.vo=(sum(subset(., Ho=="Võ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Võ")
+vo_plotf <- vo_sff %>% select(songuoi_km, prop.vo, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=vo_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vo_plotf$prop.vo[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Võ")
+ggsave(filename = file.path("figures", "Vo-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Vo-PerArea-River.jpeg"), width = 49, height = 33)
+```
 
 
 ```{r}
