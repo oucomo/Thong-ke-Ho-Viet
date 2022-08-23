@@ -216,6 +216,7 @@ ggplot(data = data_ho_top50, aes(x = reorder(Ho, songuoi, decreasing=F), y =song
   ggtitle("Top 50 họ có số người cao nhất")
 ggsave(filename = file.path("top50_ho.png"), width = 7, height = 5)
 ```
+
 ```{r}
 ggplot(data = data_ho_top100, aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
   geom_bar(stat = "identity", fill="red", width = 0.75) +
@@ -241,6 +242,7 @@ ggplot(data = data_ho_top150, aes(x = reorder(Ho, songuoi, decreasing=F), y =son
   ggtitle("Top 100-150 họ có số người cao nhất")
 ggsave(filename = file.path("top150_ho.png"), width = 7, height = 5)
 ```
+
 ```{r}
 top1_100 <- data_ho_top200 %>% filter(rank %in% c(1:100)) %>%
   ggplot(aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
@@ -256,6 +258,7 @@ top1_100 <- data_ho_top200 %>% filter(rank %in% c(1:100)) %>%
 ggsave(filename = file.path("top100_ho.png"), width = 7, height = 5)
 top1_100
 ```
+
 ```{r}
 top101_200 <- data_ho_top200 %>% filter(rank %in% c(101:200)) %>%
   ggplot(aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
@@ -762,7 +765,7 @@ ggsave(filename = file.path("Ho Doan-PerPop.jpeg"), width = 49, height = 33)
 ## Họ Ngô
 
 ```{r}
-ngo_sf <- dat_sf %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+ngo_sf <- dat_sf %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Ngô")
 ngo_plot <- ngo_sf %>% select(pro.pop, prop.ngo, geometry) %>% st_as_sf(crs = 4326)
 #colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf(data=ngo_plot, aes(fill=pro.pop), lwd=0) +
@@ -828,7 +831,7 @@ ggsave(filename = file.path("Ho Khuc-PerPop.jpeg"), width = 49, height = 33)
 ## Họ Phạm
 
 ```{r}
-pham_sf <- dat_sf %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+pham_sf <- dat_sf %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phạm")
 pham_plot <- pham_sf %>% select(pro.pop, prop.pham, geometry) %>% st_as_sf(crs = 4326)
 ggplot() + geom_sf() + geom_sf(data=pham_plot, aes(fill=pro.pop), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(pham_plot$prop.pham[1],1), "% dân số", sep = "")) +
@@ -1160,7 +1163,7 @@ ggsave(filename = file.path("Ho Doan-PerArea.jpeg"), width = 49, height = 33)
 ## Họ Ngô
 
 ```{r}
-ngo_sff <- dat_sff %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+ngo_sff <- dat_sff %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Ngô")
 ngo_plotf <- ngo_sff %>% select(songuoi_km, prop.ngo, geometry) %>% st_as_sf(crs = 4326)
 #colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf(data=ngo_plotf, aes(fill=songuoi_km), lwd=0) +
@@ -1226,7 +1229,7 @@ ggsave(filename = file.path("Ho Khuc-PerArea.jpeg"), width = 49, height = 33)
 ## Họ Phạm
 
 ```{r}
-pham_sff <- dat_sff %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+pham_sff <- dat_sff %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phạm")
 pham_plotf <- pham_sff %>% select(songuoi_km, prop.pham, geometry) %>% st_as_sf(crs = 4326)
 ggplot() + geom_sf() + geom_sf(data=pham_plotf, aes(fill=songuoi_km), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(pham_plot$prop.pham[1],1), "% dân số", sep = "")) +
@@ -1531,7 +1534,7 @@ ggsave(filename = file.path("figures", "Doan-PerPop-River.jpeg"), width = 49, he
 ## Họ Ngô
 
 ```{r}
-ngo_sf <- dat_sf %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+ngo_sf <- dat_sf %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Ngô")
 ngo_plot <- ngo_sf %>% select(pro.pop, prop.ngo, geometry) %>% st_as_sf(crs = 4326)
 #colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf(data=ngo_plot, aes(fill=pro.pop), lwd=0) +
@@ -1604,7 +1607,7 @@ ggsave(filename = file.path("figures", "Khuc-PerPop-River.jpeg"), width = 49, he
 ## Họ Phạm
 
 ```{r}
-pham_sf <- dat_sf %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+pham_sf <- dat_sf %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phạm")
 pham_plot <- pham_sf %>% select(pro.pop, prop.pham, geometry) %>% st_as_sf(crs = 4326)
 ggplot() + geom_sf() + geom_sf(data=pham_plot, aes(fill=pro.pop), lwd=0) +
   geom_sf(data=river3) +
@@ -1913,7 +1916,7 @@ ggsave(filename = file.path("figures", "Doan-PerArea-River.jpeg"), width = 49, h
 ## Họ Ngô
 
 ```{r}
-ngo_sff <- dat_sff %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+ngo_sff <- dat_sff %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Ngô")
 ngo_plotf <- ngo_sff %>% select(songuoi_km, prop.ngo, geometry) %>% st_as_sf(crs = 4326)
 #colnames(doan_plot) <- c("Tỉ lệ % họ trên tổng dân số", "geometry")
 ggplot() + geom_sf(data=ngo_plotf, aes(fill=songuoi_km), lwd=0) +
@@ -1984,7 +1987,7 @@ ggsave(filename = file.path("figures", "Khuc-PerArea-River.jpeg"), width = 49, h
 ## Họ Phạm
 
 ```{r}
-pham_sff <- dat_sff %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
+pham_sff <- dat_sff %>% mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phạm")
 pham_plotf <- pham_sff %>% select(songuoi_km, prop.pham, geometry) %>% st_as_sf(crs = 4326)
 ggplot() + geom_sf() + geom_sf(data=pham_plotf, aes(fill=songuoi_km), lwd=0) +
   geom_sf(data=river3) +
