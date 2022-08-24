@@ -63,16 +63,16 @@ data_huyen = read_sav(path_huyen)
 data_tinh = read_sav(path_tinh)
 data_xa = read_sav(path_xa)
 
-gadm36_VNM2 <- readRDS("gadm36_VNM_2_sp.rds")
-gadm36_VNM3 <- readRDS("gadm36_VNM_3_sp.rds")
+#gadm36_VNM2 <- readRDS("gadm36_VNM_2_sp.rds")
+#gadm36_VNM3 <- readRDS("gadm36_VNM_3_sp.rds")
 
 gadm36_VNM3_sf <- readRDS("gadm36_VNM_3_sf.rds")
-publicProvinces <- readRDS("publicProvinces.rds")
+#publicProvinces <- readRDS("publicProvinces.rds")
 
-load("geo_vnm.Rdata")
-load("pop_info.Rdata")
-load("vnm2_map.Rdata")
-load("vnm3_map.Rdata")
+#load("geo_vnm.Rdata")
+#load("pop_info.Rdata")
+#load("vnm2_map.Rdata")
+#load("vnm3_map.Rdata")
 ```
 
 ## Inspecting data
@@ -623,11 +623,11 @@ xa$TENHUYEN <- gsub("Thị Xã", "", xa$TENHUYEN)
 
 #xa$TENXA <- stri_trans_general(xa$TENXA, "Latin-ASCII")
 
-nametinh <- vnm3$NAME_1
+#nametinh <- vnm3$NAME_1
 #nametinh <- stri_trans_general(nametinh, "Latin-ASCII")
-namehuyen <- vnm3$NAME_2
+#namehuyen <- vnm3$NAME_2
 #namehuyen <- stri_trans_general(namehuyen, "Latin-ASCII")
-namexa <- vnm3$NAME_3
+#namexa <- vnm3$NAME_3
 #namexa <- stri_trans_general(namexa, "Latin-ASCII")
 
 xa2 <- xa %>% rename(NAME_1=TENTINH, NAME_2=TENHUYEN, NAME_3=TENXA)
@@ -2247,19 +2247,410 @@ ggsave(filename = file.path("figures", "Vo-PerArea-River.png"), width = 49, heig
 ggsave(filename = file.path("figures", "Vo-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
+```{r}
+library(sf)
+library(spatstat)
+library(sp)
+library(maptools)
+library(raster)
+library(cartography)
+library(SpatialPosition)
+remotes::install_github("riatelab/SpatialPosition")
+library(tanaka)
+```
+
+```{r}
+# rasterToContourPoly <- function(r, nclass = 8, breaks = NULL, mask = NULL){
+#   .Deprecated(new = "isopoly", package = "SpatialPosition" )
+#   breaks <- get_bks(r = r, nclass =  nclass, breaks = breaks)
+#   res <- get_mask(r, mask)
+#   res2 <- adjust_bks(r = res$r, breaks = breaks)
+#   res3 <- get_poly(r = res2$r, breaks = res2$breaks, finalBreaks = res2$finalBreaks)
+#   res4 <- add_hole(res3)
+#   result <- mask_clip(res4, res$mask)
+#   return(result)
+# }
+# 
+# # build a mask around the raster
+# masker <- function(r){
+#   xy <- sp::coordinates(r)[which(!is.na(raster::values(r))),]
+#   bb <- sp::bbox(xy)
+#   xseq <- seq(bb[1,1], bb[1,2], length.out = 50)
+#   yseq <- seq(bb[2,1], bb[2,2], length.out = 50)
+#   b <- data.frame(x = c(xseq, rep(bb[1,2], 50), rev(xseq), rep(bb[1,1], 50)), 
+#                   y = c(rep(bb[2,1], 50), yseq, rep(bb[2,2], 50), rev(yseq)))
+#   b <- as.matrix(b)
+#   mask <- sp::SpatialPolygons(list(sp::Polygons(list(sp::Polygon(b, hole = FALSE)), 
+#                                                 ID = "1")), 
+#                               proj4string = sp::CRS(sp::proj4string(r)))
+#   return(mask)
+# }
+# 
+# 
+# # adjust breaks to fit the raster
+# get_bks <- function(r, nclass = 8, breaks = NULL){
+#   # get initial min and max values
+#   rmin <- raster::cellStats(r, min, na.rm = TRUE)
+#   rmax <- raster::cellStats(r, max, na.rm = TRUE)
+#   
+#   if(is.null(breaks)){
+#     breaks <- seq(from = rmin, 
+#                   to = rmax, 
+#                   length.out = (nclass+1))
+#   }
+#   breaks <- sort(unique(c(rmin, breaks[breaks > rmin & breaks < rmax], rmax)))
+#   return(breaks)
+# } 
+# 
+# # build a mask around the raster
+# get_mask <- function(r, mask){
+#   myres <- raster::res(r)[1]
+#   if(!is.null(mask)){
+#     bmask <- TRUE
+#     # Dissolve the mask
+#     mask <- rgeos::gUnaryUnion(mask)
+#     # Is the mask valid
+#     options(warn=-1)
+#     if(!rgeos::gIsValid(mask)){
+#       mask <- rgeos::gBuffer(mask)
+#     }
+#     options(warn=0)
+#     # mask too big or not valid
+#     if(!rgeos::gIsValid(mask)){
+#       textx <- "'mask' does not have a valid geometry.\nThe contour SpatialPolygonsDataFrame is built without mask."
+#       warning(textx, call. = FALSE)
+#       bmask <- FALSE
+#     }
+#   }else{
+#     bmask <- FALSE
+#   }
+#   maskr <- masker(r)
+#   r <- raster::extend(r, 
+#                       rgeos::gBuffer(maskr, byid = FALSE, width =  2 * myres ), 
+#                       value = -1)
+#   if(!bmask){mask <- maskr}
+#   return(list(r = r, mask = mask))
+# }
+# 
+# # adjust breaks to take intoccount 0 and NA values
+# adjust_bks <- function(r, breaks){
+#   # adjust breaks if necessary (adapted to mask)
+#   rmin <- min(r[r!=-1])
+#   rmax <- max(r[r!=-1])
+#   breaks <- sort(unique(c(rmin, breaks[breaks > rmin & breaks < rmax], rmax)))
+#   finalBreaks <- breaks
+#   
+#   # deal with 0
+#   if(breaks[1] <= 0){
+#     breaks <- breaks + 1
+#     r <- r + 1
+#   }
+#   
+#   # remove top break
+#   breaks <- breaks[-(length(breaks))]
+#   
+#   # deal with NAs
+#   r[is.na(r)] <- 0
+#   
+#   return(list(breaks = breaks, finalBreaks = finalBreaks, r = r))
+# }
+# 
+# # get polygons out of the raster 
+# get_poly <- function(r, breaks, finalBreaks){
+#   # test breaks
+#   if(length(breaks)<2){stop("breaks values do not fit the raster values", 
+#                             call. = FALSE)}
+#   # build the contour lines polygones
+#   cl <- rasterToContour(r, levels = breaks)
+#   cl$level <- as.numeric(as.character(cl$level))
+#   SPlist <- list()
+#   SPlevels <- character()
+#   for (i in cl$level){ 
+#     linex <- cl[cl@data$level == i,]@lines[[1]]@Lines
+#     Plist <- list()
+#     for (j in 1:length(linex)){
+#       Plist[[j]] <- sp::Polygons(srl = list(sp::Polygon(coords = linex[[j]]@coords, 
+#                                                         hole = F)), ID = j)
+#     }  
+#     x <- raster::union(x = sp::SpatialPolygons(Srl = Plist))
+#     
+#     if (class(x) != "SpatialPolygonsDataFrame"){
+#       x <- sp::SpatialPolygonsDataFrame(Sr = x, 
+#                                         data = data.frame(
+#                                           level = rep(i, length(x))))
+#     } else {
+#       x <- x[x@data$count < 2,]
+#       x@data <- data.frame(level = rep(i, dim(x)[1]))
+#     }
+#     SPlist <- c(SPlist , x@polygons)
+#     SPlevels <- c(SPlevels, x@data$level)
+#   }
+#   
+#   for (i in 1:length(SPlist)){
+#     SPlist[[i]]@ID <- as.character(i)
+#   }
+#   x <- sp::SpatialPolygonsDataFrame(Sr = sp::SpatialPolygons(Srl = SPlist, 
+#                                                              proj4string = r@crs), 
+#                                     data = data.frame(levels = SPlevels))
+#   bks <- data.frame(b =c(breaks, max(r[r!=-1])), t = finalBreaks)
+#   # manage attributes data of the contour spdf
+#   x@data <- data.frame(id = paste("id_",row.names(x),sep=""),
+#                        min = bks[match(x$levels, bks[,1]),2], 
+#                        max = bks[match(x$levels, bks[,1])+1,2],
+#                        center = NA, 
+#                        stringsAsFactors = FALSE)
+#   x$center <- (x$min+x$max) / 2 
+#   row.names(x) <- x$id
+#   return(x)
+# }
+# 
+# # add holes into polygons overlaid 
+# add_hole <- function(final){
+#   # ring correction
+#   df <- unique(final@data[,2:4])
+#   df$id <- 1:nrow(df)
+#   df <- df[order(df$center, decreasing = T),]
+#   
+#   z <- rgeos::gIntersection(final[final$center==df[1,3],],
+#                             final[final$center==df[1,3],], byid = F,
+#                             id = as.character(df[1,4]))
+#   
+#   for(i in 2:nrow(df)){
+#     y <- rgeos::gDifference(final[final$center==df[i,3],],
+#                             final[final$center==df[i-1,3],], byid = F, 
+#                             id = as.character(df[i,4]))
+#     if(!is.null(y)){ z <- rbind(z, y)}
+#   }
+#   dfx <- data.frame(id = sapply(methods::slot(z, "polygons"), 
+#                                 methods::slot, "ID"))
+#   row.names(dfx) <- dfx$id
+#   z <- sp::SpatialPolygonsDataFrame(z, dfx)
+#   z@data <- df[match(x=z@data$id, table = df$id),c(4,1:3)]
+#   return(z)
+# }
+# 
+# # clip polygons with the mask
+# mask_clip <- function(x, mask){
+#   # clip the contour spdf with the mask
+#   final <- rgeos::gIntersection(spgeom1 = x, spgeom2 = mask, byid = TRUE,
+#                                 id = row.names(x))
+#   df <- data.frame(id = sapply(methods::slot(final, "polygons"),
+#                                methods::slot, "ID"))
+#   row.names(df) <- df$id
+#   final <- sp::SpatialPolygonsDataFrame(Sr = final, data = df)
+#   final@data <- data.frame(id = final$id, x[match(final$id, x$id),2:4])
+#   final@plotOrder <- 1:nrow(final)
+#   return(final)
+# }
+```
+
+```{r}
+# ## import dataset
+# feat <- sf::st_read("https://gist.githubusercontent.com/rCarto/747164575e3f216a123c3092d0ce9162/raw/f12390464f255b5f9760c577ab6bf5456cf61a40/iris75.geojson")
+# # Use french projection
+# feat <- sf::st_transform(feat, 2154)
+# 
+# ## Compute density raster
+# # from sf to sp
+# feat <- as(feat,'Spatial')
+# # get coodinates
+# coords <- coordinates(feat)
+# # from sp to spatstat
+# pts <- ppp(x = coords[,1], y = coords[,2], window = as.owin(feat, 10), 
+#            marks = feat$P14_POP)
+# # compute density
+# ds <- density.ppp(x = pts, sigma = 300, eps = 100, weights = pts$marks)
+# # spatstat to raster, in inhab per sq. km
+# ras <- raster(ds, crs = proj4string(feat)) * 1000 * 1000
+# ras[is.na(ras)] <- 0
+# 
+# ## Compute contour polygons
+# # raster break values 
+# bks <- c(seq(0,50000, 5000), 54100)
+# iso_pop <- rasterToContourPoly(r = ras, breaks = bks, mask = feat)
+# 
+# ## prepare for tanaka contours
+# # from sp to sf
+# iso_pop <- st_as_sf(iso_pop)
+# # order iso surfaces
+# iso_pop <- iso_pop[order(iso_pop$center),]
+# # color palette à la viridis
+# pal <-c("#000004FF", "#170C3AFF", "#420A68FF", "#6B186EFF", "#932667FF", 
+#         "#BB3754FF", "#DD513AFF", "#F3771AFF", "#FCA50AFF", "#F6D645FF", 
+#         "#FCFFA4FF")
+# ########### Figure 3
+# png(filename = "paris3.png", width = 800, height = 500, res = 100, bg = NA)
+# # custom margin
+# par(mar = c(0,0,1.2,0))
+# # plot area
+# plot(st_geometry(iso_pop), col = NA, border = NA, bg = "ivory1")
+# ## tanaka contours + colors
+# # plot each contour layer successively
+# for(i in 1:nrow(iso_pop)){
+#   p <- st_geometry(iso_pop[i,])
+#   # plot light contour polygons with a Nort-West shift
+#   plot(p + c(-30, 30), add=T, border = "#ffffff90",col = "#ffffff90")
+#   # plot dark contour polygons with a South-East shift
+#   plot(p + c(50, -50),  col = "#00000099", add=T, border = "#00000099")
+#   # plot colored contour polygons in place
+#   plot(p, col = pal[i], border = "NA", add=T)
+# }
+# # legend
+# legendChoro(pos = "topright", breaks = bks, col = pal, nodata = F,
+#             title.txt = "Inhabitants\nper sq. km *", cex = 0.8)
+# # layout
+# layoutLayer(title = "Smoothed Population Density, Paris 2014",
+#             col = "ivory1", tabtitle = T, coltitle = "black",
+#             frame = T, scale = 1,
+#             sources = "T. Giraud - 2018",
+#             author = "Contours...Iris® - IGN 2017, Recensements de la population - Insee 2017")
+# north(pos = c(661000,6857900 ))
+# # annotations
+# text(x = 654500, y = 6856900, adj = 0, cex = 0.6, font = 3,
+#      labels='(*) Kernel Density Estimation with\n    a gaussian kernel (sigma = 300 m)')
+# dev.off()
+```
+
+```{r}
+## import dataset
+# nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% filter(MATINH=="01") %>% st_as_sf(crs = 4326)
+# nguyen_f <- sf::st_transform(nguyen_f, 2154)
+# 
+# ## Compute density raster
+# # from sf to sp
+# nguyen_f <- as(nguyen_f,'Spatial')
+# 
+# #Using a zero-width buffer cleans up many topology problems in R
+# library(rgeos)
+# nguyen_f <- gBuffer(nguyen_f, byid=TRUE, width=0)
+# 
+# # get coodinates
+# coords <- coordinates(feat)
+# 
+# nguyen_coords <- coordinates(nguyen_f)
+# # from sp to spatstat
+# pts <- ppp(x = coords[,1], y = coords[,2], window = as.owin(feat, 10), 
+#            marks = feat$P14_POP)
+# 
+# nguyen_pts <- ppp(x = nguyen_coords[,1], y = nguyen_coords[,2], window = as.owin(nguyen_f, 10), marks = nguyen_f$pro.pop)
+# # compute density
+# nguyen_ds <- density.ppp(x = nguyen_pts, sigma = 300, eps = 100, weights = nguyen_pts$marks)
+# # spatstat to raster, in inhab per sq. km
+# nguyen_ras <- raster(nguyen_ds, crs = proj4string(nguyen_f)) * 1000 * 1000
+# nguyen_ras[is.na(nguyen_ras)] <- 0
+# 
+# ## Compute contour polygons
+# # raster break values 
+# bks <- c(seq(0,50000, 5000), 54100)
+# nguyen_iso_pop <- rasterToContourPoly(r = nguyen_ras, breaks = bks, mask = nguyen_f)
+# 
+# nguyen_iso_pop <- isopoly(
+#   x,
+#   nclass = 8,
+#   breaks,
+#   mask,
+#   xcoords = "COORDX",
+#   ycoords = "COORDY",
+#   var = "OUTPUT",
+#   returnclass = "sp"
+# )
+# ## prepare for tanaka contours
+# # from sp to sf
+# iso_pop <- st_as_sf(iso_pop)
+# 
+# nguyen_iso_pop <- st_as_sf(nguyen_iso_pop)
+# # order iso surfaces
+# iso_pop <- iso_pop[order(iso_pop$center),]
+# 
+# nguyen_iso_pop <- nguyen_iso_pop[order(nguyen_iso_pop$center),]
+# # color palette à la viridis
+# pal <-c("#000004FF", "#170C3AFF", "#420A68FF", "#6B186EFF", "#932667FF", 
+#         "#BB3754FF", "#DD513AFF", "#F3771AFF", "#FCA50AFF", "#F6D645FF", 
+#         "#FCFFA4FF")
+# ########### Figure 3
+# png(filename = "Nguyen_contour.png", width = 800, height = 500, res = 100, bg = NA)
+# # custom margin
+# par(mar = c(0,0,1.2,0))
+# # plot area
+# plot(st_geometry(nguyen_iso_pop), col = NA, border = NA, bg = "ivory1")
+# ## tanaka contours + colors
+# # plot each contour layer successively
+# for(i in 1:nrow(nguyen_iso_pop)){
+#   p <- st_geometry(nguyen_iso_pop[i,])
+#   # plot light contour polygons with a Nort-West shift
+#   plot(p + c(-30, 30), add=T, border = "#ffffff90",col = "#ffffff90")
+#   # plot dark contour polygons with a South-East shift
+#   plot(p + c(50, -50),  col = "#00000099", add=T, border = "#00000099")
+#   # plot colored contour polygons in place
+#   plot(p, col = pal[i], border = "NA", add=T)
+# }
+# # legend
+# legendChoro(pos = "topright", breaks = bks, col = pal, nodata = F,
+#             title.txt = "Inhabitants\nper sq. km *", cex = 0.8)
+# # layout
+# layoutLayer(title = "Smoothed Population Density, Nguyen 2022",
+#             col = "ivory1", tabtitle = T, coltitle = "black",
+#             frame = T, scale = 1,
+#             sources = "T. Giraud - 2018",
+#             author = "Contours...Iris® - IGN 2017, Recensements de la population - Insee 2017")
+# north(pos = c(661000,6857900 ))
+# # annotations
+# text(x = 654500, y = 6856900, adj = 0, cex = 0.6, font = 3,
+#      labels='(*) Kernel Density Estimation with\n    a gaussian kernel (sigma = 300 m)')
+# dev.off()
+```
+
+## Contour lines
+
+```{r}
+library(potential)
+#data
+nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% filter(MATINH=="01") %>% st_as_sf(crs = 4326)
+nguyen_f <- sf::st_transform(nguyen_f, 2154)
+
+# Compute Stewart potentials
+nguyen_f_stewart <- stewart(knownpts = nguyen_f, varname = "songuoi", typefct = "exponential", span = 1000, beta = 3, mask = nguyen_f, returnclass = "sf")
+
+# Create contour
+contourpoly <- isopoly(x = nguyen_f_stewart, nclass = 6, mask = nguyen_f, returnclass = "sf")
+
+library(sf)
+png(filename = "Nguyen_contour.png", width = 800, height = 500, res = 100, bg = NA)
+plot(st_geometry(contourpoly))
+
+if(require(cartography)){
+# Created breaks
+bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
+opar <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = contourpoly,
+var = "center", legend.pos = "topleft",
+breaks = bks, border = "grey90",
+lwd = 0.2,
+legend.title.txt = "Số người ước tính\ncủa dòng họ (Nguyễn)\ntại khu vực lân cận",
+legend.values.rnd = 0)
+plot(st_geometry(nguyen_f), add = TRUE)
+propSymbolsLayer(x = nguyen_f, var = "songuoi",
+legend.pos = "right",
+legend.title.txt = "Số người",
+col = "#ff000020")
+layoutLayer(title = "Phân bố số người ước tính của dòng họ (Nguyễn)",
+sources = "", author = "")
+par(opar)
+}
+dev.off()
+#fwrite(x = nguyen_f_stewart, file = file.path("nguyen_f_stewart.csv"))
+```
 
 ```{r}
 #Github
-credentials::set_github_pat("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")
+credentials::set_github_pat("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")
 #git remote set-url origin https://github.com/oucomo/Thong-ke-Ho-Viet.git
 #git remote -v
 #git remote set-url origin ssh://git@github.com:oucomo/Thong-ke-Ho-Viet.git
-#git config --global user.email ducdh@oucru.org
+#git config --global user.email ducdh@oucru.org 
 #git config --global user.name duhongduc
 #ssh -T git@github.com
 #git remote set-url origin git@github.com:oucomo/Thong-ke-Ho-Viet.git
 #git push -u origin main
 ```
-
-
-https://github.com/oucomo/Thong-ke-Ho-Viet.git
