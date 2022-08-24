@@ -2263,91 +2263,12 @@ library(SpatialPosition)
 
 ## Họ Nguyễn
 
-```{r}
-library(potential)
+```{r, message=FALSE, warning=FALSE}
 #data
 nguyen_sf <- dat_sf %>% mutate(prop.nguyen=(sum(subset(., Ho=="Nguyễn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Nguyễn")
-#nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% filter(MATINH=="01") %>% st_as_sf(crs = 4326)
 nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
 nguyen_f <- sf::st_transform(nguyen_f, 2154)
-
-# Compute Stewart potentials
-nguyen_f_stewart <- stewart(knownpts = nguyen_f, varname = "songuoi", typefct = "exponential", span = 1000, beta = 3, mask = nguyen_f, returnclass = "sf")
-
-# Create contour
-contourpoly <- isopoly(x = nguyen_f_stewart, nclass = 6, mask = nguyen_f, returnclass = "sf")
-
-library(sf)
-png(filename = "Nguyen_contour.png", width = 800, height = 500, res = 100, bg = NA)
-plot(st_geometry(contourpoly))
-
-if(require(cartography)){
-# Created breaks
-bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
-opar <- par(mar = c(0,0,1.2,0))
-# Display the map
-choroLayer(x = contourpoly,
-var = "center", legend.pos = "topleft",
-breaks = bks, border = "grey90",
-lwd = 0.2,
-legend.title.txt = "Số người ước tính\ncủa dòng họ (Nguyễn)\ntại khu vực lân cận",
-legend.values.rnd = 0)
-plot(st_geometry(nguyen_f), add = TRUE)
-propSymbolsLayer(x = nguyen_f, var = "songuoi",
-legend.pos = "right",
-legend.title.txt = "Số người",
-col = "#ff000020")
-layoutLayer(title = "Phân bố số người ước tính của dòng họ (Nguyễn)",
-sources = "", author = "")
-par(opar)
-}
-dev.off()
-#fwrite(x = nguyen_f_stewart, file = file.path("nguyen_f_stewart.csv"))
-```
-## Họ Lý
-
-```{r}
-library(potential)
-#data
-ly_sf <- dat_sf %>% mutate(prop.ly=(sum(subset(., Ho=="Lý")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lý")
-#nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% filter(MATINH=="01") %>% st_as_sf(crs = 4326)
-ly_f <- ly_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-ly_f <- sf::st_transform(ly_f, 2154)
-
-# Compute Stewart potentials
-ly_f_stewart <- stewart(knownpts = ly_f, varname = "songuoi", typefct = "exponential", span = 1000, beta = 3, mask = ly_f, returnclass = "sf")
-
-# Create contour
-contourpoly <- isopoly(x = ly_f_stewart, nclass = 6, mask = ly_f, returnclass = "sf")
-
-library(sf)
-png(filename = "Ly_contour.png", width = 800, height = 500, res = 100, bg = NA)
-plot(st_geometry(contourpoly))
-
-if(require(cartography)){
-# Created breaks
-bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
-opar <- par(mar = c(0,0,1.2,0))
-# Display the map
-choroLayer(x = contourpoly,
-var = "center", legend.pos = "topleft",
-breaks = bks, border = "grey90",
-lwd = 0.2,
-legend.title.txt = "Số người ước tính\ncủa dòng họ (Lý)\ntại khu vực lân cận",
-legend.values.rnd = 0)
-plot(st_geometry(ly_f), add = TRUE)
-propSymbolsLayer(x = ly_f, var = "songuoi",
-legend.pos = "right",
-legend.title.txt = "Số người",
-col = "#ff000020")
-layoutLayer(title = "Phân bố số người ước tính của dòng họ (Lý)",
-sources = "", author = "")
-par(opar)
-}
-dev.off()
-#fwrite(x = nguyen_f_stewart, file = file.path("nguyen_f_stewart.csv"))
-```
-```{r}
+nguyen_plot <- nguyen_sf %>% select(pro.pop, prop.nguyen, geometry) %>% st_as_sf(crs = 4326)
 #Smoothed Map of the family name per Pop
 
 #In this case, the potential family name per Pop is computed on a regular grid.
@@ -2388,10 +2309,10 @@ poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
 bv <- quantile(nguyen_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
 
 # Create an isopleth layer
-pot <- isopoly(x = nguyen_f_stewart, var = "OUTPUT",
-               breaks = bv, 
-               mask = nguyen_sp, 
-               returnclass = "sf")
+# pot <- isopoly(x = nguyen_f_stewart, var = "OUTPUT",
+#                breaks = bv, 
+#                mask = nguyen_sp, 
+#                returnclass = "sf")
 
 pot <- isopoly(x = poppot, var = "OUTPUT2",
                breaks = bv, 
@@ -2403,21 +2324,21 @@ rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
 
 # make a new geometry that is rotated 90 degrees (but retain original geom)
 nguyen_rot <- nguyen_f %>% 
-  mutate(geom_rot = st_geometry(.)*rot(pi/2)) %>%
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
   st_drop_geometry() %>%
   rename(geometry = geom_rot) %>%
   st_set_geometry("geometry")
 nguyen_rot <- as(nguyen_rot, Class = "Spatial")
 
 pot_rot <- pot %>% 
-   mutate(geom_rot = st_geometry(.)*rot(pi/2)) %>%
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
    st_drop_geometry() %>%
    rename(geometry = geom_rot) %>%
    st_set_geometry("geometry")
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Nguyen_contourpoly.jpeg", width = 1000, height = 2000, res = 100, bg = NA)
+png(filename = "Nguyen_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(nguyen_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -2430,96 +2351,1037 @@ pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
 par <- par(mar = c(0,0,1.2,0))
 # Display the map
 choroLayer(x = pot_rot, var = "center", 
-          legend.pos = "topright",
+          legend.pos = "left",
           breaks = bks, col = pal, add=T, 
-          border = "grey90", lwd = 0.2,
-          legend.title.txt = "Tỉ lệ(%)\ntại khu vực lân cận",
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# # Set a text to explicit the function parameters
+# text(x = 9035851, y = 9580781, 
+#      labels = paste(round(nguyen_plot$prop.nguyen[1],1), "% dân số", sep = ""), 
+#      cex = 0.8, adj = 0, font = 3)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Nguyễn", paste(round(nguyen_plot$prop.nguyen[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+## Họ Triệu
+
+```{r, warning=FALSE, message=FALSE}
+trieu_sf <- dat_sf %>% mutate(prop.trieu=(sum(subset(., Ho=="Triệu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Triệu")
+trieu_f <- trieu_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+trieu_f <- sf::st_transform(trieu_f, 2154)
+trieu_plot <- trieu_sf %>% select(pro.pop, prop.trieu, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+trieu_sf2 <- trieu_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+trieu_sf2 <- sf::st_transform(trieu_sf2, 2154)
+trieu_sp <- as(trieu_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = trieu_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = trieu_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = trieu_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = trieu_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(trieu_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = trieu_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+trieu_rot <- trieu_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+trieu_rot <- as(trieu_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Trieu_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(trieu_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
           legend.values.rnd = 1)
 # Set a layout
-layoutLayer(title = "Phân bố tỉ lệ (%) của dòng họ (Nguyễn)",
-sources = "Vietnam GSO", author = "Duc Du, 2022",north = T, theme = "wine.pal")
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Triệu", paste(round(trieu_plot$prop.trieu[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(opar)
 }
 dev.off()
 ```
 
+## Họ Đinh
 
-```{r}
-library(potential)
-library(mapsf)
-mf_map(nguyen_f, col= "grey80", border = "white", lwd = .4)
-y <- create_grid(x = nguyen_f, res = 100000)
-mf_map(y, pch = 23, add = TRUE, bg = "blue", cex = .5 )
+```{r, warning=FALSE, message=FALSE}
+dinh_sf <- dat_sf %>% mutate(prop.dinh=(sum(subset(., Ho=="Đinh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đinh")
+dinh_f <- dinh_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+dinh_f <- sf::st_transform(dinh_f, 2154)
+dinh_plot <- dinh_sf %>% select(pro.pop, prop.dinh, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+dinh_sf2 <- dinh_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+dinh_sf2 <- sf::st_transform(dinh_sf2, 2154)
+dinh_sp <- as(dinh_sf2, Class = "Spatial")
 
-d <- create_matrix(x = nguyen_f, y = y)
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = dinh_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = dinh_sp, 
+                  returnclass = "sf")
 
-y$pot <- potential(x = nguyen_f, y = y, d = d,
-                   var = "songuoi", fun = "e",
-                   span = 75000, beta = 2)
-mf_map(nguyen_f, col= "grey80", border = "white", lwd = .4)
-mf_map(y, var = "pot", type = "prop", 
-       inches= .1, 
-       lwd = .5, 
-       leg_val_cex = .5, 
-       leg_val_rnd = -3,
-       leg_frame = TRUE, 
-       leg_pos = "topright")
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = dinh_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = dinh_sp, 
+                  returnclass = "sf")
 
-y$pot2 <- 100 * y$pot / max(y$pot)
-mf_map(nguyen_f, col= "grey80", border = "white", lwd = .4)
-mf_map(y, var = "pot2", type = "prop", 
-       inches= .1, 
-       lwd = .5, 
-       leg_val_cex = .5, 
-       leg_val_rnd = 0,
-       leg_frame = TRUE, 
-       leg_pos = "topright")
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
 
-bks <- seq(0, 100, 10)
-iso <- equipotential(x = y, var = "pot2", breaks = bks, mask = n3_poly)
-mf_map(x = iso, var = "min", type = "choro", 
-       breaks = bks, 
-       pal = hcl.colors(10, 'Teal'),
-       lwd = .2,
-       border = "#121725", 
-       leg_pos = "topright",
-       leg_val_rnd = 0,
-       leg_title = "Potential of\nPopulation")
+# Discretize the variable
+bv <- quantile(dinh_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
 
-y <- create_grid(x = nguyen_f, res = 20000)
-y$pot <- mcpotential(x = nguyen_f, y = y, 
-                     var = "songuoi", fun = "e",
-                     span = 75000, beta = 2, 
-                     limit = 200000, ncl = 2)
-y$pot2 <- 100 * y$pot / max(y$pot)
-bks <- seq(0, 100, 10)
-iso <- equipotential(x = y, var = "pot2", breaks = bks, mask = n3_poly)
-mf_map(x = iso, var = "min", type = "choro", 
-       breaks =  seq(0,100, 10), 
-       pal = hcl.colors(10, 'Teal'),
-       lwd = .2,
-       border = "#121725", 
-       leg_pos = c(6084270,4253383),
-       leg_val_rnd = 0,
-       leg_title = "Mật độ ước tính")
-mf_credits(txt = "© Địa giới hành chính theo bản đồ Việt Nam and © Dữ liệu dân số từ TCTK Việt Nam",
-           pos = "bottomright", cex = .7)
-mf_title(txt = "Họ Nguyễn", bg = "white", fg = "black", inner = TRUE, cex = 1.1)
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = dinh_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+dinh_rot <- dinh_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+dinh_rot <- as(dinh_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Dinh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(dinh_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Đinh", paste(round(dinh_plot$prop.dinh[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+
+## Họ Lý
+
+```{r, message=FALSE, warning=FALSE}
+ly_sf <- dat_sf %>% mutate(prop.ly=(sum(subset(., Ho=="Lý")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lý")
+ly_f <- ly_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ly_f <- sf::st_transform(ly_f, 2154)
+ly_plot <- ly_sf %>% select(pro.pop, prop.ly, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+ly_sf2 <- ly_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ly_sf2 <- sf::st_transform(ly_sf2, 2154)
+ly_sp <- as(ly_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = ly_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = ly_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = ly_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = ly_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(ly_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = ly_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+ly_rot <- ly_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+ly_rot <- as(ly_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Ly_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(ly_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Lý", paste(round(ly_plot$prop.ly[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+
+## Họ Lê
+
+```{r, message=FALSE, warning=FALSE}
+le_sf <- dat_sf %>% mutate(prop.le=(sum(subset(., Ho=="Lê")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lê")
+le_f <- le_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+le_f <- sf::st_transform(le_f, 2154)
+le_plot <- le_sf %>% select(pro.pop, prop.le, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+le_sf2 <- le_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+le_sf2 <- sf::st_transform(le_sf2, 2154)
+le_sp <- as(le_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = le_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = le_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = le_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = le_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(le_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = le_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+le_rot <- le_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+le_rot <- as(le_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Le_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(le_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Lê", paste(round(le_plot$prop.le[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+
+## Họ Trần
+
+```{r, message=FALSE, warning=FALSE}
+tran_sf <- dat_sf %>% mutate(prop.tran=(sum(subset(., Ho=="Trần")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trần")
+tran_f <- tran_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+tran_f <- sf::st_transform(tran_f, 2154)
+tran_plot <- tran_sf %>% select(pro.pop, prop.tran, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+tran_sf2 <- tran_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+tran_sf2 <- sf::st_transform(tran_sf2, 2154)
+tran_sp <- as(tran_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = tran_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = tran_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = tran_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = tran_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(tran_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = tran_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+tran_rot <- tran_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+tran_rot <- as(tran_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Tran_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(tran_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Trần", paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+## Họ Dư
+
+```{r, message=FALSE, warning=FALSE}
+du_sf <- dat_sf %>% mutate(prop.du=(sum(subset(., Ho=="Dư")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Dư")
+du_f <- du_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+du_f <- sf::st_transform(du_f, 2154)
+du_plot <- du_sf %>% select(pro.pop, prop.du, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+du_sf2 <- du_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+du_sf2 <- sf::st_transform(du_sf2, 2154)
+du_sp <- as(du_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = du_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = du_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = du_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = du_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(du_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = du_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+du_rot <- du_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+du_rot <- as(du_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Du_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(du_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 2)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Dư", paste(round(du_plot$prop.du[1],2), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+## Họ Ngô
+
+```{r, message=FALSE, warning=FALSE}
+ngo_sf <- dat_sf %>% mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Ngô")
+ngo_f <- ngo_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ngo_f <- sf::st_transform(ngo_f, 2154)
+ngo_plot <- ngo_sf %>% select(pro.pop, prop.ngo, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+ngo_sf2 <- ngo_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ngo_sf2 <- sf::st_transform(ngo_sf2, 2154)
+ngo_sp <- as(ngo_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = ngo_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = ngo_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = ngo_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = ngo_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(ngo_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = ngo_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+ngo_rot <- ngo_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+ngo_rot <- as(ngo_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Ngo_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(ngo_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Ngô", paste(round(ngo_plot$prop.ngo[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+
+## Họ Đoàn
+
+```{r, message=FALSE, warning=FALSE}
+doan_sf <- dat_sf %>% mutate(prop.doan=(sum(subset(., Ho=="Đoàn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đoàn")
+doan_f <- doan_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+doan_f <- sf::st_transform(doan_f, 2154)
+doan_plot <- doan_sf %>% select(pro.pop, prop.doan, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+doan_sf2 <- doan_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+doan_sf2 <- sf::st_transform(doan_sf2, 2154)
+doan_sp <- as(doan_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = doan_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = doan_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = doan_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = doan_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(doan_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = doan_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+doan_rot <- doan_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+doan_rot <- as(doan_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Doan_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(doan_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Đoàn", paste(round(doan_plot$prop.doan[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
+```
+
+## Họ Trịnh
+
+```{r, message=FALSE, warning=FALSE}
+trinh_sf <- dat_sf %>% mutate(prop.trinh=(sum(subset(., Ho=="Trịnh")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trịnh")
+trinh_f <- trinh_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+trinh_f <- sf::st_transform(trinh_f, 2154)
+trinh_plot <- trinh_sf %>% select(pro.pop, prop.trinh, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+trinh_sf2 <- trinh_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+trinh_sf2 <- sf::st_transform(trinh_sf2, 2154)
+trinh_sp <- as(trinh_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = trinh_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = trinh_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = trinh_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = trinh_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(trinh_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = trinh_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+trinh_rot <- trinh_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+trinh_rot <- as(trinh_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Trinh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(trinh_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Trịnh", paste(round(trinh_plot$prop.trinh[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(opar)
+}
+dev.off()
 ```
 
 ```{r}
-library(potential)
-library(mapsf)
-bks <- seq(0, 100, 10)
-iso <- equipotential(x = y, var = "pot2", breaks = bks, mask = n3_poly)
-mf_map(x = iso, var = "min", type = "choro", 
-       breaks = bks, 
-       pal = hcl.colors(10, 'Teal'),
-       lwd = .2,
-       border = "#121725", 
-       leg_pos = "topright",
-       leg_val_rnd = 0,
-       leg_title = "Potential of\nPopulation")
+# library(potential)
+# #data
+# nguyen_sf <- dat_sf %>% mutate(prop.nguyen=(sum(subset(., Ho=="Nguyễn")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Nguyễn")
+# #nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% filter(MATINH=="01") %>% st_as_sf(crs = 4326)
+# nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+# nguyen_f <- sf::st_transform(nguyen_f, 2154)
+# 
+# # Compute Stewart potentials
+# nguyen_f_stewart <- stewart(knownpts = nguyen_f, varname = "songuoi", typefct = "exponential", span = 1000, beta = 3, mask = nguyen_f, returnclass = "sf")
+# 
+# # Create contour
+# contourpoly <- isopoly(x = nguyen_f_stewart, nclass = 6, mask = nguyen_f, returnclass = "sf")
+# 
+# library(sf)
+# png(filename = "Nguyen_contour.png", width = 800, height = 500, res = 100, bg = NA)
+# plot(st_geometry(contourpoly))
+# 
+# if(require(cartography)){
+# # Created breaks
+# bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
+# opar <- par(mar = c(0,0,1.2,0))
+# # Display the map
+# choroLayer(x = contourpoly,
+# var = "center", legend.pos = "topleft",
+# breaks = bks, border = "grey90",
+# lwd = 0.2,
+# legend.title.txt = "Số người ước tính\ncủa dòng họ (Nguyễn)\ntại khu vực lân cận",
+# legend.values.rnd = 0)
+# plot(st_geometry(nguyen_f), add = TRUE)
+# propSymbolsLayer(x = nguyen_f, var = "songuoi",
+# legend.pos = "right",
+# legend.title.txt = "Số người",
+# col = "#ff000020")
+# layoutLayer(title = "Phân bố số người ước tính của dòng họ (Nguyễn)",
+# sources = "", author = "")
+# par(opar)
+# }
+# dev.off()
+# #fwrite(x = nguyen_f_stewart, file = file.path("nguyen_f_stewart.csv"))
+```
+
+```{r}
+# library(potential)
+# #data
+# ly_sf <- dat_sf %>% mutate(prop.ly=(sum(subset(., Ho=="Lý")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lý")
+# #nguyen_f <- nguyen_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% filter(MATINH=="01") %>% st_as_sf(crs = 4326)
+# ly_f <- ly_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+# ly_f <- sf::st_transform(ly_f, 2154)
+# 
+# # Compute Stewart potentials
+# ly_f_stewart <- stewart(knownpts = ly_f, varname = "songuoi", typefct = "exponential", span = 1000, beta = 3, mask = ly_f, returnclass = "sf")
+# 
+# # Create contour
+# contourpoly <- isopoly(x = ly_f_stewart, nclass = 6, mask = ly_f, returnclass = "sf")
+# 
+# library(sf)
+# png(filename = "Ly_contour.png", width = 800, height = 500, res = 100, bg = NA)
+# plot(st_geometry(contourpoly))
+# 
+# if(require(cartography)){
+# # Created breaks
+# bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
+# opar <- par(mar = c(0,0,1.2,0))
+# # Display the map
+# choroLayer(x = contourpoly,
+# var = "center", legend.pos = "topleft",
+# breaks = bks, border = "grey90",
+# lwd = 0.2,
+# legend.title.txt = "Số người ước tính\ncủa dòng họ (Lý)\ntại khu vực lân cận",
+# legend.values.rnd = 0)
+# plot(st_geometry(ly_f), add = TRUE)
+# propSymbolsLayer(x = ly_f, var = "songuoi",
+# legend.pos = "right",
+# legend.title.txt = "Số người",
+# col = "#ff000020")
+# layoutLayer(title = "Phân bố số người ước tính của dòng họ (Lý)",
+# sources = "", author = "")
+# par(opar)
+# }
+# dev.off()
+# #fwrite(x = nguyen_f_stewart, file = file.path("nguyen_f_stewart.csv"))
+```
+
+```{r}
+# library(potential)
+# library(mapsf)
+# mf_map(nguyen_f, col= "grey80", border = "white", lwd = .4)
+# y <- create_grid(x = nguyen_f, res = 100000)
+# mf_map(y, pch = 23, add = TRUE, bg = "blue", cex = .5 )
+# 
+# d <- create_matrix(x = nguyen_f, y = y)
+# 
+# y$pot <- potential(x = nguyen_f, y = y, d = d,
+#                    var = "songuoi", fun = "e",
+#                    span = 75000, beta = 2)
+# mf_map(nguyen_f, col= "grey80", border = "white", lwd = .4)
+# mf_map(y, var = "pot", type = "prop", 
+#        inches= .1, 
+#        lwd = .5, 
+#        leg_val_cex = .5, 
+#        leg_val_rnd = -3,
+#        leg_frame = TRUE, 
+#        leg_pos = "topright")
+# 
+# y$pot2 <- 100 * y$pot / max(y$pot)
+# mf_map(nguyen_f, col= "grey80", border = "white", lwd = .4)
+# mf_map(y, var = "pot2", type = "prop", 
+#        inches= .1, 
+#        lwd = .5, 
+#        leg_val_cex = .5, 
+#        leg_val_rnd = 0,
+#        leg_frame = TRUE, 
+#        leg_pos = "topright")
+# 
+# bks <- seq(0, 100, 10)
+# iso <- equipotential(x = y, var = "pot2", breaks = bks, mask = n3_poly)
+# mf_map(x = iso, var = "min", type = "choro", 
+#        breaks = bks, 
+#        pal = hcl.colors(10, 'Teal'),
+#        lwd = .2,
+#        border = "#121725", 
+#        leg_pos = "topright",
+#        leg_val_rnd = 0,
+#        leg_title = "Potential of\nPopulation")
+# 
+# y <- create_grid(x = nguyen_f, res = 20000)
+# y$pot <- mcpotential(x = nguyen_f, y = y, 
+#                      var = "songuoi", fun = "e",
+#                      span = 75000, beta = 2, 
+#                      limit = 200000, ncl = 2)
+# y$pot2 <- 100 * y$pot / max(y$pot)
+# bks <- seq(0, 100, 10)
+# iso <- equipotential(x = y, var = "pot2", breaks = bks, mask = n3_poly)
+# mf_map(x = iso, var = "min", type = "choro", 
+#        breaks =  seq(0,100, 10), 
+#        pal = hcl.colors(10, 'Teal'),
+#        lwd = .2,
+#        border = "#121725", 
+#        leg_pos = c(6084270,4253383),
+#        leg_val_rnd = 0,
+#        leg_title = "Mật độ ước tính")
+# mf_credits(txt = "© Địa giới hành chính theo bản đồ Việt Nam and © Dữ liệu dân số từ TCTK Việt Nam",
+#            pos = "bottomright", cex = .7)
+# mf_title(txt = "Họ Nguyễn", bg = "white", fg = "black", inner = TRUE, cex = 1.1)
+```
+
+```{r}
+# library(potential)
+# library(mapsf)
+# bks <- seq(0, 100, 10)
+# iso <- equipotential(x = y, var = "pot2", breaks = bks, mask = n3_poly)
+# mf_map(x = iso, var = "min", type = "choro", 
+#        breaks = bks, 
+#        pal = hcl.colors(10, 'Teal'),
+#        lwd = .2,
+#        border = "#121725", 
+#        leg_pos = "topright",
+#        leg_val_rnd = 0,
+#        leg_title = "Potential of\nPopulation")
 ```
 
 
