@@ -43,6 +43,10 @@ library(rstatix)
 
 library(haven)
 
+library(raster)
+library(rgdal)
+library(viridis)
+
 select<-dplyr::select
 filter<-dplyr::filter
 recode<-dplyr::recode
@@ -281,18 +285,14 @@ top101_200
 ## Bản đồ Việt Nam
 
 ```{r, warning=FALSE, message=FALSE}
-libs <- c("maptools", "sp")
-lapply(libs, require, character.only = TRUE)
-
-geo63 <- readRDS("geo63.rds")
-spplot(geo63, "ID_1", main="63 tỉnh")
+# libs <- c("maptools", "sp")
+# lapply(libs, require, character.only = TRUE)
+# 
+# geo63 <- readRDS("geo63.rds")
+# spplot(geo63, "ID_1", main="63 tỉnh")
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-library(raster)
-library(rgdal)
-library(viridis)
-
 ## Get the Vietnam data - provincial level
 vnm = getData("GADM", country="Vietnam", level=1)
 vnm2 = getData("GADM", country="Vietnam", level=2)
@@ -2348,85 +2348,99 @@ dev.off()
 #fwrite(x = nguyen_f_stewart, file = file.path("nguyen_f_stewart.csv"))
 ```
 ```{r}
-#Smoothed Map of the GDP per Capita
+#Smoothed Map of the family name per Pop
 
-#In this case, the potential GDP per capita is computed on a regular grid.
+#In this case, the potential family name per Pop is computed on a regular grid.
+
+# Convert to Spatial class
+nguyen_sf2 <- nguyen_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+nguyen_sf2 <- sf::st_transform(nguyen_sf2, 2154)
+nguyen_sp <- as(nguyen_sf2, Class = "Spatial")
 
 # Compute the potentials of population on a regular grid (50km span)
 # function = exponential, beta = 2, span = 75 km
-poppot <- stewart(knownpts = nguyen_f, 
-                  varname = "songuoi", 
-                  typefct = "exponential", 
-                  span = 1000, 
-                  beta = 2, 
-                  resolution = 50000, 
-                  mask = nguyen_f, 
-                  returnclass = "sf")
-
-## Warning: stewart(), rasterStewart(), plotStewart(), quickStewart(), isopoly(),
-## mcStewart() and smoothy() are deprecated. Use 'potential' package for all
-## potential-related functions.
-
-# Compute the potentials of GDP on a regular grid (50km span)
-# function = exponential, beta = 2, span = 75 km
-gdppot <- stewart(knownpts = nuts3.spdf, 
-                  varname = "gdppps2008", 
+poppot <- stewart(knownpts = nguyen_sp, 
+                  varname = "danso", 
                   typefct = "exponential", 
                   span = 75000, 
                   beta = 2, 
                   resolution = 50000, 
-                  mask = nuts0.spdf, 
+                  mask = nguyen_sp, 
                   returnclass = "sf")
 
-## Warning: stewart(), rasterStewart(), plotStewart(), quickStewart(), isopoly(),
-## mcStewart() and smoothy() are deprecated. Use 'potential' package for all
-## potential-related functions.
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = nguyen_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 75000, 
+                  beta = 2, 
+                  resolution = 50000, 
+                  mask = nguyen_sp, 
+                  returnclass = "sf")
 
 # Create the ratio variable
-poppot$OUTPUT2 <- gdppot$OUTPUT * 1e6 / poppot$OUTPUT
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
 
 # Discretize the variable
-bv <- quantile(nguyen_f$songuoi, seq(from = 0, to = 1, length.out = 9))
+bv <- quantile(nguyen_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
 
 # Create an isopleth layer
 pot <- isopoly(x = nguyen_f_stewart, var = "OUTPUT",
                breaks = bv, 
-               mask = nguyen_f, 
+               mask = nguyen_sp, 
                returnclass = "sf")
 
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = nguyen_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+nguyen_rot <- nguyen_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+nguyen_rot <- as(nguyen_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+png(filename = "Nguyen_contourpoly.jpeg", width = 1000, height = 2000, res = 100, bg = NA)
+plot(nguyen_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
 # Get breaks values
-bv3 <- sort(c(unique(pot$min), max(pot$max)), decreasing = FALSE)
-
+bks <-  sort(unique(c(pot$min, pot$max)))
 # Set a color palette
-pal <- carto.pal(pal1 = "yellow.pal", n1 = 8)
-
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
 # Draw the map
 par <- par(mar = c(0,0,1.2,0))
-
-# Draw the basemap
-plot(st_geometry(pot), add = F, border = NA, bg = "#cdd2d4")
-plot(st_geometry(pot))
-#plot(world.spdf, col = "#f5f5f3ff", border = "#a9b3b4ff", add = TRUE)
-
-# Map the potential GDP per Capita
-choroLayer(x = pot, var = "center", 
-           legend.pos = "topright",
-           breaks = bv3, col = pal, add=T, 
-           border = NA, lwd = 0.2,
-           legend.title.txt = "Potential\nGDP per capita",
-           legend.values.rnd = -2)
-plot(pot, add=T, lwd = 0.5, border = "grey30")
-#plot(world.spdf, col = NA, border = "#7DA9B8", add=T)
-
-# Set a text to explicit the function parameters
-text(x = 6271272, y = 3743765, 
-     labels = "Distance function:\n- type = exponential\n- beta = 2\n- span = 75 km", 
-     cex = 0.8, adj = 0, font = 3)
-
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "topright",
+          breaks = bks, col = pal, add=T, 
+          border = "grey90", lwd = 0.2,
+          legend.title.txt = "Tỉ lệ(%)\ntại khu vực lân cận",
+          legend.values.rnd = 1)
 # Set a layout
-layoutLayer(title = "Wealth Inequality in Europe", 
-            sources = "Basemap: UMS RIATE, 2015 - Data: Eurostat, 2008", 
-            author = "T. Giraud, 2015")
+layoutLayer(title = "Phân bố tỉ lệ (%) của dòng họ (Nguyễn)",
+sources = "Vietnam GSO", author = "Duc Du, 2022",north = T, theme = "wine.pal")
+par(opar)
+}
+dev.off()
 ```
 
 
