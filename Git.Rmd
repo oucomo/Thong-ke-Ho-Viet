@@ -1,0 +1,19 @@
+---
+title: "Ho Viet"
+author: "Duc Du"
+date: '2022-08-22'
+output: html_document
+---
+
+```{r}
+#Github
+credentials::set_github_pat("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")
+#git remote set-url origin https://github.com/oucomo/Thong-ke-Ho-Viet.git
+#git remote -v
+#git remote set-url origin ssh://git@github.com:oucomo/Thong-ke-Ho-Viet.git
+#git config --global user.email ducdh@oucru.org 
+#git config --global user.name duhongduc
+#ssh -T git@github.com
+#git remote set-url origin git@github.com:oucomo/Thong-ke-Ho-Viet.git
+#git push -u origin main
+```
