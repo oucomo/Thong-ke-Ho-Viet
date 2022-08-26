@@ -1,0 +1,7 @@
+"Year","Extent","Surnames(n > = 30)","Individuals KDE(surname n)","Historic Census(total n)"
+"1851","England, Scotland, Wales","37,941","18,947,318","20,610,325"
+"1861","England, Scotland, Wales","48,894","20,468,217","22,837,378"
+"1881","England, Scotland, Wales","39,845","28,051,183","29,865,602"
+"1891","England, Scotland, Wales","50,097","31,038,153","33,522,822"
+"1901","England, Scotland, Wales","44,807","35,226,626","36,910,767"
+"1911","England, Wales","44,961","33,817,546","36,353,455"
