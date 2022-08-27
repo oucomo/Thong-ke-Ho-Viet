@@ -4227,38 +4227,38 @@ par(par)
 dev.off()
 ```
 
-## Họ Khúc
+## Họ Đỗ
 
 ```{r, message=FALSE, warning=FALSE}
-khuc_sf <- dat_sf %>% mutate(prop.khuc=(sum(subset(., Ho=="Khúc")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Khúc")
-khuc_f <- khuc_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-khuc_f <- sf::st_transform(khuc_f, 2154)
-khuc_plot <- khuc_sf %>% select(pro.pop, prop.khuc, geometry) %>% st_as_sf(crs = 4326)
+do_sf <- dat_sf %>% mutate(prop.do=(sum(subset(., Ho=="Đỗ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đỗ")
+do_f <- do_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+do_f <- sf::st_transform(khuc_f, 2154)
+do_plot <- do_sf %>% select(pro.pop, prop.do, geometry) %>% st_as_sf(crs = 4326)
 # Convert to Spatial class
-khuc_sf2 <- khuc_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-khuc_sf2 <- sf::st_transform(khuc_sf2, 2154)
-khuc_sp <- as(khuc_sf2, Class = "Spatial")
+do_sf2 <- do_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+do_sf2 <- sf::st_transform(do_sf2, 2154)
+do_sp <- as(do_sf2, Class = "Spatial")
 
 # Compute the potentials of population on a regular grid (50km span)
 # function = exponential, beta = 2, span = 75 km
-poppot <- stewart(knownpts = khuc_sp, 
+poppot <- stewart(knownpts = do_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
                   span = 75000, 
                   beta = 2, 
                   resolution = 50000, 
-                  mask = khuc_sp, 
+                  mask = do_sp, 
                   returnclass = "sf")
 
 # Compute the potentials of family name on a regular grid (50km span)
 # function = exponential, beta = 2, span = 75 km
-namepot <- stewart(knownpts = khuc_sp, 
+namepot <- stewart(knownpts = do_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
                   span = 75000, 
                   beta = 2, 
                   resolution = 50000, 
-                  mask = khuc_sp, 
+                  mask = do_sp, 
                   returnclass = "sf")
 
 # Create the ratio variable
@@ -4267,24 +4267,24 @@ namepot <- stewart(knownpts = khuc_sp,
 poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
 
 # Discretize the variable
-bv <- quantile(khuc_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+bv <- quantile(do_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
 
 # Create an isopleth layer
 pot <- isopoly(x = poppot, var = "OUTPUT2",
                breaks = bv, 
-               mask = khuc_sp, 
+               mask = do_sp, 
                returnclass = "sf")
 
 # rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
 rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
 
 # make a new geometry that is rotated 90 degrees (but retain original geom)
-khuc_rot <- khuc_f %>% 
+do_rot <- do_f %>% 
   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
   st_drop_geometry() %>%
   rename(geometry = geom_rot) %>%
   st_set_geometry("geometry")
-khuc_rot <- as(khuc_rot, Class = "Spatial")
+do_rot <- as(do_rot, Class = "Spatial")
 
 pot_rot <- pot %>% 
    mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
@@ -4294,8 +4294,8 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Khuc_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
-plot(khuc_rot, add = F, border = NA, bg = "white")
+png(filename = "Do_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(do_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
 if(require(cartography)){
@@ -4315,7 +4315,7 @@ choroLayer(x = pot_rot, var = "center",
           legend.values.cex = 0.6,
           legend.values.rnd = 1)
 # Set a layout
-layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Khúc", paste(round(khuc_plot$prop.khuc[1],1), "% dân số", sep = ""), sep=" - "),
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Đỗ", paste(round(do_plot$prop.do[1],1), "% dân số", sep = ""), sep=" - "),
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
