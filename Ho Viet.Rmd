@@ -4410,7 +4410,7 @@ choroLayer(x = pot_rot, var = "center",
           legend.values.cex = 0.6,
           legend.values.rnd = 1)
 # Set a layout
-layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Khúc", paste(round(khuc_plot$prop.khuc[1],1), "% dân số", sep = ""), sep=" - "),
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Khúc", paste(round(khuc_plot$prop.khuc[1],2), "% dân số", sep = ""), sep=" - "),
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
@@ -4695,7 +4695,7 @@ choroLayer(x = pot_rot, var = "center",
           legend.values.cex = 0.6,
           legend.values.rnd = 1)
 # Set a layout
-layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Tôn", paste(round(ton_plot$prop.ton[1],1), "% dân số", sep = ""), sep=" - "),
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Tôn", paste(round(ton_plot$prop.ton[1],2), "% dân số", sep = ""), sep=" - "),
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
