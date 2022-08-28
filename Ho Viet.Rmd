@@ -50,6 +50,7 @@ library(viridis)
 select<-dplyr::select
 filter<-dplyr::filter
 recode<-dplyr::recode
+getData<-raster::getData
 
 options(scipen=999, digits = 3)
 ```
@@ -294,7 +295,7 @@ top101_200
 
 ```{r, message=FALSE, warning=FALSE}
 ## Get the Vietnam data - provincial level
-vnm = getData("GADM", country="Vietnam", level=1)
+vnm = raster::getData("GADM", country="Vietnam", level=1)
 vnm2 = getData("GADM", country="Vietnam", level=2)
 vnm3 = getData("GADM", country="Vietnam", level=3)
 
@@ -1076,19 +1077,15 @@ dat_f$NAME_3 <- stri_trans_general(dat_f$NAME_3, "Latin-ASCII")
 
 dat_f <- dat_f %>% distinct(., NAME_1, NAME_2, NAME_3, .keep_all = T)
 
-dat_sff <- merge(xa2, dat_f, by=c("NAME_1", "NAME_2", "NAME_3"))
-
-table(xa2$NAME_1 %in% dat_f$NAME_1)
-head(xa2$NAME_1)
-head(dat_f$NAME_1)
-```
-
-```{r}
-dat_sff <- dat_sff %>%
+dat_sff <- merge(xa2, dat_f, by=c("NAME_1", "NAME_2", "NAME_3")) %>%
   mutate(area_km=area/1000000,
          songuoi_km=songuoi/area_km,
          songuoi_km=as.numeric(songuoi_km))
 head(dat_sff)
+
+table(xa2$NAME_1 %in% dat_f$NAME_1)
+head(xa2$NAME_1)
+head(dat_f$NAME_1)
 ```
 
 ## Họ Nguyễn
@@ -2635,8 +2632,8 @@ ly_sp <- as(ly_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = ly_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 50000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = ly_sp, 
                   returnclass = "sf")
@@ -2646,8 +2643,8 @@ poppot <- stewart(knownpts = ly_sp,
 namepot <- stewart(knownpts = ly_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 50000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = ly_sp, 
                   returnclass = "sf")
@@ -2730,8 +2727,8 @@ le_sp <- as(le_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = le_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 50000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = le_sp, 
                   returnclass = "sf")
@@ -2741,8 +2738,8 @@ poppot <- stewart(knownpts = le_sp,
 namepot <- stewart(knownpts = le_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 50000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = le_sp, 
                   returnclass = "sf")
@@ -2825,8 +2822,8 @@ tran_sp <- as(tran_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = tran_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 50000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = tran_sp, 
                   returnclass = "sf")
@@ -2836,8 +2833,8 @@ poppot <- stewart(knownpts = tran_sp,
 namepot <- stewart(knownpts = tran_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 50000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = tran_sp, 
                   returnclass = "sf")
