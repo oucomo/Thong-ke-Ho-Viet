@@ -52,6 +52,9 @@ filter<-dplyr::filter
 recode<-dplyr::recode
 getData<-raster::getData
 
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
 options(scipen=999, digits = 3)
 ```
 
@@ -2339,8 +2342,8 @@ nguyen_sp <- as(nguyen_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = nguyen_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = nguyen_sp, 
                   returnclass = "sf")
@@ -2350,8 +2353,8 @@ poppot <- stewart(knownpts = nguyen_sp,
 namepot <- stewart(knownpts = nguyen_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = nguyen_sp, 
                   returnclass = "sf")
@@ -2442,8 +2445,8 @@ trieu_sp <- as(trieu_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = trieu_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 30000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = trieu_sp, 
                   returnclass = "sf")
@@ -2453,8 +2456,8 @@ poppot <- stewart(knownpts = trieu_sp,
 namepot <- stewart(knownpts = trieu_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 30000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = trieu_sp, 
                   returnclass = "sf")
@@ -2632,7 +2635,7 @@ ly_sp <- as(ly_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = ly_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 50000, 
+                  span = 30000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = ly_sp, 
@@ -2643,7 +2646,7 @@ poppot <- stewart(knownpts = ly_sp,
 namepot <- stewart(knownpts = ly_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 50000, 
+                  span = 30000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = ly_sp, 
@@ -2727,7 +2730,7 @@ le_sp <- as(le_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = le_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 50000, 
+                  span = 20000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = le_sp, 
@@ -2738,7 +2741,7 @@ poppot <- stewart(knownpts = le_sp,
 namepot <- stewart(knownpts = le_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 50000, 
+                  span = 20000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = le_sp, 
@@ -2822,7 +2825,7 @@ tran_sp <- as(tran_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = tran_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 10000, 
+                  span = 20000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = tran_sp, 
@@ -2833,7 +2836,7 @@ poppot <- stewart(knownpts = tran_sp,
 namepot <- stewart(knownpts = tran_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 10000, 
+                  span = 20000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = tran_sp, 
@@ -2870,9 +2873,9 @@ pot_rot <- pot %>%
    rename(geometry = geom_rot) %>%
    st_set_geometry("geometry")
 #pot_rot <- st_as_sfc(pot_rot)
- 
+
 # Draw the basemap
-png(filename = "Tran_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Tran_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(tran_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -2892,13 +2895,20 @@ choroLayer(x = pot_rot, var = "center",
           legend.title.cex = 1,
           legend.values.cex = 0.6,
           legend.values.rnd = 1)
+plot(st_geometry(river3), add=T, lwd = 0.5, border = "grey30")
 # Set a layout
 layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Trần", paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = ""), sep=" - "),
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 ```
+
+```{r}
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=center), lwd=0) +
+  geom_sf(data=river3, col="white")
+```
+
 ## Họ Dư
 
 ```{r, message=FALSE, warning=FALSE}
@@ -3010,8 +3020,8 @@ ngo_sp <- as(ngo_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = ngo_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = ngo_sp, 
                   returnclass = "sf")
@@ -3021,8 +3031,8 @@ poppot <- stewart(knownpts = ngo_sp,
 namepot <- stewart(knownpts = ngo_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = ngo_sp, 
                   returnclass = "sf")
@@ -3295,8 +3305,8 @@ bui_sp <- as(bui_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = bui_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = bui_sp, 
                   returnclass = "sf")
@@ -3306,8 +3316,8 @@ poppot <- stewart(knownpts = bui_sp,
 namepot <- stewart(knownpts = bui_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = bui_sp, 
                   returnclass = "sf")
