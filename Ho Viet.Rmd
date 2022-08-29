@@ -441,7 +441,7 @@ vn_ho_tinh <- data_ho_tinh %>%
                       MATINH=="93" ~ 28,
                       MATINH=="94" ~ 51,
                       MATINH=="95" ~ 5,
-                      MATINH=="96" ~ 12)) %>% filter(MATINH!="" & Ho %in% data_ho_top200$Ho)
+                      MATINH=="96" ~ 12)) %>% filter(MATINH!="" & Ho %in% data_ho_top1000$Ho)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
@@ -2316,7 +2316,9 @@ library(maptools)
 library(raster)
 library(cartography)
 library(SpatialPosition)
+library(potential)
 # remotes::install_github("riatelab/SpatialPosition")
+# remotes::install_github("riatelab/potential")
 # library(tanaka)
 ```
 
@@ -3305,8 +3307,8 @@ bui_sp <- as(bui_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = bui_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 20000, 
-                  beta = 10, 
+                  span = 5000, 
+                  beta = 2, 
                   resolution = 50000, 
                   mask = bui_sp, 
                   returnclass = "sf")
@@ -3316,8 +3318,8 @@ poppot <- stewart(knownpts = bui_sp,
 namepot <- stewart(knownpts = bui_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 20000, 
-                  beta = 10, 
+                  span = 5000, 
+                  beta = 2, 
                   resolution = 50000, 
                   mask = bui_sp, 
                   returnclass = "sf")
