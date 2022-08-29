@@ -2322,6 +2322,242 @@ library(potential)
 # library(tanaka)
 ```
 
+## Functions
+
+
+```{r}
+# interact_density <- function(d, fun, beta, span) {
+#   if (fun == "p") {
+#     alpha <- (2^(1 / beta) - 1) / span
+#     matDens <- (1 + alpha * d)^(-beta)
+#   } else if (fun == "e") {
+#     alpha <- exp(-log(2)  + (sqrt(span) - beta)^2)
+#     matDens <- alpha * exp(-(sqrt(d) - beta)^2)
+#   }
+#   return(matDens)
+# }
+```
+
+## Họ Bùi
+
+```{r, message=FALSE, warning=FALSE}
+bui_sf <- dat_sf %>% mutate(prop.bui=(sum(subset(., Ho=="Bùi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Bùi")
+bui_f <- bui_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+bui_f <- sf::st_transform(bui_f, 2154)
+bui_plot <- bui_sf %>% select(pro.pop, prop.bui, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+bui_sf2 <- bui_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+bui_sf2 <- sf::st_transform(bui_sf2, 2154)
+bui_sp <- as(bui_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = bui_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = bui_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = bui_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = bui_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(bui_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = bui_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+bui_rot <- bui_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+bui_rot <- as(bui_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+#png(filename = "Bui_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(bui_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(par)
+}
+#dev.off()
+```
+
+```{r}
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - ")) +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, height = 33)
+```
+
+```{r}
+#Create a regular grid
+library(potential)
+library(mapsf)
+potential <- potential::potential
+mf_map(bui_f, col= "grey80", border = "white", lwd = .4)
+y <- create_grid(x = bui_f, res = 100000)
+mf_map(y, pch = 23, add = TRUE, bg = "blue", cex = .5 )
+```
+
+```{r}
+#Create a distance matrix
+d <- create_matrix(x = bui_f, y = y)
+d[1:5, 1:5]
+```
+
+```{r}
+#Compute the potentials
+y$namepot <- potential(x = bui_f, y = y, d = d,
+                   var = "songuoi", fun = "e",
+                   span = 1000, beta = 2)
+mf_map(bui_f, col= "grey80", border = "white", lwd = .4)
+mf_map(y, var = "namepot", type = "prop", 
+       inches= .1, 
+       lwd = .5, 
+       leg_val_cex = .5, 
+       leg_val_rnd = -3,
+       leg_frame = TRUE, 
+       leg_pos = "topright")
+```
+
+```{r}
+#It’s possible to express the potential relatively to its maximum in order to display more understandable values (Rich 1980).
+y$poppot <- potential(x = bui_f, y = y, d = d,
+                   var = "danso", fun = "e",
+                   span = 1000, beta = 2)
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+y$pot <- y$namepot * 100 / y$poppot
+
+mf_map(bui_f, col= "grey80", border = "white", lwd = .4)
+mf_map(y, var = "pot", type = "prop", 
+       inches= .1, 
+       lwd = .5, 
+       leg_val_cex = .5, 
+       leg_val_rnd = 0,
+       leg_frame = TRUE, 
+       leg_pos = "topright")
+```
+
+```{r}
+#It’s also possible to compute areas of equipotential with equipotential().
+bks <- seq(0, 100, 10)
+iso <- equipotential(x = y, var = "pot", breaks = bks, mask = bui_f)
+mf_map(x = iso, var = "min", type = "choro", 
+       breaks = bks, 
+       pal = hcl.colors(10, 'viridis', rev = T),
+       lwd = .2,
+       border = "#121725", 
+       leg_pos = "topright",
+       leg_val_rnd = 1,
+       leg_title = "Tỉ lệ (%) trên\n dân số địa phương")
+```
+```{r}
+ggplot() + geom_sf() + geom_sf(data=iso, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
+  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - ")) +
+  coord_sf(crs = 4326)
+
+#  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"))
+  
+#ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
+#ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, height = 33)
+```
+```{r, message=FALSE, warning=FALSE, results='hide'}
+library(potential)
+library(mapsf)
+#Create a regular grid
+y <- create_grid(x = bui_f, res = 100000)
+
+#Create a distance matrix
+d <- create_matrix(x = bui_f, y = y)
+d[1:5, 1:5]
+```
+
+```{r}
+#Compute the potentials
+y$namepot <- potential(x = bui_f, y = y, d = d,
+                   var = "songuoi", fun = "e",
+                   span = 5000, beta = 2)
+
+y$poppot <- potential(x = bui_f, y = y, d = d,
+                   var = "danso", fun = "e",
+                   span = 5000, beta = 2)
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+y$pot <- y$namepot * 100 / y$poppot
+
+# Compute areas of equipotential with equipotential().
+bks <- seq(0, 100, 10)
+iso <- equipotential(x = y, var = "pot", breaks = bks, mask = bui_f)
+
+ggplot() + geom_sf() + geom_sf(data=iso, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - ")) +
+  coord_sf(crs = 4326)
+#ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Nguyễn
 
 ```{r, message=FALSE, warning=FALSE}
@@ -2344,7 +2580,7 @@ nguyen_sp <- as(nguyen_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = nguyen_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 20000, 
+                  span = 5000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = nguyen_sp, 
@@ -2814,7 +3050,7 @@ dev.off()
 
 ```{r, message=FALSE, warning=FALSE}
 tran_sf <- dat_sf %>% mutate(prop.tran=(sum(subset(., Ho=="Trần")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Trần")
-tran_f <- tran_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+tran_f <- tran_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
 tran_f <- sf::st_transform(tran_f, 2154)
 tran_plot <- tran_sf %>% select(pro.pop, prop.tran, geometry) %>% st_as_sf(crs = 4326)
 # Convert to Spatial class
@@ -2904,6 +3140,52 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 #dev.off()
+```
+
+```{r}
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Trần", paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = ""), sep=" - ")) +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Tran-Contour-River.jpeg"), width = 49, height = 33)
+```
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+#Create a regular grid
+y <- create_grid(x = tran_f, res = 100000)
+
+#Create a distance matrix
+d <- create_matrix(x = tran_f, y = y)
+d[1:5, 1:5]
+```
+
+```{r}
+#Compute the potentials
+y$namepot <- potential(x = tran_f, y = y, d = d,
+                   var = "songuoi", fun = "e",
+                   span = 5000, beta = 5)
+
+y$poppot <- potential(x = tran_f, y = y, d = d,
+                   var = "danso", fun = "e",
+                   span = 5000, beta = 5)
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+y$pot <- y$namepot * 100 / y$poppot
+
+# Compute areas of equipotential with equipotential().
+bks <- seq(0, 100, 10)
+iso <- equipotential(x = y, var = "pot", breaks = bks, mask = tran_f)
+
+ggplot() + geom_sf() + geom_sf(data=iso, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Trần", paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = ""), sep=" - ")) +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Tran-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ```{r}
@@ -3284,101 +3566,6 @@ choroLayer(x = pot_rot, var = "center",
           legend.values.rnd = 1)
 # Set a layout
 layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Trịnh", paste(round(trinh_plot$prop.trinh[1],1), "% dân số", sep = ""), sep=" - "),
-sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
-par(par)
-}
-dev.off()
-```
-
-## Họ Bùi
-
-```{r, message=FALSE, warning=FALSE}
-bui_sf <- dat_sf %>% mutate(prop.bui=(sum(subset(., Ho=="Bùi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Bùi")
-bui_f <- bui_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-bui_f <- sf::st_transform(bui_f, 2154)
-bui_plot <- bui_sf %>% select(pro.pop, prop.bui, geometry) %>% st_as_sf(crs = 4326)
-# Convert to Spatial class
-bui_sf2 <- bui_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-bui_sf2 <- sf::st_transform(bui_sf2, 2154)
-bui_sp <- as(bui_sf2, Class = "Spatial")
-
-# Compute the potentials of population on a regular grid (50km span)
-# function = exponential, beta = 2, span = 75 km
-poppot <- stewart(knownpts = bui_sp, 
-                  varname = "danso", 
-                  typefct = "exponential", 
-                  span = 5000, 
-                  beta = 2, 
-                  resolution = 50000, 
-                  mask = bui_sp, 
-                  returnclass = "sf")
-
-# Compute the potentials of family name on a regular grid (50km span)
-# function = exponential, beta = 2, span = 75 km
-namepot <- stewart(knownpts = bui_sp, 
-                  varname = "songuoi", 
-                  typefct = "exponential", 
-                  span = 5000, 
-                  beta = 2, 
-                  resolution = 50000, 
-                  mask = bui_sp, 
-                  returnclass = "sf")
-
-# Create the ratio variable
-# Handle NaN
-"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
-poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
-
-# Discretize the variable
-bv <- quantile(bui_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
-
-# Create an isopleth layer
-pot <- isopoly(x = poppot, var = "OUTPUT2",
-               breaks = bv, 
-               mask = bui_sp, 
-               returnclass = "sf")
-
-# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
-
-# make a new geometry that is rotated 90 degrees (but retain original geom)
-bui_rot <- bui_f %>% 
-  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
-  st_drop_geometry() %>%
-  rename(geometry = geom_rot) %>%
-  st_set_geometry("geometry")
-bui_rot <- as(bui_rot, Class = "Spatial")
-
-pot_rot <- pot %>% 
-   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
-   st_drop_geometry() %>%
-   rename(geometry = geom_rot) %>%
-   st_set_geometry("geometry")
-#pot_rot <- st_as_sfc(pot_rot)
- 
-# Draw the basemap
-png(filename = "Bui_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
-plot(bui_rot, add = F, border = NA, bg = "white")
-# Map the potential family name per Pop
-plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
-if(require(cartography)){
-# Get breaks values
-bks <-  sort(unique(c(pot$min, pot$max)))
-# Set a color palette
-pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
-# Draw the map
-par <- par(mar = c(0,0,1.2,0))
-# Display the map
-choroLayer(x = pot_rot, var = "center", 
-          legend.pos = "left",
-          breaks = bks, col = pal, add=T, 
-          border = NA, lwd = 0.2,
-          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
-          legend.title.cex = 1,
-          legend.values.cex = 0.6,
-          legend.values.rnd = 1)
-# Set a layout
-layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - "),
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
