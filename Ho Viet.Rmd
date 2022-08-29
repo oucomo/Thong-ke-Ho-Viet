@@ -2493,32 +2493,6 @@ mf_map(y, var = "pot", type = "prop",
        leg_frame = TRUE, 
        leg_pos = "topright")
 ```
-
-```{r}
-#It’s also possible to compute areas of equipotential with equipotential().
-bks <- seq(0, 100, 10)
-iso <- equipotential(x = y, var = "pot", breaks = bks, mask = bui_f)
-mf_map(x = iso, var = "min", type = "choro", 
-       breaks = bks, 
-       pal = hcl.colors(10, 'viridis', rev = T),
-       lwd = .2,
-       border = "#121725", 
-       leg_pos = "topright",
-       leg_val_rnd = 1,
-       leg_title = "Tỉ lệ (%) trên\n dân số địa phương")
-```
-```{r}
-ggplot() + geom_sf() + geom_sf(data=iso, aes(fill=min), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
-  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - ")) +
-  coord_sf(crs = 4326)
-
-#  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"))
-  
-#ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
-#ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, height = 33)
-```
 ```{r, message=FALSE, warning=FALSE, results='hide'}
 library(potential)
 library(mapsf)
