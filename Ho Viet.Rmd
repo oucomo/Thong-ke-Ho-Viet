@@ -3966,8 +3966,8 @@ huynh_sp <- as(huynh_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = huynh_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = huynh_sp, 
                   returnclass = "sf")
@@ -3977,8 +3977,8 @@ poppot <- stewart(knownpts = huynh_sp,
 namepot <- stewart(knownpts = huynh_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = huynh_sp, 
                   returnclass = "sf")
@@ -4042,13 +4042,23 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(huynh_plot$prop.huynh[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Huỳnh") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Huynh-Contour-River.jpeg"), width = 49, height = 33)
 ```
+
 ## Họ Phan
 
 ```{r, message=FALSE, warning=FALSE}
 phan_sf <- dat_sf %>% mutate(prop.phan=(sum(subset(., Ho=="Phan")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Phan")
 phan_f <- phan_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-phan_f <- sf::st_transform(pham_f, 2154)
+phan_f <- sf::st_transform(phan_f, 2154)
 phan_plot <- phan_sf %>% select(pro.pop, prop.phan, geometry) %>% st_as_sf(crs = 4326)
 # Convert to Spatial class
 phan_sf2 <- phan_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
@@ -4060,8 +4070,8 @@ phan_sp <- as(phan_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = phan_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = phan_sp, 
                   returnclass = "sf")
@@ -4071,8 +4081,8 @@ poppot <- stewart(knownpts = phan_sp,
 namepot <- stewart(knownpts = phan_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = phan_sp, 
                   returnclass = "sf")
@@ -4136,6 +4146,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phan_plot$prop.phan[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Phan") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Phan-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phạm
@@ -4155,8 +4174,8 @@ pham_sp <- as(pham_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = pham_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = pham_sp, 
                   returnclass = "sf")
@@ -4166,8 +4185,8 @@ poppot <- stewart(knownpts = pham_sp,
 namepot <- stewart(knownpts = pham_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = pham_sp, 
                   returnclass = "sf")
@@ -4231,6 +4250,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(pham_plot$prop.pham[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Phạm") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Pham-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -4250,8 +4278,8 @@ vu_sp <- as(vu_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = vu_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = vu_sp, 
                   returnclass = "sf")
@@ -4261,8 +4289,8 @@ poppot <- stewart(knownpts = vu_sp,
 namepot <- stewart(knownpts = vu_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = vu_sp, 
                   returnclass = "sf")
@@ -4326,6 +4354,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vu_plot$prop.vu[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Vũ") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Vu-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Võ
@@ -4345,8 +4382,8 @@ vo_sp <- as(vo_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = vo_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = vo_sp, 
                   returnclass = "sf")
@@ -4356,8 +4393,8 @@ poppot <- stewart(knownpts = vo_sp,
 namepot <- stewart(knownpts = vo_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = vo_sp, 
                   returnclass = "sf")
@@ -4421,6 +4458,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vo_plot$prop.vo[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Võ") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Vo-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phùng
@@ -4440,8 +4486,8 @@ phung_sp <- as(phung_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = phung_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = phung_sp, 
                   returnclass = "sf")
@@ -4451,8 +4497,8 @@ poppot <- stewart(knownpts = phung_sp,
 namepot <- stewart(knownpts = phung_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = phung_sp, 
                   returnclass = "sf")
@@ -4516,6 +4562,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phung_plot$prop.phung[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Phùng") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Phung-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đỗ
@@ -4523,7 +4578,7 @@ dev.off()
 ```{r, message=FALSE, warning=FALSE}
 do_sf <- dat_sf %>% mutate(prop.do=(sum(subset(., Ho=="Đỗ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Đỗ")
 do_f <- do_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-do_f <- sf::st_transform(khuc_f, 2154)
+do_f <- sf::st_transform(do_f, 2154)
 do_plot <- do_sf %>% select(pro.pop, prop.do, geometry) %>% st_as_sf(crs = 4326)
 # Convert to Spatial class
 do_sf2 <- do_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
@@ -4535,8 +4590,8 @@ do_sp <- as(do_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = do_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = do_sp, 
                   returnclass = "sf")
@@ -4546,8 +4601,8 @@ poppot <- stewart(knownpts = do_sp,
 namepot <- stewart(knownpts = do_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = do_sp, 
                   returnclass = "sf")
@@ -4611,6 +4666,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(do_plot$prop.do[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Đỗ") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Do-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Khúc
@@ -4630,8 +4694,8 @@ khuc_sp <- as(khuc_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = khuc_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = khuc_sp, 
                   returnclass = "sf")
@@ -4641,8 +4705,8 @@ poppot <- stewart(knownpts = khuc_sp,
 namepot <- stewart(knownpts = khuc_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = khuc_sp, 
                   returnclass = "sf")
@@ -4706,6 +4770,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(khuc_plot$prop.khuc[1],2), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Khúc") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Khuc-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Mạc
@@ -4725,8 +4798,8 @@ mac_sp <- as(mac_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = mac_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = mac_sp, 
                   returnclass = "sf")
@@ -4736,8 +4809,8 @@ poppot <- stewart(knownpts = mac_sp,
 namepot <- stewart(knownpts = mac_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = mac_sp, 
                   returnclass = "sf")
@@ -4801,6 +4874,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(mac_plot$prop.mac[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Mạc") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Mac-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Mai
@@ -4820,8 +4902,8 @@ mai_sp <- as(mai_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = mai_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = mai_sp, 
                   returnclass = "sf")
@@ -4831,8 +4913,8 @@ poppot <- stewart(knownpts = mai_sp,
 namepot <- stewart(knownpts = mai_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = mai_sp, 
                   returnclass = "sf")
@@ -4896,6 +4978,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(mai_plot$prop.mai[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Mai") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Mai-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Tôn
@@ -4915,8 +5006,8 @@ ton_sp <- as(ton_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = ton_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = ton_sp, 
                   returnclass = "sf")
@@ -4926,8 +5017,8 @@ poppot <- stewart(knownpts = ton_sp,
 namepot <- stewart(knownpts = ton_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = ton_sp, 
                   returnclass = "sf")
@@ -4991,6 +5082,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],2), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Tôn") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Ton-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trương
@@ -5010,8 +5110,8 @@ truong_sp <- as(truong_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = truong_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = truong_sp, 
                   returnclass = "sf")
@@ -5021,8 +5121,8 @@ poppot <- stewart(knownpts = truong_sp,
 namepot <- stewart(knownpts = truong_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 75000, 
-                  beta = 2, 
+                  span = 20000, 
+                  beta = 10, 
                   resolution = 50000, 
                   mask = truong_sp, 
                   returnclass = "sf")
@@ -5086,6 +5186,15 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(truong_plot$prop.truong[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Trương") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Truong-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 
