@@ -2338,6 +2338,16 @@ library(potential)
 # }
 ```
 
+```{r}
+# make a new geometry that is rotated 15 degrees (but retain original geom)
+river_rot <- river3 %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/12)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry") %>%
+  st_set_crs(4326)
+```
+
 ## Họ Bùi
 
 ```{r, message=FALSE, warning=FALSE}
@@ -2403,7 +2413,7 @@ pot_rot <- pot %>%
    rename(geometry = geom_rot) %>%
    st_set_geometry("geometry")
 #pot_rot <- st_as_sfc(pot_rot)
- 
+
 # Draw the basemap
 #png(filename = "Bui_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(bui_rot, add = F, border = NA, bg = "white")
@@ -2847,7 +2857,7 @@ ly_sp <- as(ly_sf2, Class = "Spatial")
 poppot <- stewart(knownpts = ly_sp, 
                   varname = "danso", 
                   typefct = "exponential", 
-                  span = 30000, 
+                  span = 20000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = ly_sp, 
@@ -2858,7 +2868,7 @@ poppot <- stewart(knownpts = ly_sp,
 namepot <- stewart(knownpts = ly_sp, 
                   varname = "songuoi", 
                   typefct = "exponential", 
-                  span = 30000, 
+                  span = 20000, 
                   beta = 10, 
                   resolution = 50000, 
                   mask = ly_sp, 
@@ -2923,6 +2933,16 @@ sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal
 par(par)
 }
 dev.off()
+```
+
+```{r}
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=center), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Lý", paste(round(ly_plot$prop.ly[1],1), "% dân số", sep = ""), sep=" - ")) +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Ly-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lê
