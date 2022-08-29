@@ -2415,7 +2415,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
 
 # Draw the basemap
-#png(filename = "Bui_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+png(filename = "Bui_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(bui_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -2440,15 +2440,14 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-#dev.off()
-```
+dev.off()
 
-```{r}
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
-  scale_fill_viridis("Tỉ lệ (%) trên\n dân số địa phương", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
-  ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(bui_plotf$prop.bui[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi") +
   coord_sf(crs = 4326)
 ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, height = 33)
 ```
