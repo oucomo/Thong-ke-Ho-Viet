@@ -5281,6 +5281,10 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
 ggsave(filename = file.path("figures", "Truong-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
+## Chi tiết họ theo tỉnh
+
+## Họ Khúc
+
 ```{r}
 khuc_tinh <- data_ho_tinh %>% filter(Ho=="Khúc") %>%
   arrange(desc(pro.pop))
@@ -5289,5 +5293,14 @@ khuc_tinh = merge(khuc_tinh, data_tinh, by="MATINH") %>%
 write_xlsx(khuc_tinh, "Khuc_tinh.xlsx")
 ```
 
+## Họ Dư
+
+```{r}
+du_tinh <- data_ho_tinh %>% filter(Ho=="Dư") %>%
+  arrange(desc(pro.pop))
+du_tinh = merge(du_tinh, data_tinh, by="MATINH") %>%
+  arrange(desc(pro.pop))
+write_xlsx(du_tinh, "Du_tinh.xlsx")
+```
 
 
