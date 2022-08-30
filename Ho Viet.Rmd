@@ -104,10 +104,10 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "chu|Chu|CHU") == TRUE, "Chu", data_
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đàm|Đàm|ĐÀM|Đàm|Đàm|đàm") == TRUE, "Đàm", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Đăng|đặng|Đặng|Đặng|ĐẶNG|dặng|Dặng|Đặnh|đặng|ĐặNg|ĐẶNG|Đạng|Đậng|Đặng|Ðặng|Đặnh|Đănhj") == TRUE, "Đặng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "danh|Danh|DANH") == TRUE, "Danh", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đào|Đào|Đào|ĐÀO|Dào|Đaò|đào|ĐàO|ĐÀo|ĐÀO|Đoà|Đòa") == TRUE, "Đào", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "đào" | data_ho$Ho == "Đào" | data_ho$Ho == "Đào" | data_ho$Ho == "ĐÀO" | data_ho$Ho == "Dào" | data_ho$Ho == "Đaò" | data_ho$Ho == "đào" | data_ho$Ho =="ĐàO" | data_ho$Ho == "ĐÀo" | data_ho$Ho == "ĐÀO" | data_ho$Ho == "Đoà" | data_ho$Ho == "Đòa"), "Đào", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đinh|Đinh|ĐINH|Đimh|Din|Đin|Đing|dinh|Dinh|DINH|ĐInh|Đjnh|Đlnh") == TRUE, "Đinh", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đỗ|Đỗ|Đỗ|ĐỖ|Đổ|ĐỖ|Dỗ|đổ|Đổ|ĐỔ|ĐỔ|Đõ|ĐÕ|Đỡ") == TRUE, "Đỗ", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đoàn|Đoàn|Đoàn|ĐOÀN|đoàn|ĐoàN|ĐOàn|ĐOÀN|đòan|Đòan|Đòan|ĐÒAN|Ðoàn") == TRUE, "Đoàn", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "đoàn" | data_ho$Ho ==  "Đoàn" | data_ho$Ho == "Đoàn" | data_ho$Ho == "ĐOÀN" | data_ho$Ho == "đoàn" | data_ho$Ho == "ĐoàN" | data_ho$Ho == "ĐOàn" | data_ho$Ho == "ĐOÀN" | data_ho$Ho == "đòan" | data_ho$Ho == "Đòan" | data_ho$Ho == "Đòan" | data_ho$Ho == "ĐÒAN" | data_ho$Ho == "Ðoàn"), "Đoàn", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "dư" | data_ho$Ho == "Dư" | data_ho$Ho == "DƯ"), "Dư", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "Duong" | data_ho$Ho == "dương" | data_ho$Ho == "Dương" | data_ho$Ho == "DƯƠNG" | data_ho$Ho == "Dươ" | data_ho$Ho == "Dươg" | data_ho$Ho == "Dươg" | data_ho$Ho == "Dươmg" | data_ho$Ho == "Dươn" | data_ho$Ho == "Duỏng" | data_ho$Ho == "Duơng" | data_ho$Ho == "Dươngthanh" | data_ho$Ho == "Dươnh" | data_ho$Ho == "Dươnng"), "Dương", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đường|Đường|ĐƯỜNG|Dướng|dường|Dường|Dường|Dưỡng|Dượng|Đương|Đường|Đường") == TRUE, "Đường", data_ho$Ho)
@@ -116,6 +116,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "hà|Hà|Hà|HÀ|hà|Hà|HÀ") ==
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "hồ|Hồ̀|HỒ|hồ|Hồ|Hồ|HỒ") == TRUE, "Hồ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hoang|hoàng|hoàng|Hoàng|Hoàng|HOÀNG|Hoàng|HOÀNG|Hòang|Hoáng|HOàng|hòang|HÒANG|HÒANG|Hoành|HOÀNH") == TRUE, "Hoàng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Huynh|huỳnh|Huỳnh|Huỳnh|HuỲNH|HUỲNH|Hùynh|huỳnh|Huỳnh|HUỲNH|Huuỳnh|Huuỳnh|Huỳn|Huỳng|huynh|HUYNH|Huýnh|Huỳnh|Huỹnh|Huỷnh|hùynh|Hùynh|HÙYNH|Huyỳnh") == TRUE, "Huỳnh", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Khuc|khúc|Khúc|Khúc|KHÚC") == TRUE, "Khúc", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kiều|Kiều|Kiều|Kiều|KIỀU|Kieu|Kièu|Kiêu|Kiếu|KiỀU|KIỀU|Kiểu") == TRUE, "Kiều", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lại|Lại|LẠI|Lại|Lại|Laị|LẠI") == TRUE, "Lại", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lam|lâm|Lâm|LÂM|LÂm") == TRUE, "Lâm", data_ho$Ho)
@@ -661,7 +662,7 @@ nametinh <- vnm$VARNAME_1
 data_pop <- cbind(data_pop, data_pop2) %>%
   mutate(id=order(nametinh))
 
-# ho_tinh_pop = merge(ho_tinh, data_pop, by="id")
+ho_tinh_pop = merge(ho_tinh, data_pop, by="id")
 # ho_tinh_pop <- ho_tinh_pop %>%
 #   mutate(nguoi_pop=songuoi/danso)
 
@@ -5280,7 +5281,13 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
 ggsave(filename = file.path("figures", "Truong-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
-
+```{r}
+khuc_tinh <- data_ho_tinh %>% filter(Ho=="Khúc") %>%
+  arrange(desc(pro.pop))
+khuc_tinh = merge(khuc_tinh, data_tinh, by="MATINH") %>%
+  arrange(desc(pro.pop))
+write_xlsx(khuc_tinh, "Khuc_tinh.xlsx")
+```
 
 
 
