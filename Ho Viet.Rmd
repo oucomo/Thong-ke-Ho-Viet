@@ -163,7 +163,10 @@ data_ho_overall <- data_ho %>%
 
 data_ho_tinh <- data_ho %>%
   group_by(MATINH, Ho) %>%
-  summarise(songuoi=sum(songuoi))
+  summarise(songuoi=sum(songuoi)) %>% filter(MATINH!="") %>%
+  group_by(MATINH) %>%
+  mutate(danso=sum(songuoi)) %>% ungroup() %>%
+  mutate(pro.pop=(songuoi/danso)*100)
 
 data_ho_xa <- data_ho %>%
   group_by(MATINH, MAHUYEN, MAXA, Ho) %>%
@@ -175,6 +178,13 @@ data_ho_xa <- data_ho %>%
 ## Top Họ cả nước
 
 ```{r}
+data_ho_top3000 <- data_ho_overall %>%
+  arrange(desc(songuoi)) %>%
+  mutate(pro.pop=(songuoi/sum(songuoi)*100))
+data_ho_top3000 <- head(data_ho_top3000, n=3000)
+library(writexl)
+write_xlsx(data_ho_top3000, "Top 3000 ho.xlsx")
+
 data_ho_top1000 <- data_ho_overall %>%
   arrange(desc(songuoi))
 data_ho_top1000 <- head(data_ho_top1000, n=1000)
@@ -285,6 +295,78 @@ top101_200
 ```
 
 ## Tổng họ theo tỉnh
+
+## Top Họ theo tỉnh
+
+```{r}
+phutho <- data_ho_tinh %>% filter(MATINH=="25") %>%
+  arrange(desc(songuoi))
+write_xlsx(phutho, "Phu Tho.xlsx")
+
+vinhphuc <- data_ho_tinh %>% filter(MATINH=="26") %>%
+  arrange(desc(songuoi))
+write_xlsx(vinhphuc, "Vinh Phuc.xlsx")
+
+sonla <- data_ho_tinh %>% filter(MATINH=="14") %>%
+  arrange(desc(songuoi))
+write_xlsx(sonla, "Son La.xlsx")
+
+hoabinh <- data_ho_tinh %>% filter(MATINH=="17") %>%
+  arrange(desc(songuoi))
+write_xlsx(hoabinh, "Hoa Binh.xlsx")
+
+thainguyen <- data_ho_tinh %>% filter(MATINH=="19") %>%
+  arrange(desc(songuoi))
+write_xlsx(thainguyen, "Thai Nguyen.xlsx")
+
+tuyenquang <- data_ho_tinh %>% filter(MATINH=="08") %>%
+  arrange(desc(songuoi))
+write_xlsx(tuyenquang, "Tuyen Quang.xlsx")
+
+hanam <- data_ho_tinh %>% filter(MATINH=="35") %>%
+  arrange(desc(songuoi))
+write_xlsx(hanam, "Ha Nam.xlsx")
+
+hungyen <- data_ho_tinh %>% filter(MATINH=="33") %>%
+  arrange(desc(songuoi))
+write_xlsx(hungyen, "Hung Yen.xlsx")
+
+haiduong <- data_ho_tinh %>% filter(MATINH=="30") %>%
+  arrange(desc(songuoi))
+write_xlsx(haiduong, "Hai Duong.xlsx")
+
+ninhbinh <- data_ho_tinh %>% filter(MATINH=="37") %>%
+  arrange(desc(songuoi))
+write_xlsx(ninhbinh, "Ninh Binh.xlsx")
+
+namdinh <- data_ho_tinh %>% filter(MATINH=="36") %>%
+  arrange(desc(songuoi))
+write_xlsx(namdinh, "Nam Dinh.xlsx")
+
+thanhhoa <- data_ho_tinh %>% filter(MATINH=="38") %>%
+  arrange(desc(songuoi))
+write_xlsx(thanhhoa, "Thanh Hoa.xlsx")
+
+nghean <- data_ho_tinh %>% filter(MATINH=="40") %>%
+  arrange(desc(songuoi))
+write_xlsx(nghean, "Nghe An.xlsx")
+
+hcm <- data_ho_tinh %>% filter(MATINH=="79") %>%
+  arrange(desc(songuoi))
+write_xlsx(hcm, "HCM.xlsx")
+
+hanoi <- data_ho_tinh %>% filter(MATINH=="01") %>%
+  arrange(desc(songuoi))
+write_xlsx(hanoi, "Ha Noi.xlsx")
+
+dongnai <- data_ho_tinh %>% filter(MATINH=="75") %>%
+  arrange(desc(songuoi))
+write_xlsx(dongnai, "Dong Nai.xlsx")
+
+binhduong <- data_ho_tinh %>% filter(MATINH=="74") %>%
+  arrange(desc(songuoi))
+write_xlsx(binhduong, "Binh Duong.xlsx")
+```
 
 ## Bản đồ Việt Nam
 
