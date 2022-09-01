@@ -1,7 +1,7 @@
 ---
 title: "Ho Viet"
 author: "Duc Du"
-date: '2022-08-30'
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output: html_document
 ---
 
@@ -31,9 +31,6 @@ library(data.table)
 library(lubridate)
 library(stringi)
 
-library(psych) # for describing the data
-library(tableone)
-#library(compareGroups)
 library(forcats)
 library(ggpubr)
 library(rstatix)
@@ -62,26 +59,30 @@ options(max.print=1000000)
 ## Load data
 
 ```{r load data}
-path_ho = file.path("DanhSach_Ho.sav") 
-path_huyen = file.path("Dm_Huyen.sav")
-path_tinh = file.path("Dm_Tinh.sav")
-path_xa = file.path("Dm_Xa.sav")
+path_ho = file.path("data", "DanhSach_Ho.sav") 
+path_huyen = file.path("data", "Dm_Huyen.sav")
+path_tinh = file.path("data", "Dm_Tinh.sav")
+path_xa = file.path("data", "Dm_Xa.sav")
 
 data_ho = read_sav(path_ho) %>% filter(Ho!="" & Ho!=" " & !is.na(Ho))
 data_huyen = read_sav(path_huyen)
 data_tinh = read_sav(path_tinh)
 data_xa = read_sav(path_xa)
 
-#gadm36_VNM2 <- readRDS("gadm36_VNM_2_sp.rds")
-#gadm36_VNM3 <- readRDS("gadm36_VNM_3_sp.rds")
+#gadm36_VNM2 <- readRDS("data/gadm36_VNM_2_sp.rds")
+#gadm36_VNM3 <- readRDS("data/"gadm36_VNM_3_sp.rds")
 
-gadm36_VNM3_sf <- readRDS("gadm36_VNM_3_sf.rds")
-#publicProvinces <- readRDS("publicProvinces.rds")
+gadm36_VNM3_sf <- readRDS("data/gadm36_VNM_3_sf.rds")
+#publicProvinces <- readRDS("data", "publicProvinces.rds")
 
-load("geo_vnm.Rdata")
-load("pop_info.Rdata")
-load("vnm2_map.Rdata")
-load("vnm3_map.Rdata")
+load("data/geo_vnm.Rdata")
+load("data/pop_info.Rdata")
+load("data/vnm2_map.Rdata")
+load("data/vnm3_map.Rdata")
+```
+
+```{r load data2}
+# load("data/hoviet.RData")
 ```
 
 ## Inspecting data
@@ -185,14 +186,14 @@ data_ho_top10000 <- data_ho_overall %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
 data_ho_top10000 <- head(data_ho_top10000, n=10000)
 library(writexl)
-write_xlsx(data_ho_top10000, "Top 10000 ho.xlsx")
+write_xlsx(data_ho_top10000, "output/Top 10000 ho.xlsx")
 
 data_ho_top3000 <- data_ho_overall %>%
   arrange(desc(songuoi)) %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
 data_ho_top3000 <- head(data_ho_top3000, n=3000)
 library(writexl)
-write_xlsx(data_ho_top3000, "Top 3000 ho.xlsx")
+write_xlsx(data_ho_top3000, "output/Top 3000 ho.xlsx")
 
 data_ho_top1000 <- data_ho_overall %>%
   arrange(desc(songuoi))
@@ -241,7 +242,7 @@ ggplot(data = data_ho_top50, aes(x = reorder(Ho, songuoi, decreasing=F), y =song
   theme(axis.text.y = element_text(size = 7),
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 50 họ có số người cao nhất")
-ggsave(filename = file.path("top50_ho.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "top50_ho.png"), width = 7, height = 5)
 ```
 
 ```{r}
@@ -254,7 +255,7 @@ ggplot(data = data_ho_top100, aes(x = reorder(Ho, songuoi, decreasing=F), y =son
   theme(axis.text.y = element_text(size = 7),
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 50-100 họ có số người cao nhất")
-ggsave(filename = file.path("top100_ho.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "top100_ho.png"), width = 7, height = 5)
 ```
 
 ```{r}
@@ -267,7 +268,7 @@ ggplot(data = data_ho_top150, aes(x = reorder(Ho, songuoi, decreasing=F), y =son
   theme(axis.text.y = element_text(size = 7),
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 100-150 họ có số người cao nhất")
-ggsave(filename = file.path("top150_ho.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "top150_ho.png"), width = 7, height = 5)
 ```
 
 ```{r}
@@ -282,7 +283,7 @@ top1_100 <- data_ho_top200 %>% filter(rank %in% c(1:100)) %>%
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 100 họ có số người cao nhất") +
   facet_wrap(~group, scales = "free_y")
-ggsave(filename = file.path("top100_ho.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "top100_ho.png"), width = 7, height = 5)
 top1_100
 ```
 
@@ -299,7 +300,7 @@ top101_200 <- data_ho_top200 %>% filter(rank %in% c(101:200)) %>%
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 101-200 họ có số người cao nhất") +
   facet_wrap(~group, scales = "free_y")
-ggsave(filename = file.path("top101-200_ho.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "top101-200_ho.png"), width = 7, height = 5)
 top101_200
 ```
 
@@ -310,35 +311,35 @@ top101_200
 ```{r}
 phutho <- data_ho_tinh %>% filter(MATINH=="25") %>%
   arrange(desc(songuoi))
-write_xlsx(phutho, "Phu Tho.xlsx")
+write_xlsx(phutho, "output/Phu Tho.xlsx")
 
 vinhphuc <- data_ho_tinh %>% filter(MATINH=="26") %>%
   arrange(desc(songuoi))
-write_xlsx(vinhphuc, "Vinh Phuc.xlsx")
+write_xlsx(vinhphuc, "output/Vinh Phuc.xlsx")
 
 sonla <- data_ho_tinh %>% filter(MATINH=="14") %>%
   arrange(desc(songuoi))
-write_xlsx(sonla, "Son La.xlsx")
+write_xlsx(sonla, "output/Son La.xlsx")
 
 hoabinh <- data_ho_tinh %>% filter(MATINH=="17") %>%
   arrange(desc(songuoi))
-write_xlsx(hoabinh, "Hoa Binh.xlsx")
+write_xlsx(hoabinh, "output/Hoa Binh.xlsx")
 
 thainguyen <- data_ho_tinh %>% filter(MATINH=="19") %>%
   arrange(desc(songuoi))
-write_xlsx(thainguyen, "Thai Nguyen.xlsx")
+write_xlsx(thainguyen, "output/Thai Nguyen.xlsx")
 
 tuyenquang <- data_ho_tinh %>% filter(MATINH=="08") %>%
   arrange(desc(songuoi))
-write_xlsx(tuyenquang, "Tuyen Quang.xlsx")
+write_xlsx(tuyenquang, "output/Tuyen Quang.xlsx")
 
 hanam <- data_ho_tinh %>% filter(MATINH=="35") %>%
   arrange(desc(songuoi))
-write_xlsx(hanam, "Ha Nam.xlsx")
+write_xlsx(hanam, "output/Ha Nam.xlsx")
 
 hungyen <- data_ho_tinh %>% filter(MATINH=="33") %>%
   arrange(desc(songuoi))
-write_xlsx(hungyen, "Hung Yen.xlsx")
+write_xlsx(hungyen, "output/Hung Yen.xlsx")
 
 haiduong <- data_ho_tinh %>% filter(MATINH=="30") %>%
   arrange(desc(songuoi))
@@ -346,35 +347,35 @@ write_xlsx(haiduong, "Hai Duong.xlsx")
 
 ninhbinh <- data_ho_tinh %>% filter(MATINH=="37") %>%
   arrange(desc(songuoi))
-write_xlsx(ninhbinh, "Ninh Binh.xlsx")
+write_xlsx(ninhbinh, "output/Ninh Binh.xlsx")
 
 namdinh <- data_ho_tinh %>% filter(MATINH=="36") %>%
   arrange(desc(songuoi))
-write_xlsx(namdinh, "Nam Dinh.xlsx")
+write_xlsx(namdinh, "output/Nam Dinh.xlsx")
 
 thanhhoa <- data_ho_tinh %>% filter(MATINH=="38") %>%
   arrange(desc(songuoi))
-write_xlsx(thanhhoa, "Thanh Hoa.xlsx")
+write_xlsx(thanhhoa, "output/Thanh Hoa.xlsx")
 
 nghean <- data_ho_tinh %>% filter(MATINH=="40") %>%
   arrange(desc(songuoi))
-write_xlsx(nghean, "Nghe An.xlsx")
+write_xlsx(nghean, "output/Nghe An.xlsx")
 
 hcm <- data_ho_tinh %>% filter(MATINH=="79") %>%
   arrange(desc(songuoi))
-write_xlsx(hcm, "HCM.xlsx")
+write_xlsx(hcm, "output/HCM.xlsx")
 
 hanoi <- data_ho_tinh %>% filter(MATINH=="01") %>%
   arrange(desc(songuoi))
-write_xlsx(hanoi, "Ha Noi.xlsx")
+write_xlsx(hanoi, "output/Ha Noi.xlsx")
 
 dongnai <- data_ho_tinh %>% filter(MATINH=="75") %>%
   arrange(desc(songuoi))
-write_xlsx(dongnai, "Dong Nai.xlsx")
+write_xlsx(dongnai, "output/Dong Nai.xlsx")
 
 binhduong <- data_ho_tinh %>% filter(MATINH=="74") %>%
   arrange(desc(songuoi))
-write_xlsx(binhduong, "Binh Duong.xlsx")
+write_xlsx(binhduong, "output/Binh Duong.xlsx")
 ```
 
 ## Bản đồ Việt Nam
@@ -558,7 +559,7 @@ ggplot(data = nguyen, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Nguyễn")
-ggsave(filename = file.path("Ho Nguyen.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Nguyen.png"), width = 7, height = 5)
 ```
 ## Họ Trần
 
@@ -567,7 +568,7 @@ ggplot(data = tran, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Trần")
-ggsave(filename = file.path("Ho Tran.png"), width = 7, height = 5) 
+ggsave(filename = file.path("figures", "General", "Ho Tran.png"), width = 7, height = 5) 
 ```
 
 ## Họ Lê
@@ -577,7 +578,7 @@ ggplot(data = le, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Lê")
-ggsave(filename = file.path("Ho Le.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Le.png"), width = 7, height = 5)
 ```
 ## Họ Dư
 
@@ -586,7 +587,7 @@ ggplot(data = du, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Dư")
-ggsave(filename = file.path("Ho Du.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Du.png"), width = 7, height = 5)
 ```
 
 ## Họ Lý
@@ -596,7 +597,7 @@ ggplot(data = ly, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Lý")
-ggsave(filename = file.path("Ho Ly.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Ly.png"), width = 7, height = 5)
 ```
 
 ## Họ Mạc
@@ -606,7 +607,7 @@ ggplot(data = mac, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Mạc")
-ggsave(filename = file.path("Ho Mac.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Mac.png"), width = 7, height = 5)
 ```
 
 ## Họ Phùng
@@ -616,7 +617,7 @@ ggplot(data = phung, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Phùng")
-ggsave(filename = file.path("Ho Phung.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Phung.png"), width = 7, height = 5)
 ```
 ## Họ Khúc
 
@@ -625,7 +626,7 @@ ggplot(data = khuc, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Khúc")
-ggsave(filename = file.path("Ho Khuc.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Khuc.png"), width = 7, height = 5)
 ```
 ## Họ Ngô
 
@@ -634,7 +635,7 @@ ggplot(data = ngo, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Ngô")
-ggsave(filename = file.path("Ho Ngo.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Ngo.png"), width = 7, height = 5)
 ```
 ## Họ Đoàn
 
@@ -643,7 +644,7 @@ ggplot(data = doan, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Đoàn")
-ggsave(filename = file.path("Ho Doan.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Doan.png"), width = 7, height = 5)
 ```
 ## Họ Triệu
 
@@ -652,7 +653,7 @@ ggplot(data = trieu, aes(x=long, y=lat, group=group)) +
   geom_polygon(aes(fill=songuoi), show.legend = T) +
   scale_fill_viridis(direction=-1, option = "viridis") +
   ggtitle("Họ Triệu")
-ggsave(filename = file.path("Ho Trieu.png"), width = 7, height = 5)
+ggsave(filename = file.path("figures", "General", "Ho Trieu.png"), width = 7, height = 5)
 ```
 ## Tổng dân số
 
@@ -726,7 +727,7 @@ xa$TENHUYEN <- gsub("Thị Xã", "", xa$TENHUYEN)
 #namexa <- stri_trans_general(namexa, "Latin-ASCII")
 
 xa2 <- xa %>% rename(NAME_1=TENTINH, NAME_2=TENHUYEN, NAME_3=TENXA)
-gadm36_VNM3_sf <- readRDS("gadm36_VNM_3_sf.rds")
+gadm36_VNM3_sf <- readRDS("data", "gadm36_VNM_3_sf.rds")
 
 ## Merge all data
 
@@ -771,7 +772,7 @@ ggplot() + geom_sf() + geom_sf(data=nguyen_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
 #ggsave(filename = file.path("Ho Nguyen-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Nguyen-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Nguyen-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -785,7 +786,7 @@ ggplot() + geom_sf() + geom_sf(data=tran_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trần")
 #ggsave(filename = file.path("Ho Tran-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Tran-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Tran-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Lê
 
@@ -798,7 +799,7 @@ ggplot() + geom_sf() + geom_sf(data=le_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lê")
 #ggsave(filename = file.path("Ho Le-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Le-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Le-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -812,7 +813,7 @@ ggplot() + geom_sf() + geom_sf(data=du_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dư")
 #ggsave(filename = file.path("Ho Du-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Du-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Du-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Dương
 
@@ -825,7 +826,7 @@ ggplot() + geom_sf() + geom_sf(data=duong_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dương")
 #ggsave(filename = file.path("Ho Duong-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Duong-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Duong-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -841,7 +842,7 @@ ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
 #ggsave(filename = file.path("Ho Ly-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ly-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ly-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đoàn
 
@@ -855,7 +856,7 @@ ggplot() + geom_sf(data=doan_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
 #ggsave(filename = file.path("Ho Doan-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Doan-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Doan-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Ngô
@@ -870,7 +871,7 @@ ggplot() + geom_sf(data=ngo_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Ngô")
 #ggsave(filename = file.path("Ho Ngo-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ngo-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ngo-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Triệu
 
@@ -883,7 +884,7 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Triệu")
 #ggsave(filename = file.path("Ho Trieu-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Trieu-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Trieu-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mạc
 
@@ -896,7 +897,7 @@ ggplot() + geom_sf() + geom_sf(data=mac_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mạc")
 #ggsave(filename = file.path("Ho Mac-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Mac-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Mac-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mai
 
@@ -909,7 +910,7 @@ ggplot() + geom_sf() + geom_sf(data=mai_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mai")
 #ggsave(filename = file.path("Ho Mai-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Mai-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Mai-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phùng
@@ -923,7 +924,7 @@ ggplot() + geom_sf() + geom_sf(data=phung_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phùng")
 #ggsave(filename = file.path("Ho Phung-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Phung-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Phung-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Khúc
 
@@ -936,7 +937,7 @@ ggplot() + geom_sf() + geom_sf(data=khuc_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Khúc")
 #ggsave(filename = file.path("Ho Khuc-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Khuc-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Khuc-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phạm
 
@@ -949,7 +950,7 @@ ggplot() + geom_sf() + geom_sf(data=pham_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phạm")
 #ggsave(filename = file.path("Ho Pham-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Pham-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Pham-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Hồ
@@ -963,7 +964,7 @@ ggplot() + geom_sf() + geom_sf(data=ho_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hồ")
 #ggsave(filename = file.path("Ho Ho-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ho-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ho-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Tôn
@@ -977,7 +978,7 @@ ggplot() + geom_sf() + geom_sf(data=ton_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Tôn")
 #ggsave(filename = file.path("Ho Ton-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ton-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ton-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Bùi
 
@@ -990,7 +991,7 @@ ggplot() + geom_sf() + geom_sf(data=bui_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Bùi")
 #ggsave(filename = file.path("Ho Bui-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Bui-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Bui-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đào
 
@@ -1003,7 +1004,7 @@ ggplot() + geom_sf() + geom_sf(data=dao_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đào")
 #ggsave(filename = file.path("Ho Dao-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Dao-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Dao-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đinh
@@ -1017,7 +1018,7 @@ ggplot() + geom_sf() + geom_sf(data=dinh_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đinh")
 #ggsave(filename = file.path("Ho Dinh-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Dinh-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Dinh-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đỗ
 
@@ -1030,7 +1031,7 @@ ggplot() + geom_sf() + geom_sf(data=do_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đỗ")
 #ggsave(filename = file.path("Ho Do-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Do-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Do-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hoàng
 
@@ -1043,7 +1044,7 @@ ggplot() + geom_sf() + geom_sf(data=hoang_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hoàng")
 #ggsave(filename = file.path("Ho Hoang-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Hoang-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Hoang-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Huỳnh
 
@@ -1056,7 +1057,7 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Huỳnh")
 #ggsave(filename = file.path("Ho Huynh-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Huynh-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Huynh-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phan
@@ -1070,7 +1071,7 @@ ggplot() + geom_sf() + geom_sf(data=phan_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phan")
 #ggsave(filename = file.path("Ho Phan-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Phan-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Phan-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Quách
@@ -1084,7 +1085,7 @@ ggplot() + geom_sf() + geom_sf(data=quach_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Quách")
 #ggsave(filename = file.path("Ho Quach-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Quach-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Quach-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trịnh
@@ -1098,7 +1099,7 @@ ggplot() + geom_sf() + geom_sf(data=trinh_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trịnh")
 #ggsave(filename = file.path("Ho Trinh-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Trinh-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Trinh-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trương
@@ -1112,7 +1113,7 @@ ggplot() + geom_sf() + geom_sf(data=truong_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trương")
 #ggsave(filename = file.path("Ho Truong-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Truong-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Truong-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -1126,7 +1127,7 @@ ggplot() + geom_sf() + geom_sf(data=vu_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Vũ")
 #ggsave(filename = file.path("Ho Vu-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Vu-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Vu-PerPop.jpeg"), width = 49, height = 33)
 ```
 ## Họ Võ
 
@@ -1139,7 +1140,7 @@ ggplot() + geom_sf() + geom_sf(data=vo_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Võ")
 #ggsave(filename = file.path("Ho Vo-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Vo-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Vo-PerPop.jpeg"), width = 49, height = 33)
 ```
 
 ```{r}
@@ -1155,7 +1156,7 @@ ggsave(filename = file.path("Ho Vo-PerPop.jpeg"), width = 49, height = 33)
 
 ```{r}
 library(sf)
-f <- st_read("gadm36_VNM_3.shp")
+f <- st_read("data/gadm36_VNM_3.shp")
 f$area <- st_area(f) #Take care of units
 
 dat_f <- f[,c("NAME_1", "NAME_2", "NAME_3", "TYPE_3", "area")]
@@ -1195,7 +1196,7 @@ ggplot() + geom_sf() + geom_sf(data=nguyen_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
 #ggsave(filename = file.path("Ho Nguyen-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Nguyen-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Nguyen-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -1209,7 +1210,7 @@ ggplot() + geom_sf() + geom_sf(data=tran_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trần")
 #ggsave(filename = file.path("Ho Tran-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Tran-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Tran-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Lê
 
@@ -1222,7 +1223,7 @@ ggplot() + geom_sf() + geom_sf(data=le_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lê")
 #ggsave(filename = file.path("Ho Le-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Le-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Le-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -1236,7 +1237,7 @@ ggplot() + geom_sf() + geom_sf(data=du_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dư")
 #ggsave(filename = file.path("Ho Du-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Du-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Du-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Dương
 
@@ -1249,7 +1250,7 @@ ggplot() + geom_sf() + geom_sf(data=duong_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dương")
 #ggsave(filename = file.path("Ho Duong-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Duong-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Duong-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -1264,7 +1265,7 @@ ggplot() + geom_sf() + geom_sf(data=ly_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
 #ggsave(filename = file.path("Ho Ly-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ly-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ly-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đoàn
 
@@ -1278,7 +1279,7 @@ ggplot() + geom_sf(data=doan_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
 #ggsave(filename = file.path("Ho Doan-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Doan-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Doan-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Ngô
@@ -1293,7 +1294,7 @@ ggplot() + geom_sf(data=ngo_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Ngô")
 #ggsave(filename = file.path("Ho Ngo-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ngo-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ngo-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Triệu
 
@@ -1306,7 +1307,7 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Triệu")
 #ggsave(filename = file.path("Ho Trieu-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Trieu-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Trieu-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mạc
 
@@ -1319,7 +1320,7 @@ ggplot() + geom_sf() + geom_sf(data=mac_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mạc")
 #ggsave(filename = file.path("Ho Mac-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Mac-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Mac-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mai
 
@@ -1332,7 +1333,7 @@ ggplot() + geom_sf() + geom_sf(data=mai_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mai")
 #ggsave(filename = file.path("Ho Mai-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Mai-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Mai-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phùng
@@ -1346,7 +1347,7 @@ ggplot() + geom_sf() + geom_sf(data=phung_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phùng")
 #ggsave(filename = file.path("Ho Phung-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Phung-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Phung-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Khúc
 
@@ -1359,7 +1360,7 @@ ggplot() + geom_sf() + geom_sf(data=khuc_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Khúc")
 #ggsave(filename = file.path("Ho Khuc-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Khuc-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Khuc-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phạm
 
@@ -1372,7 +1373,7 @@ ggplot() + geom_sf() + geom_sf(data=pham_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phạm")
 #ggsave(filename = file.path("Ho Pham-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Pham-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Pham-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Hồ
@@ -1386,7 +1387,7 @@ ggplot() + geom_sf() + geom_sf(data=ho_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hồ")
 #ggsave(filename = file.path("Ho Ho-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ho-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ho-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Tôn
@@ -1400,7 +1401,7 @@ ggplot() + geom_sf() + geom_sf(data=ton_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Tôn")
 #ggsave(filename = file.path("Ho Ton-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Ton-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ton-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Bùi
@@ -1414,7 +1415,7 @@ ggplot() + geom_sf() + geom_sf(data=bui_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Bùi")
 #ggsave(filename = file.path("Ho Bui-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Bui-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Bui-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đào
 
@@ -1427,7 +1428,7 @@ ggplot() + geom_sf() + geom_sf(data=dao_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đào")
 #ggsave(filename = file.path("Ho Dao-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Dao-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Dao-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đinh
@@ -1441,7 +1442,7 @@ ggplot() + geom_sf() + geom_sf(data=dinh_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đinh")
 #ggsave(filename = file.path("Ho Dinh-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Dinh-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Dinh-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đỗ
 
@@ -1454,7 +1455,7 @@ ggplot() + geom_sf() + geom_sf(data=do_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đỗ")
 #ggsave(filename = file.path("Ho Do-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Do-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Do-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hoàng
 
@@ -1467,7 +1468,7 @@ ggplot() + geom_sf() + geom_sf(data=hoang_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hoàng")
 #ggsave(filename = file.path("Ho Hoang-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Hoang-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Hoang-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Huỳnh
 
@@ -1480,7 +1481,7 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Huỳnh")
 #ggsave(filename = file.path("Ho Huynh-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Huynh-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Huynh-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phan
 
@@ -1493,7 +1494,7 @@ ggplot() + geom_sf() + geom_sf(data=phan_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phan")
 #ggsave(filename = file.path("Ho Phan-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Phan-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Phan-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Quách
@@ -1507,7 +1508,7 @@ ggplot() + geom_sf() + geom_sf(data=quach_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Quách")
 #ggsave(filename = file.path("Ho Quach-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Quach-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Quach-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trịnh
@@ -1521,7 +1522,7 @@ ggplot() + geom_sf() + geom_sf(data=trinh_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trịnh")
 #ggsave(filename = file.path("Ho Trinh-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Trinh-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Trinh-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Trương
 
@@ -1534,7 +1535,7 @@ ggplot() + geom_sf() + geom_sf(data=truong_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trương")
 #ggsave(filename = file.path("Ho Truong-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Truong-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Truong-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -1548,7 +1549,7 @@ ggplot() + geom_sf() + geom_sf(data=vu_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Vũ")
 #ggsave(filename = file.path("Ho Vu-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Vu-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Vu-PerArea.jpeg"), width = 49, height = 33)
 ```
 ## Họ Võ
 
@@ -1561,16 +1562,16 @@ ggplot() + geom_sf() + geom_sf(data=vo_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Võ")
 #ggsave(filename = file.path("Ho Vo-PerArea.png"), width = 49, height = 33)
-ggsave(filename = file.path("Ho Vo-PerArea.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Vo-PerArea.jpeg"), width = 49, height = 33)
 ```
 
 ## Get river data
 
 ```{r}
 #rivers <- st_read(file.path("GloRiC_v10_shapefile", "GloRiC_v10.shp"))
-#river1 <- st_read(file.path("ThuyHeVN2000.shp")) #https://data.opendevelopmentmekong.net/dataset/mng-li-thy-vn
-#river2 <- st_read(file.path("river.shp")) #https://www.greatermekong.org/gms-main-rivers
-river3 <- st_read(file.path("fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
+#river1 <- st_read(file.path("data", "ThuyHeVN2000.shp")) #https://data.opendevelopmentmekong.net/dataset/mng-li-thy-vn
+#river2 <- st_read(file.path("data", "river.shp")) #https://www.greatermekong.org/gms-main-rivers
+river3 <- st_read(file.path("data", "fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
 ```
 
 ## Họ Nguyễn
@@ -1588,7 +1589,7 @@ ggplot() + geom_sf() + geom_sf(data=nguyen_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
 #ggsave(filename = file.path("figures", "Nguyen-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Nguyen-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Nguyen-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -1603,7 +1604,7 @@ ggplot() + geom_sf() + geom_sf(data=tran_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trần")
 #ggsave(filename = file.path("figures", "Tran-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Tran-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Tran-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Lê
 
@@ -1617,7 +1618,7 @@ ggplot() + geom_sf() + geom_sf(data=le_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lê")
 #ggsave(filename = file.path("figures", "Le-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Le-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Le-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -1632,7 +1633,7 @@ ggplot() + geom_sf() + geom_sf(data=du_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dư")
 #ggsave(filename = file.path("figures", "Du-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Du-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Du-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Dương
 
@@ -1646,7 +1647,7 @@ ggplot() + geom_sf() + geom_sf(data=duong_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dương")
 #ggsave(filename = file.path("figures", "Duong-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Duong-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Duong-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -1662,7 +1663,7 @@ ggplot() + geom_sf() + geom_sf(data=ly_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
 #ggsave(filename = file.path("figures", "Ly-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ly-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Ly-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đoàn
@@ -1678,7 +1679,7 @@ ggplot() + geom_sf(data=doan_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
 #ggsave(filename = file.path("figures", "Doan-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Doan-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Doan-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Ngô
@@ -1694,7 +1695,7 @@ ggplot() + geom_sf(data=ngo_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Ngô")
 #ggsave(filename = file.path("figures", "Ngo-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ngo-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Ngo-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Triệu
@@ -1709,7 +1710,7 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Triệu")
 #ggsave(filename = file.path("figures", "Trieu-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Trieu-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Trieu-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Mạc
@@ -1724,7 +1725,7 @@ ggplot() + geom_sf() + geom_sf(data=mac_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mạc")
 #ggsave(filename = file.path("figures", "Mac-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Mac-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Mac-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mai
 
@@ -1738,7 +1739,7 @@ ggplot() + geom_sf() + geom_sf(data=mai_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mai")
 #ggsave(filename = file.path("figures", "Mai-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Mai-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Mai-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phùng
@@ -1753,7 +1754,7 @@ ggplot() + geom_sf() + geom_sf(data=phung_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phùng")
 #ggsave(filename = file.path("figures", "Phung-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Phung-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Phung-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Khúc
 
@@ -1767,7 +1768,7 @@ ggplot() + geom_sf() + geom_sf(data=khuc_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Khúc")
 #ggsave(filename = file.path("figures", "Khuc-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Khuc-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Khuc-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phạm
 
@@ -1781,7 +1782,7 @@ ggplot() + geom_sf() + geom_sf(data=pham_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phạm")
 #ggsave(filename = file.path("figures", "Pham-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Pham-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Pham-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Hồ
@@ -1796,7 +1797,7 @@ ggplot() + geom_sf() + geom_sf(data=ho_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hồ")
 #ggsave(filename = file.path("figures", "Ho-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Ho-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Tôn
@@ -1811,7 +1812,7 @@ ggplot() + geom_sf() + geom_sf(data=ton_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Tôn")
 #ggsave(filename = file.path("figures", "Ton-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ton-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Ton-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Bùi
 
@@ -1825,7 +1826,7 @@ ggplot() + geom_sf() + geom_sf(data=bui_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Bùi")
 #ggsave(filename = file.path("figures", "Bui-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Bui-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Bui-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đào
 
@@ -1839,7 +1840,7 @@ ggplot() + geom_sf() + geom_sf(data=dao_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đào")
 #ggsave(filename = file.path("figures", "Dao-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Dao-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Dao-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đinh
@@ -1854,7 +1855,7 @@ ggplot() + geom_sf() + geom_sf(data=dinh_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đinh")
 #ggsave(filename = file.path("figures", "Dinh-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Dinh-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Dinh-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đỗ
 
@@ -1868,7 +1869,7 @@ ggplot() + geom_sf() + geom_sf(data=do_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đỗ")
 #ggsave(filename = file.path("figures", "Do-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Do-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Do-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hoàng
 
@@ -1882,7 +1883,7 @@ ggplot() + geom_sf() + geom_sf(data=hoang_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hoàng")
 #ggsave(filename = file.path("figures", "Hoang-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Hoang-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Hoang-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Huỳnh
 
@@ -1896,7 +1897,7 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Huỳnh")
 #ggsave(filename = file.path("figures", "Huynh-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Huynh-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Huynh-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phan
 
@@ -1910,7 +1911,7 @@ ggplot() + geom_sf() + geom_sf(data=phan_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phan")
 #ggsave(filename = file.path("figures", "Phan-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Phan-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Phan-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Quách
@@ -1925,7 +1926,7 @@ ggplot() + geom_sf() + geom_sf(data=quach_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Quách")
 #ggsave(filename = file.path("figures", "Quach-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Quach-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Quach-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trịnh
@@ -1940,7 +1941,7 @@ ggplot() + geom_sf() + geom_sf(data=trinh_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trịnh")
 #ggsave(filename = file.path("figures", "Trinh-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Trinh-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Trinh-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trương
@@ -1955,7 +1956,7 @@ ggplot() + geom_sf() + geom_sf(data=truong_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trương")
 #ggsave(filename = file.path("figures", "Truong-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Truong-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Truong-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -1970,7 +1971,7 @@ ggplot() + geom_sf() + geom_sf(data=vu_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Vũ")
 #ggsave(filename = file.path("figures", "Vu-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Vu-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Vu-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Võ
 
@@ -1984,7 +1985,7 @@ ggplot() + geom_sf() + geom_sf(data=vo_plot, aes(fill=pro.pop), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Võ")
 #ggsave(filename = file.path("figures", "Vo-PerPop-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Vo-PerPop-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Vo-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Nguyễn
@@ -2001,7 +2002,7 @@ ggplot() + geom_sf() + geom_sf(data=nguyen_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Nguyễn")
 #ggsave(filename = file.path("figures", "Nguyen-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Nguyen-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Nguyen-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -2016,7 +2017,7 @@ ggplot() + geom_sf() + geom_sf(data=tran_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trần")
 #ggsave(filename = file.path("figures", "Tran-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Tran-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Tran-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Lê
 
@@ -2030,7 +2031,7 @@ ggplot() + geom_sf() + geom_sf(data=le_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lê")
 #ggsave(filename = file.path("figures", "Le-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Le-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Le-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -2045,7 +2046,7 @@ ggplot() + geom_sf() + geom_sf(data=du_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dư")
 #ggsave(filename = file.path("figures", "Du-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Du-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Du-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Dương
 
@@ -2059,7 +2060,7 @@ ggplot() + geom_sf() + geom_sf(data=duong_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Dương")
 #ggsave(filename = file.path("figures", "Duong-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Duong-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Duong-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -2075,7 +2076,7 @@ ggplot() + geom_sf() + geom_sf(data=ly_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Lý")
 #ggsave(filename = file.path("figures", "Ly-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ly-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Ly-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đoàn
 
@@ -2090,7 +2091,7 @@ ggplot() + geom_sf(data=doan_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đoàn")
 #ggsave(filename = file.path("figures", "Doan-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Doan-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Doan-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Ngô
@@ -2106,7 +2107,7 @@ ggplot() + geom_sf(data=ngo_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Ngô")
 #ggsave(filename = file.path("figures", "Ngo-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ngo-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Ngo-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Triệu
 
@@ -2120,7 +2121,7 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Triệu")
 #ggsave(filename = file.path("figures", "Trieu-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Trieu-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Trieu-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mạc
 
@@ -2134,7 +2135,7 @@ ggplot() + geom_sf() + geom_sf(data=mac_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mạc")
 #ggsave(filename = file.path("figures", "Mac-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Mac-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Mac-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Mai
 
@@ -2148,7 +2149,7 @@ ggplot() + geom_sf() + geom_sf(data=mai_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mai")
 #ggsave(filename = file.path("figures", "Mai-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Mai-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Mai-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phùng
@@ -2163,7 +2164,7 @@ ggplot() + geom_sf() + geom_sf(data=phung_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phùng")
 #ggsave(filename = file.path("figures", "Phung-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Phung-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Phung-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Khúc
 
@@ -2177,7 +2178,7 @@ ggplot() + geom_sf() + geom_sf(data=khuc_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Khúc")
 #ggsave(filename = file.path("figures", "Khuc-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Khuc-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Khuc-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phạm
 
@@ -2191,7 +2192,7 @@ ggplot() + geom_sf() + geom_sf(data=pham_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phạm")
 #ggsave(filename = file.path("figures", "Pham-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Pham-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Pham-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Hồ
@@ -2206,7 +2207,7 @@ ggplot() + geom_sf() + geom_sf(data=ho_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hồ")
 #ggsave(filename = file.path("figures", "Ho-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ho-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Ho-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Tôn
@@ -2221,7 +2222,7 @@ ggplot() + geom_sf() + geom_sf(data=ton_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Tôn")
 #ggsave(filename = file.path("figures", "Ton-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Ton-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Ton-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Bùi
@@ -2236,7 +2237,7 @@ ggplot() + geom_sf() + geom_sf(data=bui_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Bùi")
 #ggsave(filename = file.path("figures", "Bui-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Bui-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Bui-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đào
 
@@ -2250,7 +2251,7 @@ ggplot() + geom_sf() + geom_sf(data=dao_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đào")
 #ggsave(filename = file.path("figures", "Dao-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Dao-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Dao-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đinh
@@ -2265,7 +2266,7 @@ ggplot() + geom_sf() + geom_sf(data=dinh_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đinh")
 #ggsave(filename = file.path("figures", "Dinh-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Dinh-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Dinh-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Đỗ
 
@@ -2279,7 +2280,7 @@ ggplot() + geom_sf() + geom_sf(data=do_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Đỗ")
 #ggsave(filename = file.path("figures", "Do-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Do-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Do-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hoàng
 
@@ -2293,7 +2294,7 @@ ggplot() + geom_sf() + geom_sf(data=hoang_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Hoàng")
 #ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Hoang-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Hoang-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Huỳnh
 
@@ -2307,7 +2308,7 @@ ggplot() + geom_sf() + geom_sf(data=huynh_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Huỳnh")
 #ggsave(filename = file.path("figures", "Huynh-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Huynh-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Huynh-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Phan
 
@@ -2321,7 +2322,7 @@ ggplot() + geom_sf() + geom_sf(data=phan_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Phan")
 #ggsave(filename = file.path("figures", "Phan-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Phan-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Phan-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Quách
@@ -2336,7 +2337,7 @@ ggplot() + geom_sf() + geom_sf(data=quach_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Quách")
 #ggsave(filename = file.path("figures", "Quach-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Quach-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Quach-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trịnh
@@ -2351,7 +2352,7 @@ ggplot() + geom_sf() + geom_sf(data=trinh_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trịnh")
 #ggsave(filename = file.path("figures", "Trinh-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Trinh-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Trinh-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Trương
 
@@ -2365,7 +2366,7 @@ ggplot() + geom_sf() + geom_sf(data=truong_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Trương")
 #ggsave(filename = file.path("figures", "Truong-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Truong-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Truong-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -2380,7 +2381,7 @@ ggplot() + geom_sf() + geom_sf(data=vu_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Vũ")
 #ggsave(filename = file.path("figures", "Vu-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Vu-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Vu-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Võ
 
@@ -2394,7 +2395,7 @@ ggplot() + geom_sf() + geom_sf(data=vo_plotf, aes(fill=songuoi_km), lwd=0) +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Võ")
 #ggsave(filename = file.path("figures", "Vo-PerArea-River.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "Vo-PerArea-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Vo-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Contour lines
@@ -2506,7 +2507,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
 
 # Draw the basemap
-png(filename = "Bui_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Bui_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(bui_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -2531,7 +2532,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -2540,7 +2541,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Bui-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ```{r}
@@ -2629,8 +2630,7 @@ ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, he
 #   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
 #   ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Bùi", paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = ""), sep=" - ")) +
 #   coord_sf(crs = 4326)
-# #ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
-# ggsave(filename = file.path("figures", "Bui-Contour-River.jpeg"), width = 49, height = 33)
+# ggsave(filename = file.path("figures", "Contour-River", "Bui-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Nguyễn
@@ -2711,7 +2711,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Nguyen_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Nguyen_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(nguyen_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -2740,7 +2740,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -2749,7 +2749,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(nguyen_plot$prop.nguyen[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Nguyễn") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Nguyen-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Nguyen-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Triệu
@@ -2819,7 +2819,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Trieu_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Trieu_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(trieu_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -2844,7 +2844,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -2853,7 +2853,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(trieu_plot$prop.trieu[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Triệu") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Trieu-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Trieu-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đinh
@@ -2923,7 +2923,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Dinh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Dinh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(dinh_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -2948,7 +2948,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -2957,7 +2957,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(dinh_plot$prop.dinh[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Đinh") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Dinh-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Dinh-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lý
@@ -3027,7 +3027,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Ly_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Ly_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(ly_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3052,7 +3052,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3061,7 +3061,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ly_plot$prop.ly[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Lý") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Ly-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Ly-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Lê
@@ -3131,7 +3131,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Le_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Le_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(le_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3156,7 +3156,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3165,7 +3165,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(le_plot$prop.le[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Lê") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Le-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Le-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -3235,7 +3235,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
 
 # Draw the basemap
-png(filename = "Tran_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Tran_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(tran_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3261,7 +3261,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3270,7 +3270,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Trần") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Tran-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Tran-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ```{r, message=FALSE, warning=FALSE, results='hide'}
@@ -3306,7 +3306,7 @@ ggsave(filename = file.path("figures", "Tran-Contour-River.jpeg"), width = 49, h
 #   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
 #   ggtitle(paste("Đường đồng mức tỉ lệ (%) trên dân số họ Trần", paste(round(tran_plot$prop.tran[1],1), "% dân số", sep = ""), sep=" - ")) +
 #   coord_sf(crs = 4326)
-# ggsave(filename = file.path("figures", "Tran-Contour-River.jpeg"), width = 49, height = 33)
+# ggsave(filename = file.path("figures", "Contour-River", "Tran-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ```{r}
@@ -3381,7 +3381,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Du_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Du_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(du_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3406,7 +3406,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3415,7 +3415,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(du_plot$prop.du[1],2), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Dư") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Du-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Du-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Ngô
@@ -3485,7 +3485,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Ngo_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Ngo_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(ngo_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3510,7 +3510,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3519,7 +3519,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ngo_plot$prop.ngo[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Ngô") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Ngo-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Ngo-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đoàn
@@ -3589,7 +3589,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Doan_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Doan_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(doan_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3614,7 +3614,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3623,7 +3623,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(doan_plot$prop.doan[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Đoàn") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Doan-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Doan-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trịnh
@@ -3693,7 +3693,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Trinh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Trinh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(trinh_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3718,7 +3718,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3727,7 +3727,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(trinh_plot$prop.trinh[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Trịnh") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Trinh-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Trinh-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dương
@@ -3797,7 +3797,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Duong_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Duong_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(duong_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3822,7 +3822,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3831,7 +3831,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(duong_plot$prop.duong[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Dương") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Duong-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Duong-Contour-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hồ
 
@@ -3900,7 +3900,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Ho_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Ho_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(ho_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -3925,7 +3925,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -3934,7 +3934,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ho_plot$prop.ho[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Hồ") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Ho-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Ho-Contour-River.jpeg"), width = 49, height = 33)
 ```
 ## Họ Hoàng
 
@@ -4003,7 +4003,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Hoang_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Hoang_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(hoang_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4028,7 +4028,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4037,7 +4037,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(hoang_plot$prop.hoang[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Hoàng") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Hoang-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Hoang-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Huỳnh
@@ -4107,7 +4107,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Huynh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Huynh_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(hoang_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4132,7 +4132,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4141,7 +4141,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(huynh_plot$prop.huynh[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Huỳnh") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Huynh-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Huynh-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phan
@@ -4211,7 +4211,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Phan_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Phan_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(phan_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4236,7 +4236,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4245,7 +4245,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phan_plot$prop.phan[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Phan") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Phan-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Phan-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phạm
@@ -4315,7 +4315,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Pham_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Pham_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(pham_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4340,7 +4340,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4349,7 +4349,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(pham_plot$prop.pham[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Phạm") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Pham-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Pham-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Vũ
@@ -4419,7 +4419,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Vu_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Vu_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(vu_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4444,7 +4444,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4453,7 +4453,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vu_plot$prop.vu[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Vũ") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Vu-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Vu-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Võ
@@ -4523,7 +4523,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Vo_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Vo_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(vo_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4548,7 +4548,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4557,7 +4557,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vo_plot$prop.vo[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Võ") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Vo-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Vo-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Phùng
@@ -4627,7 +4627,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Phung_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Phung_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(phung_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4652,7 +4652,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4661,7 +4661,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(phung_plot$prop.phung[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Phùng") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Phung-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Phung-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Đỗ
@@ -4731,7 +4731,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Do_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Do_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(do_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4756,7 +4756,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4765,7 +4765,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(do_plot$prop.do[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Đỗ") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Do-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Do-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Khúc
@@ -4835,7 +4835,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Khuc_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Khuc_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(khuc_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4860,7 +4860,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4869,7 +4869,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(khuc_plot$prop.khuc[1],2), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Khúc") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Khuc-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Khuc-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Mạc
@@ -4939,7 +4939,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Mac_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Mac_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(mac_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -4964,7 +4964,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -4973,7 +4973,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(mac_plot$prop.mac[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Mạc") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Mac-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Mac-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Mai
@@ -5043,7 +5043,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Mai_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Mai_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(mai_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -5068,7 +5068,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -5077,7 +5077,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(mai_plot$prop.mai[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Mai") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Mai-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Mai-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Tôn
@@ -5147,7 +5147,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Ton_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Ton_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(ton_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -5172,7 +5172,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -5181,7 +5181,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ton_plot$prop.ton[1],2), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Tôn") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Ton-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Ton-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trương
@@ -5251,7 +5251,7 @@ pot_rot <- pot %>%
 #pot_rot <- st_as_sfc(pot_rot)
  
 # Draw the basemap
-png(filename = "Truong_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Truong_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(truong_rot, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
@@ -5276,7 +5276,7 @@ layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -5285,7 +5285,7 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(truong_plot$prop.truong[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Trương") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Truong-Contour-River.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Truong-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Contour Areas
@@ -5342,7 +5342,7 @@ pot_rotf <- potf %>%
 #pot_rotf <- st_as_sfc(pot_rotf)
 
 # Draw the basemap
-png(filename = "Bui_contourpoly_area.jpeg", width=2400, height=3200, res=300, bg = NA)
+#png(filename = "Bui_contourpoly_area.jpeg", width=2400, height=3200, res=300, bg = NA)
 plot(bui_rotf, add = F, border = NA, bg = "white")
 # Map the potential family name per Pop
 plot(st_geometry(pot_rotf), add=T, lwd = 0.5, border = "grey30")
@@ -5367,7 +5367,7 @@ layoutLayer(title = paste("Đường đồng mức số người/km2 dân số h
 sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
 par(par)
 }
-dev.off()
+#dev.off()
 
 ggplot() + geom_sf() + geom_sf(data=potf, aes(fill=min), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -5376,7 +5376,7 @@ ggplot() + geom_sf() + geom_sf(data=potf, aes(fill=min), lwd=0) +
   annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(bui_plotf$prop.bui[1],1), "% dân số", sep = "")) +
   ggtitle("Đường đồng mức số người/km2 dân số họ Bùi") +
   coord_sf(crs = 4326)
-ggsave(filename = file.path("figures", "Bui-Contour-River-Area.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "Contour-River", "Bui-Contour-River-Area.jpeg"), width = 49, height = 33)
 ```
 
 ```{r}
@@ -5458,7 +5458,7 @@ ggsave(filename = file.path("figures", "Bui-Contour-River-Area.jpeg"), width = 4
 #   ggtitle(paste("Đường đồng mức số người/km2 dân số họ Bùi", paste(round(bui_plotf$prop.bui[1],1), "% dân số", sep = ""), sep=" - ")) +
 #   coord_sf(crs = 4326)
 # #ggsave(filename = file.path("figures", "Hoang-PerArea-River.png"), width = 49, height = 33)
-# ggsave(filename = file.path("figures", "Bui-Contour-River-Area(2).jpeg"), width = 49, height = 33)
+# ggsave(filename = file.path("figures", "Contour-River", "Bui-Contour-River-Area(2).jpeg"), width = 49, height = 33)
 ```
 
 ## Chi tiết họ theo tỉnh
@@ -5470,7 +5470,7 @@ khuc_tinh <- data_ho_tinh %>% filter(Ho=="Khúc") %>%
   arrange(desc(pro.pop))
 khuc_tinh = merge(khuc_tinh, data_tinh, by="MATINH") %>%
   arrange(desc(pro.pop))
-write_xlsx(khuc_tinh, "Khuc_tinh.xlsx")
+write_xlsx(khuc_tinh, "output/Khuc_tinh.xlsx")
 ```
 
 ## Họ Dư
@@ -5480,9 +5480,9 @@ du_tinh <- data_ho_tinh %>% filter(Ho=="Dư") %>%
   arrange(desc(pro.pop))
 du_tinh = merge(du_tinh, data_tinh, by="MATINH") %>%
   arrange(desc(pro.pop))
-write_xlsx(du_tinh, "Du_tinh.xlsx")
+write_xlsx(du_tinh, "output/Du_tinh.xlsx")
 ```
 
 ```{r}
-#save(dat_f, dat_sf, dat_sff, data_ho, data_ho_overall, data_ho_tinh, data_ho_xa, data_huyen, data_pop, data_tinh, data_xa, river3, file = "hoviet.RData")
+#save(dat_f, dat_sf, dat_sff, data_ho, data_ho_overall, data_ho_tinh, data_ho_xa, data_huyen, data_pop, data_tinh, data_xa, river3, file = "data/hoviet.RData")
 ```
