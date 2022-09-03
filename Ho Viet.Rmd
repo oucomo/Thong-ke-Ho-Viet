@@ -727,7 +727,7 @@ xa$TENHUYEN <- gsub("Thị Xã", "", xa$TENHUYEN)
 #namexa <- stri_trans_general(namexa, "Latin-ASCII")
 
 xa2 <- xa %>% rename(NAME_1=TENTINH, NAME_2=TENHUYEN, NAME_3=TENXA)
-gadm36_VNM3_sf <- readRDS("data", "gadm36_VNM_3_sf.rds")
+gadm36_VNM3_sf <- readRDS("data/gadm36_VNM_3_sf.rds")
 
 ## Merge all data
 
@@ -1987,6 +1987,20 @@ ggplot() + geom_sf() + geom_sf(data=vo_plot, aes(fill=pro.pop), lwd=0) +
 #ggsave(filename = file.path("figures", "Vo-PerPop-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerPop-River", "Vo-PerPop-River.jpeg"), width = 49, height = 33)
 ```
+## Họ Vi
+
+```{r}
+vi_sf <- dat_sf %>% mutate(prop.vi=(sum(subset(., Ho=="Vi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Vi")
+vi_plot <- vi_sf %>% select(pro.pop, prop.vi, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=vi_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vi_plot$prop.vi[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Vi")
+#ggsave(filename = file.path("figures", "Vi-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Vi-PerPop-River.jpeg"), width = 49, height = 33)
+```
 
 ## Họ Nguyễn
 
@@ -2396,6 +2410,20 @@ ggplot() + geom_sf() + geom_sf(data=vo_plotf, aes(fill=songuoi_km), lwd=0) +
   ggtitle("Họ Võ")
 #ggsave(filename = file.path("figures", "Vo-PerArea-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerArea-River", "Vo-PerArea-River.jpeg"), width = 49, height = 33)
+```
+## Họ Vi
+
+```{r}
+vi_sff <- dat_sff %>% mutate(prop.vi=(sum(subset(., Ho=="Vi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Vi")
+vi_plotf <- vi_sff %>% select(songuoi_km, prop.vi, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=vi_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vi_plotf$prop.vi[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Vi")
+#ggsave(filename = file.path("figures", "Vo-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Vi-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Contour lines
@@ -4461,7 +4489,7 @@ ggsave(filename = file.path("figures", "Contour-River", "Vu-Contour-River.jpeg")
 ```{r, message=FALSE, warning=FALSE}
 vo_sf <- dat_sf %>% mutate(prop.vo=(sum(subset(., Ho=="Võ")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Võ")
 vo_f <- vo_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
-vo_f <- sf::st_transform(vu_f, 2154)
+vo_f <- sf::st_transform(vo_f, 2154)
 vo_plot <- vo_sf %>% select(pro.pop, prop.vo, geometry) %>% st_as_sf(crs = 4326)
 # Convert to Spatial class
 vo_sf2 <- vo_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
@@ -5286,6 +5314,110 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Trương") +
   coord_sf(crs = 4326)
 ggsave(filename = file.path("figures", "Contour-River", "Truong-Contour-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Vi
+
+```{r, message=FALSE, warning=FALSE}
+vi_sf <- dat_sf %>% mutate(prop.vi=(sum(subset(., Ho=="Vi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Vi")
+vi_f <- vi_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+vi_f <- sf::st_transform(vi_f, 2154)
+vi_plot <- vi_sf %>% select(pro.pop, prop.vi, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+vi_sf2 <- vi_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+vi_sf2 <- sf::st_transform(vi_sf2, 2154)
+vi_sp <- as(vi_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = vi_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = vi_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = vi_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = vi_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(vi_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = vi_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+vi_rot <- vi_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+vi_rot <- as(vi_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+#png(filename = "Vi_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(vi_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Vi", paste(round(vi_plot$prop.vi[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(par)
+}
+#dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(vi_plot$prop.vi[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Vi") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Contour-River", "Vi-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Contour Areas
