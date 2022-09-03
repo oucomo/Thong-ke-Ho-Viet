@@ -149,7 +149,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "trịnh|Trịnh|Trịnh|TRỊNH|Tr�
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Truong|trương|Trương|TRƯƠNG|truong|Trươ|Trươg|Trươmg|Trươn|TRUONG|truơng|Truơng|Trưong|Trưông|Trương|Trươnh|Truương") == TRUE, "Trương", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Văn|VĂN|văn|Văn|Vắn") == TRUE, "Văn", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vàng|VÀNG|vàng|Vàng|Vàng|VÀNG") == TRUE, "Vàng", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vi|Vi|VI") == TRUE, "Vi", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vi|Vi|VI|ViThị|ViVăn|vy|Vy|VY|VyThị|VyVăn") == TRUE, "Vi", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vì|Vì") == TRUE, "Vì", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "võ|Võ|Võ|VÕ|Vỏ|Vỗ|võ|Võ|VÕ|vỏ|Vỏ|VỎ|Vỡ") == TRUE, "Võ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vũ|Vũ|Vũ|VŨ|vũ|Vũ|Vủ|VŨ|Vū|vủ|VỦ|Vữ") == TRUE, "Vũ", data_ho$Ho)
