@@ -5679,7 +5679,7 @@ tinh_ho <- merge(data_ho_tinh, data_tinh %>% select(MATINH, TENTINH), by=c("MATI
 ```{r}
 nguyen_bar <- tinh_ho %>% filter(Ho=="Nguyễn") %>%
   ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
-  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  geom_bar(stat = "identity", fill="grey", width = 0.75) +
   scale_x_discrete(name = NULL) +
   theme_bw() + 
   theme(axis.text.y = element_text(size = 7),
@@ -5691,7 +5691,7 @@ ggsave(filename = file.path("figures", "General", "Nguyen-Density-tinh.jpeg"), w
 ```{r}
 tran_bar <- tinh_ho %>% filter(Ho=="Trần") %>%
   ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
-  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  geom_bar(stat = "identity", fill="grey", width = 0.75) +
   scale_x_discrete(name = NULL) +
   theme_bw() + 
   theme(axis.text.y = element_text(size = 7),
@@ -5703,7 +5703,7 @@ ggsave(filename = file.path("figures", "General", "Tran-Density-tinh.jpeg"), wid
 ```{r}
 le_bar <- tinh_ho %>% filter(Ho=="Lê") %>%
   ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
-  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  geom_bar(stat = "identity", fill="grey", width = 0.75) +
   scale_x_discrete(name = NULL) +
   theme_bw() + 
   theme(axis.text.y = element_text(size = 7),
@@ -5715,7 +5715,7 @@ ggsave(filename = file.path("figures", "General", "Le-Density-tinh.jpeg"), width
 ```{r}
 ly_bar <- tinh_ho %>% filter(Ho=="Lý") %>%
   ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
-  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  geom_bar(stat = "identity", fill="grey", width = 0.75) +
   scale_x_discrete(name = NULL) +
   theme_bw() + 
   theme(axis.text.y = element_text(size = 7),
@@ -5727,7 +5727,7 @@ ggsave(filename = file.path("figures", "General", "Ly-Density-tinh.jpeg"), width
 ```{r}
 trieu_bar <- tinh_ho %>% filter(Ho=="Triệu") %>%
   ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
-  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  geom_bar(stat = "identity", fill="grey", width = 0.75) +
   scale_x_discrete(name = NULL) +
   theme_bw() + 
   theme(axis.text.y = element_text(size = 7),
@@ -5739,7 +5739,7 @@ ggsave(filename = file.path("figures", "General", "Trieu-Density-tinh.jpeg"), wi
 ```{r}
 khuc_bar <- tinh_ho %>% filter(Ho=="Khúc") %>%
   ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
-  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  geom_bar(stat = "identity", fill="grey", width = 0.75) +
   scale_x_discrete(name = NULL) +
   theme_bw() + 
   theme(axis.text.y = element_text(size = 7),
