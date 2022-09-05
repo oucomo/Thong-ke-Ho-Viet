@@ -886,6 +886,8 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop), lwd=0) +
 #ggsave(filename = file.path("Ho Trieu-PerPop.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "General", "Ho Trieu-PerPop.jpeg"), width = 49, height = 33)
 ```
+
+
 ## Họ Mạc
 
 ```{r}
@@ -5667,4 +5669,81 @@ khuc_his <- khuc_sf %>%
 
 ```{r}
 ggarrange(nguyen_his, tran_his, le_his, ly_his, trieu_his, khuc_his)
+ggsave(filename = file.path("figures", "General", "Density(1).jpeg"), width = 10, height = 7)
+```
+
+```{r}
+tinh_ho <- merge(data_ho_tinh, data_tinh %>% select(MATINH, TENTINH), by=c("MATINH"))
+```
+
+```{r}
+nguyen_bar <- tinh_ho %>% filter(Ho=="Nguyễn") %>%
+  ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
+  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Nguyễn")
+ggsave(filename = file.path("figures", "General", "Nguyen-Density-tinh.jpeg"), width = 10, height = 7)
+```
+
+```{r}
+tran_bar <- tinh_ho %>% filter(Ho=="Trần") %>%
+  ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
+  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Trần")
+ggsave(filename = file.path("figures", "General", "Tran-Density-tinh.jpeg"), width = 10, height = 7)
+```
+
+```{r}
+le_bar <- tinh_ho %>% filter(Ho=="Lê") %>%
+  ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
+  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Lê")
+ggsave(filename = file.path("figures", "General", "Le-Density-tinh.jpeg"), width = 10, height = 7)
+```
+
+```{r}
+ly_bar <- tinh_ho %>% filter(Ho=="Lý") %>%
+  ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
+  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Lý")
+ggsave(filename = file.path("figures", "General", "Ly-Density-tinh.jpeg"), width = 10, height = 7)
+```
+
+```{r}
+trieu_bar <- tinh_ho %>% filter(Ho=="Triệu") %>%
+  ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
+  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Triệu")
+ggsave(filename = file.path("figures", "General", "Trieu-Density-tinh.jpeg"), width = 10, height = 7)
+```
+
+```{r}
+khuc_bar <- tinh_ho %>% filter(Ho=="Khúc") %>%
+  ggplot(aes(x = reorder(TENTINH, pro.pop, decreasing=F), y =pro.pop)) +
+  geom_bar(stat = "identity", fill="#e9ecef", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Khúc")
+ggsave(filename = file.path("figures", "General", "Khuc-Density-tinh.jpeg"), width = 10, height = 7)
 ```
