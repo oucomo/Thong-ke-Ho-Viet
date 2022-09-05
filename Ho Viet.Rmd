@@ -5830,6 +5830,42 @@ ggsave(filename = file.path("figures", "General", "Tran-Density-xa(2).jpeg"), wi
 ```
 
 ```{r}
+tran_bar_namdinh <- dat_sff %>% filter(Ho=="Trần" & NAME_1=="Nam Dinh") %>% filter(rank(desc(pro.pop))<=50) %>%
+  ggplot(aes(x = reorder(NAME_3, pro.pop, decreasing=F), y =pro.pop, fill=factor(NAME_1))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  scale_fill_discrete(name="Tỉnh/thành phố") +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Trần-Nam Định")
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-xa.jpeg"), width = 10, height = 7)
+```
+
+```{r}
+tran_namdinh <- dat_sff %>% filter(Ho=="Trần" & NAME_1=="Nam Dinh") %>% st_as_sf(crs = 4326)
+tran_namdinh$centroid <- sf::st_transform(tran_namdinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+```
+
+```{r}
+tran_barf_namdinh <- dat_sff %>% filter(Ho=="Trần" & NAME_1=="Nam Dinh") %>% filter(rank(desc(songuoi_km))<=50) %>%
+  ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  scale_fill_discrete(name="Tỉnh/thành phố") +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Trần-Nam Định")
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-xa(2).jpeg"), width = 10, height = 7)
+```
+
+```{r}
 le_barf <- dat_sff %>% filter(Ho=="Lê") %>% filter(rank(desc(songuoi_km))<=50) %>%
   ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
   geom_bar(stat = "identity", width = 0.75) +
