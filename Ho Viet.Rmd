@@ -5618,3 +5618,53 @@ write_xlsx(du_tinh, "output/Du_tinh.xlsx")
 ```{r}
 #save(dat_f, dat_sf, dat_sff, data_ho, data_ho_overall, data_ho_tinh, data_ho_xa, data_huyen, data_pop, data_tinh, data_xa, river3, file = "data/hoviet.RData")
 ```
+
+## Phân bố mật độ người mang 1 họ
+
+```{r}
+nguyen_his <- nguyen_sf %>% 
+  ggplot(aes(x=pro.pop)) +
+  geom_histogram(aes(y =..density..), color="#e9ecef", alpha=0.6, position = 'identity') +
+  theme_bw() + 
+  stat_function(fun = dnorm, args = list(mean = mean(nguyen_sf$pro.pop), sd = sd(nguyen_sf$pro.pop))) +
+  ggtitle("Nguyễn")
+
+tran_his <- tran_sf %>% 
+  ggplot(aes(x=pro.pop)) +
+  geom_histogram(aes(y =..density..), color="#e9ecef", alpha=0.6, position = 'identity') +
+  theme_bw() + 
+  stat_function(fun = dnorm, args = list(mean = mean(tran_sf$pro.pop), sd = sd(tran_sf$pro.pop))) +
+  ggtitle("Trần")
+
+le_his <- le_sf %>% 
+  ggplot(aes(x=pro.pop)) +
+  geom_histogram(aes(y =..density..), color="#e9ecef", alpha=0.6, position = 'identity') +
+  theme_bw() + 
+  stat_function(fun = dnorm, args = list(mean = mean(le_sf$pro.pop), sd = sd(le_sf$pro.pop))) +
+  ggtitle("Lê")
+
+ly_his <- ly_sf %>% 
+  ggplot(aes(x=pro.pop)) +
+  geom_histogram(aes(y =..density..), color="#e9ecef", alpha=0.6, position = 'identity') +
+  theme_bw() + 
+  stat_function(fun = dnorm, args = list(mean = mean(ly_sf$pro.pop), sd = sd(ly_sf$pro.pop))) +
+  ggtitle("Lý")
+
+trieu_his <- trieu_sf %>% 
+  ggplot(aes(x=pro.pop)) +
+  geom_histogram(aes(y =..density..), color="#e9ecef", alpha=0.6, position = 'identity') +
+  theme_bw() + 
+  stat_function(fun = dnorm, args = list(mean = mean(trieu_sf$pro.pop), sd = sd(trieu_sf$pro.pop))) +
+  ggtitle("Triệu")
+
+khuc_his <- khuc_sf %>% 
+  ggplot(aes(x=pro.pop)) +
+  geom_histogram(aes(y =..density..), color="#e9ecef", alpha=0.6, position = 'identity') +
+  theme_bw() + 
+  stat_function(fun = dnorm, args = list(mean = mean(khuc_sf$pro.pop), sd = sd(khuc_sf$pro.pop))) +
+  ggtitle("Khúc")
+```
+
+```{r}
+ggarrange(nguyen_his, tran_his, le_his, ly_his, trieu_his, khuc_his)
+```
