@@ -5850,6 +5850,7 @@ tran_namdinh$centroid <- sf::st_transform(tran_namdinh, 2154) %>%
   st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
   # since you want the centroids in a second geometry col:
   st_geometry()
+#write_xlsx(tran_namdinh, "output/tran_namdinh.xlsx")
 ```
 
 ```{r}
