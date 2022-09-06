@@ -5867,23 +5867,59 @@ tran_namdinh <- tran_namdinh %>%
 ```
 ```{r}
 tran_namdinh_radius <- tran_namdinh %>%
-  arrange(desc(distm_km))
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
 write_xlsx(tran_namdinh_radius, "output/tran_namdinh_radius.xlsx")
+```
 
+```{r}
+## Fit data
+fit1 <- lm(distm_km~rank, data=tran_namdinh_radius)
+fit2 <- lm(distm_km~poly(rank,2,raw=TRUE), data=tran_namdinh_radius)
+fit3 <- lm(distm_km~poly(rank,3,raw=TRUE), data=tran_namdinh_radius)
+fit4 <- lm(distm_km~poly(rank,4,raw=TRUE), data=tran_namdinh_radius)
+fit5 <- lm(distm_km~poly(rank,5,raw=TRUE), data=tran_namdinh_radius)
+
+#create a scatterplot of x vs. y
+plot(tran_namdinh_radius$rank, tran_namdinh_radius$distm_km, pch=19, xlab='x', ylab='y')
+
+#define x-axis values
+x_axis <- seq(1, 227, length=227)
+
+#add curve of each model to plot
+lines(x_axis, predict(fit1, data.frame(x=x_axis)), col='green')
+lines(x_axis, predict(fit2, data.frame(x=x_axis)), col='red')
+lines(x_axis, predict(fit3, data.frame(x=x_axis)), col='purple')
+lines(x_axis, predict(fit4, data.frame(x=x_axis)), col='blue')
+lines(x_axis, predict(fit5, data.frame(x=x_axis)), col='orange')
+
+summary(fit1)$adj.r.squared
+summary(fit2)$adj.r.squared
+summary(fit3)$adj.r.squared
+summary(fit4)$adj.r.squared
+summary(fit5)$adj.r.squared
+
+summary(fit5)
+predict(fit5)
+```
+
+```{r}
 tran_namdinh_dens2 <- tran_namdinh_radius %>%
   ggplot(aes(x = reorder(NAME_3, -distm_km), y =distm_km)) +
   #geom_point() +
   geom_bar(stat = "identity", width = 0.5) +
+  geom_line(aes(x=rank, y=predict(fit5), col='blue')) +
   stat_summary(aes(label=round(songuoi_km,0)), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
   #stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE) +
   #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
   #geom_smooth(method = "lm", se = FALSE) +
-  geom_smooth(method = "loess", se = FALSE) +
+  #geom_smooth(method = "loess", se = FALSE) +
   scale_x_discrete(name = "Xã/Phường") +
   scale_y_continuous(name="Khoảng cách tới tâm (km)") +
   theme_bw() + 
   theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=5)) +
-  theme(panel.grid.major = element_blank()) + coord_flip() +
+  theme(panel.grid.major = element_blank()) + 
+  coord_flip() +
   ggtitle("Trần-Nam Định")
 ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density(2).jpeg"), width = 25, height = 16)
 ```
