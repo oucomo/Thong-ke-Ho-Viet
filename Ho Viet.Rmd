@@ -5865,6 +5865,29 @@ tran_namdinh <- tran_namdinh %>%
          distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
          distm_km=distm/1000)
 ```
+```{r}
+tran_namdinh_radius <- tran_namdinh %>%
+  arrange(desc(distm_km))
+write_xlsx(tran_namdinh_radius, "output/tran_namdinh_radius.xlsx")
+
+tran_namdinh_dens2 <- tran_namdinh_radius %>%
+  ggplot(aes(x = reorder(NAME_3, -distm_km), y =distm_km)) +
+  #geom_point() +
+  geom_bar(stat = "identity", width = 0.5) +
+  stat_summary(aes(label=round(songuoi_km,0)), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  #stat_smooth(method = 'lm', formula = y ~ poly(x,2), aes(colour = 'polynomial'), se= FALSE) +
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(method = "loess", se = FALSE) +
+  scale_x_discrete(name = "Xã/Phường") +
+  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=5)) +
+  theme(panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Trần-Nam Định")
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density(2).jpeg"), width = 25, height = 16)
+```
+
 
 ```{r}
 tran_namdinh_radius50 <- tran_namdinh %>%
