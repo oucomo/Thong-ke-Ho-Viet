@@ -533,7 +533,7 @@ vn_ho_tinh <- data_ho_tinh %>%
                       MATINH=="93" ~ 28,
                       MATINH=="94" ~ 51,
                       MATINH=="95" ~ 5,
-                      MATINH=="96" ~ 12)) %>% filter(MATINH!="" & Ho %in% data_ho_top1000$Ho)
+                      MATINH=="96" ~ 12)) %>% filter(MATINH!="" & Ho %in% data_ho_top10000$Ho)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
@@ -5853,8 +5853,7 @@ tran_namdinh$centroid <- sf::st_transform(tran_namdinh, 2154) %>%
   # since you want the centroids in a second geometry col:
   st_geometry()
 #write_xlsx(tran_namdinh, "output/tran_namdinh.xlsx")
-```
-```{r}
+
 library(geosphere)
 # distHaversine()
 # distMeeus()
@@ -5863,13 +5862,28 @@ library(geosphere)
 # distVincentySphere()
 tran_namdinh <- tran_namdinh %>%
   mutate(centroid_0 = centroid[NAME_3=="Phuong Loc Vuong"],
-         distm = geosphere::distm(centroid, centroid_0, fun = distHaversine))
-distm(c(lon1, lat1), c(lon2, lat2), fun = distHaversine)
-
-tran_namdinh <- tran_namdinh %>%
-  mutate(distm = geosphere::distm(x = st_coordinates(centroid), y = st_coordinates(centroid), fun = geosphere::distHaversine))
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000)
 ```
 
+```{r}
+tran_namdinh_radius50 <- tran_namdinh %>%
+  arrange(desc(distm_km))
+
+tran_namdinh_radius50 <- tran_namdinh_radius50 %>% slice(178:227)
+
+tran_namdinh_dens2 <- tran_namdinh_radius50 %>%
+  ggplot(aes(x = reorder(NAME_3, distm_km, decreasing=T), y =distm_km)) +
+  geom_bar(stat = "identity", width = 0.75) +
+  stat_summary(aes(label=paste0(round(songuoi_km,0), "ng/km2")), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  scale_x_discrete(name = "Xã/Phường") +
+  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Trần-Nam Định")
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density(2).jpeg"), width = 10, height = 7)
+```
 
 ```{r}
 tran_barf_namdinh <- dat_sff %>% filter(Ho=="Trần" & NAME_1=="Nam Dinh") %>% filter(rank(desc(songuoi_km))<=50) %>%
