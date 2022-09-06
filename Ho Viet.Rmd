@@ -5842,6 +5842,8 @@ tran_bar_namdinh <- dat_sff %>% filter(Ho=="Trần" & NAME_1=="Nam Dinh") %>% fi
 ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-xa.jpeg"), width = 10, height = 7)
 ```
 
+## Họ Trần - Nam Định
+
 ```{r}
 tran_namdinh <- dat_sff %>% filter(Ho=="Trần" & NAME_1=="Nam Dinh") %>% st_as_sf(crs = 4326)
 tran_namdinh$centroid <- sf::st_transform(tran_namdinh, 2154) %>% 
@@ -5852,6 +5854,22 @@ tran_namdinh$centroid <- sf::st_transform(tran_namdinh, 2154) %>%
   st_geometry()
 #write_xlsx(tran_namdinh, "output/tran_namdinh.xlsx")
 ```
+```{r}
+library(geosphere)
+# distHaversine()
+# distMeeus()
+# distRhumb()
+# distVincentyEllipsoid()
+# distVincentySphere()
+tran_namdinh <- tran_namdinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Loc Vuong"],
+         distm = geosphere::distm(centroid, centroid_0, fun = distHaversine))
+distm(c(lon1, lat1), c(lon2, lat2), fun = distHaversine)
+
+tran_namdinh <- tran_namdinh %>%
+  mutate(distm = geosphere::distm(x = st_coordinates(centroid), y = st_coordinates(centroid), fun = geosphere::distHaversine))
+```
+
 
 ```{r}
 tran_barf_namdinh <- dat_sff %>% filter(Ho=="Trần" & NAME_1=="Nam Dinh") %>% filter(rank(desc(songuoi_km))<=50) %>%
