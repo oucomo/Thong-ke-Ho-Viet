@@ -5971,7 +5971,7 @@ tran_namdinh_dens2 <- tran_namdinh_radius %>%
   geom_bar(stat = "identity", width = 0.5) +
   geom_line(y =distm_km) +
   #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
-  stat_summary(aes(label=round(songuoi_km,0)), geom="text", size=3, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  stat_summary(aes(label=round(songuoi_km,0)), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
   #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
   #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
   #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
@@ -5986,10 +5986,33 @@ tran_namdinh_dens2 <- tran_namdinh_radius %>%
   annotate(geom='text', x=200, y=30, label="y == 70*e^-{(x^{2}+y^{2})/2*(26.2)}", parse = TRUE,size=10) +
   coord_flip() +
   ggtitle("Trần-Nam Định")
-ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2(2).jpeg"), width = 25, height = 16)
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2.jpeg"), width = 25, height = 16)
 ```
 
-
+```{r}
+tran_namdinh_dens1 <- tran_namdinh_radius %>%
+  ggplot(aes(x = reorder(NAME_3, -distm_km), y =distm_km)) +
+  #geom_point() +
+  geom_bar(stat = "identity", width = 0.5) +
+  geom_line(y =distm_km) +
+  #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
+  stat_summary(aes(label=round(pro.pop,1)), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
+  #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
+  #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #geom_smooth(method = "loess", se = FALSE) +
+  scale_x_discrete(name = "Xã/Phường") +
+  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=5)) +
+  theme(panel.grid.major = element_blank()) + 
+  annotate(geom='text', x=200, y=30, label="y == 70*e^-{(x^{2}+y^{2})/2*(26.2)}", parse = TRUE,size=10) +
+  coord_flip() +
+  ggtitle("Trần-Nam Định")
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-1.jpeg"), width = 25, height = 16)
+```
 
 ```{r}
 tran_namdinh_radius50 <- tran_namdinh %>%
