@@ -5971,7 +5971,7 @@ tran_namdinh_dens2 <- tran_namdinh_radius %>%
   geom_bar(stat = "identity", width = 0.5) +
   geom_line(y =distm_km) +
   #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
-  stat_summary(aes(label=round(songuoi_km,0)), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
   #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
   #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
   #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
@@ -5996,7 +5996,7 @@ tran_namdinh_dens1 <- tran_namdinh_radius %>%
   geom_bar(stat = "identity", width = 0.5) +
   geom_line(y =distm_km) +
   #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
-  stat_summary(aes(label=round(pro.pop,1)), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  stat_summary(aes(label=paste0(round(pro.pop,1), "%")), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
   #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
   #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
   #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
