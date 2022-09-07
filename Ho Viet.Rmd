@@ -5863,8 +5863,13 @@ library(geosphere)
 tran_namdinh <- tran_namdinh %>%
   mutate(centroid_0 = centroid[NAME_3=="Phuong Loc Vuong"],
          distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000)
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
 ```
+
 ```{r}
 tran_namdinh_radius <- tran_namdinh %>%
   arrange(distm_km) %>%
@@ -5904,9 +5909,51 @@ predict(fit5)
 ```
 
 ```{r}
-df<-tran_namdinh_radius
-y<-tran_namdinh_radius$distm_km
-x<-tran_namdinh_radius$rank
+distm_km<-tran_namdinh_radius$distm_km
+songuoi_km<-tran_namdinh_radius$songuoi_km
+rank<-tran_namdinh_radius$rank
+commune<-tran_namdinh_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-70*exp(-(distm_km^2)/(2*sqrt(685)))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km)
+
+plot_df <- df %>%
+  #gather(key, value, estimate, songuoi_km) %>%
+  ggplot(aes(x=reorder(factor(rank), -distm_km), y=distm_km)) +
+  #coord_flip() +
+  geom_bar(aes(x=reorder(factor(rank), -distm_km), y=distm_km), stat = "identity", width = 0.5)
++ 
+  geom_line(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=estimate))
++
+  scale_x_continuous(name = "Xã/Phường", labels = rank)
+plot_df
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), -distm_km), y=distm_km)) +
+  geom_bar(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=distm_km), stat = "identity", width = 0.5) + 
+  geom_line(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=estimate))
++
+  scale_x_continuous(name = "Xã/Phường", labels = rank)
+plot_df
+
+plot_df <- df %>%
+  gather(key, value, estimate, songuoi_km) %>%
+  ggplot(aes(x=rank, y=value, colour=key)) +
+  geom_line() +
+  coord_flip()
++
+  geom_bar(stat = "identity", width = 0.5)
++ 
+  geom_line(aes(x=reorder(factor(rank), -distm_km), y=estimate))
+plot_df
+
+# library("fdrtool")
+# y_dhalfnorm <- dhalfnorm(y) 
+# plot(y_dhalfnorm) 
+
+
+
 lm_eqn <- function(df){
     m <- lm(y ~ poly(x,5), df);
     eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
@@ -5922,9 +5969,12 @@ tran_namdinh_dens2 <- tran_namdinh_radius %>%
   ggplot(aes(x = reorder(NAME_3, -distm_km), y =distm_km)) +
   #geom_point() +
   geom_bar(stat = "identity", width = 0.5) +
+  geom_line(y =distm_km) +
   #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
-  stat_summary(aes(label=round(songuoi_km,0)), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
-  stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
+  stat_summary(aes(label=round(songuoi_km,0)), geom="text", size=3, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
+  #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
+  #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
   #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
   #geom_smooth(method = "lm", se = FALSE) +
   #geom_smooth(method = "loess", se = FALSE) +
@@ -5933,10 +5983,12 @@ tran_namdinh_dens2 <- tran_namdinh_radius %>%
   theme_bw() + 
   theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=5)) +
   theme(panel.grid.major = element_blank()) + 
+  annotate(geom='text', x=200, y=30, label="y == 70*e^-{(x^{2}+y^{2})/2*(26.2)}", parse = TRUE,size=10) +
   coord_flip() +
   ggtitle("Trần-Nam Định")
 ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2(2).jpeg"), width = 25, height = 16)
 ```
+
 
 
 ```{r}
