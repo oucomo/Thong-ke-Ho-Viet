@@ -6514,6 +6514,93 @@ le_thanhhoa_dens2 <- le_thanhhoa_radius %>%
 ggsave(filename = file.path("figures", "General", "Le-Thanh Hoa-Density-2.jpeg"), width = 25, height = 16)
 ```
 
+## Họ Dư - Hà Nội
+
+```{r}
+du_barf <- dat_sff %>% filter(Ho=="Dư") %>% filter(rank(desc(songuoi_km))<=50) %>%
+  ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  scale_fill_discrete(name="Tỉnh/thành phố") +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Dư")
+ggsave(filename = file.path("figures", "General", "Du-Density-xa(2).jpeg"), width = 10, height = 7)
+```
+
+```{r}
+du_hanoi <- dat_sff %>% filter(Ho=="Dư" & NAME_1=="Ha Noi") %>% st_as_sf(crs = 4326)
+du_hanoi$centroid <- sf::st_transform(du_hanoi, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+du_hanoi <- du_hanoi %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Quynh Loi" & NAME_2=="Hai Ba Trung"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+du_hanoi_radius <- du_hanoi %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         NAME_3=gsub("Xa","",NAME_3),
+         NAME_3=gsub("Phuong","",NAME_3),
+         NAME_3=gsub("Thi tran","",NAME_3),
+         commune=paste(NAME_3, NAME_2, sep = "-"))
+write_xlsx(du_hanoi_radius, "output/du_hanoi_radius.xlsx")
+```
+
+```{r}
+distm_km<-du_hanoi_radius$distm_km
+songuoi_km<-du_hanoi_radius$songuoi_km
+rank<-du_hanoi_radius$rank
+commune<-du_hanoi_radius$commune
+rank<-factor(rank, labels = commune)
+estimate<-60*exp(-(distm_km^2)/(2*sqrt(483)))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km)
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), -distm_km), y=distm_km)) +
+  geom_bar(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=distm_km), stat = "identity", width = 0.5) + 
+  geom_line(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=estimate))
+
+plot_df
+```
+
+```{r}
+du_hanoi_dens2 <- du_hanoi_radius %>% 
+  filter(rank<=100) %>%
+  ggplot(aes(x = reorder(commune, -distm_km), y =distm_km)) +
+  #geom_point() +
+  geom_bar(stat = "identity", width = 0.5) +
+  #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
+  stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=4, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
+  #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
+  #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #geom_smooth(method = "loess", se = FALSE) +
+  scale_x_discrete(name = "Xã/Phường") +
+  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=12)) +
+  theme(panel.grid.major = element_blank()) + 
+  annotate(geom='text', x=80, y=4, label="y == 60*e^-{(x^{2}+y^{2})/2*(22)}", parse = TRUE,size=10) +
+  coord_flip() +
+  ggtitle("Dư-Hà Nội")
+ggsave(filename = file.path("figures", "General", "Dư-Hà Nội-Density-2.jpeg"), width = 25, height = 16)
+```
+
 ```{r}
 ly_barf <- dat_sff %>% filter(Ho=="Lý") %>% filter(rank(desc(songuoi_km))<=50) %>%
   ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
@@ -6540,15 +6627,4 @@ trieu_barf <- dat_sff %>% filter(Ho=="Triệu") %>% filter(rank(desc(songuoi_km)
 ggsave(filename = file.path("figures", "General", "Trieu-Density-xa(2).jpeg"), width = 10, height = 7)
 ```
 
-```{r}
-duong_barf <- dat_sff %>% filter(Ho=="Dương") %>% filter(rank(desc(songuoi_km))<=50) %>%
-  ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
-  geom_bar(stat = "identity", width = 0.75) +
-  scale_x_discrete(name = NULL) +
-  scale_fill_discrete(name="Tỉnh/thành phố") +
-  theme_bw() + 
-  theme(axis.text.y = element_text(size = 7),
-        panel.grid.major = element_blank()) + coord_flip() +
-  ggtitle("Dương")
-ggsave(filename = file.path("figures", "General", "Duong-Density-xa(2).jpeg"), width = 10, height = 7)
-```
+
