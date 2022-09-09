@@ -6569,8 +6569,8 @@ plot_df <- df %>%
   theme_bw() + 
   theme(text = element_text(size=20), axis.text.x = element_text(size=15, angle = 90), axis.text.y = element_text(size=20)) +
   theme(panel.grid.major = element_blank()) + 
-  annotate(geom='text', x=20, y=80, label="y == 50*e^-{(x^{2}+y^{2})/2*(250)}", parse = TRUE,size=10) +
-  annotate(geom='text', x=20, y=70, label="s.e. = 250 người/xã",parse=F,size=8) +
+  annotate(geom='text', x=20, y=80, label="y == 50*e^-{(x^{2}+y^{2})/2*(36)}", parse = TRUE,size=10) +
+  annotate(geom='text', x=20, y=70, label="s.e. = 50 người/xã",parse=F,size=8) +
   #coord_flip() +
   ggtitle("Khúc-Hưng Yên")
 
