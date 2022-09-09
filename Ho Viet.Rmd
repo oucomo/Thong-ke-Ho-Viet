@@ -6074,12 +6074,13 @@ plot_df
 
 ```{r}
 mai_nghean_dens2 <- mai_nghean_radius %>%
+  filter(rank<=100) %>%
   ggplot(aes(x = reorder(NAME_3, -distm_km), y =distm_km)) +
   #geom_point() +
   geom_bar(stat = "identity", width = 0.5) +
-  geom_line(y =distm_km) +
+  #geom_line(y =distm_km) +
   #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
-  stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=1, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=4, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
   #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
   #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
   #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
@@ -6089,30 +6090,16 @@ mai_nghean_dens2 <- mai_nghean_radius %>%
   scale_x_discrete(name = "Xã/Phường") +
   scale_y_continuous(name="Khoảng cách tới tâm (km)") +
   theme_bw() + 
-  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=3)) +
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=12)) +
   theme(panel.grid.major = element_blank()) + 
-  annotate(geom='text', x=300, y=75, label="y == 400*e^-{(x^{2}+y^{2})/2*(52.3)}", parse = TRUE,size=10) +
+  annotate(geom='text', x=80, y=15, label="y == 400*e^-{(x^{2}+y^{2})/2*(52.3)}", parse = TRUE,size=10) +
   coord_flip() +
   ggtitle("Mai-Nghệ An")
 ggsave(filename = file.path("figures", "General", "Mai-Nghe An-Density-2.jpeg"), width = 25, height = 16)
 ```
 
-## Họ Mai - Thanh Hóa
-
 ```{r}
-mai_barf <- dat_sff %>% filter(Ho=="Mai") %>% filter(rank(desc(songuoi_km))<=100) %>%
-  ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
-  geom_bar(stat = "identity", width = 0.75) +
-  scale_x_discrete(name = NULL) +
-  scale_fill_discrete(name="Tỉnh/thành phố") +
-  theme_bw() + 
-  theme(axis.text.y = element_text(size = 7),
-        panel.grid.major = element_blank()) + coord_flip() +
-  ggtitle("Mai")
-ggsave(filename = file.path("figures", "General", "Mai-Density-xa(2).jpeg"), width = 10, height = 7)
-```
-
-```{r}
+# Phương án 2
 mai_nghean <- dat_sff %>% filter(Ho=="Mai" & NAME_1=="Nghe An") %>% st_as_sf(crs = 4326)
 mai_nghean$centroid <- sf::st_transform(mai_nghean, 2154) %>% 
   st_centroid() %>% 
@@ -6123,7 +6110,7 @@ mai_nghean$centroid <- sf::st_transform(mai_nghean, 2154) %>%
 
 library(geosphere)
 mai_nghean <- mai_nghean %>%
-  mutate(centroid_0 = centroid[NAME_3=="Thi tran Nam Dan"],
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Nghi Thuy"],
          distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
          distm_km=distm/1000,
          distm_km2=distm_km^2,
@@ -6143,7 +6130,71 @@ songuoi_km<-mai_nghean_radius$songuoi_km
 rank<-mai_nghean_radius$rank
 commune<-mai_nghean_radius$NAME_3
 rank<-factor(rank, labels = commune)
-estimate<-400*exp(-(distm_km^2)/(2*sqrt(2736)))
+estimate<-25*exp(-(distm_km^2)/(2*300))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
+  mutate(num=sum((songuoi_km-estimate)^2),
+         den=(length(df)-1),
+         var=num/den,
+         sd=sqrt(var))
+  
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km)) +
+  geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
+  scale_x_discrete(name = "Xã/Phường theo khoảng cách tới tâm (km)", 
+                     breaks = reorder(factor(rank), distm_km), 
+                     labels = reorder(factor(rank), distm_km)) +
+  scale_y_continuous(name="Mật độ người/km2") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=5, angle = 90), axis.text.y = element_text(size=20)) +
+  theme(panel.grid.major = element_blank()) + 
+  annotate(geom='text', x=150, y=200, label="y == 25*e^-{(x^{2}+y^{2})/2*(300)}", parse = TRUE,size=10) +
+  annotate(geom='text', x=150, y=180, label="s.e. = 44 người/xã",parse=F,size=8) +
+  #coord_flip() +
+  ggtitle("Mai-Nghệ An")
+
+plot_df
+ggsave(filename = file.path("figures", "General", "Mai-Nghe An-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
+## Họ Mai - Thanh Hóa
+
+```{r}
+mai_thanhhoa <- dat_sff %>% filter(Ho=="Mai" & NAME_1=="Thanh Hoa") %>% st_as_sf(crs = 4326)
+mai_thanhhoa$centroid <- sf::st_transform(mai_thanhhoa, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+mai_thanhhoa <- mai_thanhhoa %>%
+  mutate(centroid_0 = centroid[NAME_3=="Thi tran Nga Son"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+mai_thanhhoa_radius <- mai_thanhhoa %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+write_xlsx(mai_thanhhoa_radius, "output/mai_thanhhoa_radius.xlsx")
+```
+
+```{r}
+distm_km<-mai_thanhhoa_radius$distm_km
+songuoi_km<-mai_thanhhoa_radius$songuoi_km
+rank<-mai_thanhhoa_radius$rank
+commune<-mai_thanhhoa_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-450*exp(-(distm_km^2)/(2*sqrt(2781)))
 
 df<-data.frame(distm_km, rank, commune, estimate, songuoi_km)
 
@@ -6156,13 +6207,14 @@ plot_df
 ```
 
 ```{r}
-mai_nghean_dens2 <- mai_nghean_radius %>%
+mai_thanhhoa_dens2 <- mai_thanhhoa_radius %>%
+  filter(rank<=100) %>%
   ggplot(aes(x = reorder(NAME_3, -distm_km), y =distm_km)) +
   #geom_point() +
   geom_bar(stat = "identity", width = 0.5) +
-  geom_line(y =distm_km) +
+  #geom_line(y =distm_km) +
   #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
-  stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=1, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=4, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
   #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
   #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
   #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
@@ -6172,12 +6224,210 @@ mai_nghean_dens2 <- mai_nghean_radius %>%
   scale_x_discrete(name = "Xã/Phường") +
   scale_y_continuous(name="Khoảng cách tới tâm (km)") +
   theme_bw() + 
-  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=3)) +
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=12)) +
   theme(panel.grid.major = element_blank()) + 
-  annotate(geom='text', x=300, y=75, label="y == 400*e^-{(x^{2}+y^{2})/2*(52.3)}", parse = TRUE,size=10) +
+  annotate(geom='text', x=80, y=10, label="y == 450*e^-{(x^{2}+y^{2})/2*(52.7)}", parse = TRUE,size=10) +
   coord_flip() +
-  ggtitle("Mai-Nghệ An")
-ggsave(filename = file.path("figures", "General", "Mai-Nghe An-Density-2.jpeg"), width = 25, height = 16)
+  ggtitle("Mai-Thanh Hóa")
+ggsave(filename = file.path("figures", "General", "Mai-Thanh Hoa-Density-2.jpeg"), width = 25, height = 16)
+```
+
+```{r}
+# Phương án 2
+mai_thanhhoa <- dat_sff %>% filter(Ho=="Mai" & NAME_1=="Thanh Hoa") %>% st_as_sf(crs = 4326)
+mai_thanhhoa$centroid <- sf::st_transform(mai_thanhhoa, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+mai_thanhhoa <- mai_thanhhoa %>%
+  mutate(centroid_0 = centroid[NAME_3=="Thi tran Nga Son"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+mai_thanhhoa_radius <- mai_thanhhoa %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+#write_xlsx(mai_thanhhoa_radius, "output/mai_thanhhoa_radius.xlsx")
+```
+
+```{r}
+distm_km<-mai_thanhhoa_radius$distm_km
+songuoi_km<-mai_thanhhoa_radius$songuoi_km
+rank<-mai_thanhhoa_radius$rank
+commune<-mai_thanhhoa_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-250*exp(-(distm_km^2)/(2*400))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
+  mutate(num=sum((songuoi_km-estimate)^2),
+         den=(length(df)-1),
+         var=num/den,
+         sd=sqrt(var))
+  
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km)) +
+  geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
+  scale_x_discrete(name = "Xã/Phường theo khoảng cách tới tâm (km)", 
+                     breaks = reorder(factor(rank), distm_km), 
+                     labels = reorder(factor(rank), distm_km)) +
+  scale_y_continuous(name="Mật độ người/km2") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=5, angle = 90), axis.text.y = element_text(size=20)) +
+  theme(panel.grid.major = element_blank()) + 
+  annotate(geom='text', x=200, y=500, label="y == 250*e^-{(x^{2}+y^{2})/2*(400)}", parse = TRUE,size=10) +
+  annotate(geom='text', x=200, y=450, label="s.e. = 700 người/xã",parse=F,size=8) +
+  #coord_flip() +
+  ggtitle("Mai-Thanh Hóa")
+
+plot_df
+ggsave(filename = file.path("figures", "General", "Mai-Thanh Hoa-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
+
+## Họ Mai - Nam Định
+
+```{r}
+mai_namdinh <- dat_sff %>% filter(Ho=="Mai" & NAME_1=="Nam Dinh") %>% st_as_sf(crs = 4326)
+mai_namdinh$centroid <- sf::st_transform(mai_namdinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+mai_namdinh <- mai_namdinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Xuan Tien"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+mai_namdinh_radius <- mai_namdinh %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+write_xlsx(mai_namdinh_radius, "output/mai_namdinh_radius.xlsx")
+```
+
+```{r}
+distm_km<-mai_namdinh_radius$distm_km
+songuoi_km<-mai_namdinh_radius$songuoi_km
+rank<-mai_namdinh_radius$rank
+commune<-mai_namdinh_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-110*exp(-(distm_km^2)/(2*sqrt(535)))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km)
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), -distm_km), y=distm_km)) +
+  geom_bar(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=distm_km), stat = "identity", width = 0.5) + 
+  geom_line(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=estimate))
+
+plot_df
+```
+
+```{r}
+mai_namdinhdens2 <- mai_namdinh_radius %>%
+  filter(rank<=100) %>%
+  ggplot(aes(x = reorder(NAME_3, -distm_km), y =distm_km)) +
+  #geom_point() +
+  geom_bar(stat = "identity", width = 0.5) +
+  #geom_line(y =distm_km) +
+  #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
+  stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=4, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
+  #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
+  #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #geom_smooth(method = "loess", se = FALSE) +
+  scale_x_discrete(name = "Xã/Phường") +
+  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=12)) +
+  theme(panel.grid.major = element_blank()) + 
+  annotate(geom='text', x=80, y=10, label="y == 110*e^-{(x^{2}+y^{2})/2*(23.1)}", parse = TRUE,size=10) +
+  coord_flip() +
+  ggtitle("Mai-Nam Định")
+ggsave(filename = file.path("figures", "General", "Mai-Nam Dinh-Density-2.jpeg"), width = 25, height = 16)
+```
+
+```{r}
+# Phương án 2
+mai_namdinh <- dat_sff %>% filter(Ho=="Mai" & NAME_1=="Nam Dinh") %>% st_as_sf(crs = 4326)
+mai_namdinh$centroid <- sf::st_transform(mai_namdinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+mai_namdinh <- mai_namdinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Xuan Tien"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+mai_namdinh_radius <- mai_namdinh %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+#write_xlsx(mai_namdinh_radius, "output/mai_namdinh_radius.xlsx")
+```
+
+```{r}
+distm_km<-mai_namdinh_radius$distm_km
+songuoi_km<-mai_namdinh_radius$songuoi_km
+rank<-mai_namdinh_radius$rank
+commune<-mai_namdinh_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-200*exp(-(distm_km^2)/(2*50))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
+  mutate(num=sum((songuoi_km-estimate)^2),
+         den=(length(df)-1),
+         var=num/den,
+         sd=sqrt(var))
+  
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km)) +
+  geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
+  scale_x_discrete(name = "Xã/Phường theo khoảng cách tới tâm (km)", 
+                     breaks = reorder(factor(rank), distm_km), 
+                     labels = reorder(factor(rank), distm_km)) +
+  scale_y_continuous(name="Mật độ người/km2") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=5, angle = 90), axis.text.y = element_text(size=20)) +
+  theme(panel.grid.major = element_blank()) + 
+  annotate(geom='text', x=50, y=500, label="y == 200*e^-{(x^{2}+y^{2})/2*(50)}", parse = TRUE,size=10) +
+  annotate(geom='text', x=50, y=450, label="s.e. = 500 người/xã",parse=F,size=8) +
+  #coord_flip() +
+  ggtitle("Mai-Nam Định")
+
+plot_df
+ggsave(filename = file.path("figures", "General", "Mai-Nam Dinh-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
 ## Họ Khúc - Hưng Yên
