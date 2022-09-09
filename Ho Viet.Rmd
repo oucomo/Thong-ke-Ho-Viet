@@ -6019,9 +6019,7 @@ tran_namdinh_radius <- tran_namdinh %>%
   arrange(distm_km) %>%
   mutate(rank=row_number())
 #write_xlsx(tran_namdinh_radius, "output/tran_namdinh_radius.xlsx")
-```
 
-```{r}
 distm_km<-tran_namdinh_radius$distm_km
 songuoi_km<-tran_namdinh_radius$songuoi_km
 rank<-tran_namdinh_radius$rank
@@ -6055,26 +6053,7 @@ plot_df <- df %>%
   ggtitle("Trần-Nam Định")
 
 plot_df
-ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2(2).jpeg"), width = 25, height = 16)
-```
-
-```{r}
-tran_namdinh_radius50 <- tran_namdinh %>%
-  arrange(desc(distm_km))
-
-tran_namdinh_radius50 <- tran_namdinh_radius50 %>% slice(178:227)
-
-tran_namdinh_dens2 <- tran_namdinh_radius50 %>%
-  ggplot(aes(x = reorder(NAME_3, distm_km, decreasing=T), y =distm_km)) +
-  geom_bar(stat = "identity", width = 0.75) +
-  stat_summary(aes(label=paste0(round(songuoi_km,0), "ng/km2")), geom="text", size=2, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
-  scale_x_discrete(name = "Xã/Phường") +
-  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
-  theme_bw() + 
-  theme(axis.text.y = element_text(size = 7),
-        panel.grid.major = element_blank()) + coord_flip() +
-  ggtitle("Trần-Nam Định")
-ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density(2).jpeg"), width = 10, height = 7)
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2(3).jpeg"), width = 25, height = 16)
 ```
 
 ## Họ Mai - Nghệ An
