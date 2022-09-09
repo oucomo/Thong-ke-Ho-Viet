@@ -5043,7 +5043,7 @@ namepot <- stewart(knownpts = mai_sp,
 poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
 
 # Discretize the variable
-bv <- quantile(mac_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+bv <- quantile(mai_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
 
 # Create an isopleth layer
 pot <- isopoly(x = poppot, var = "OUTPUT2",
@@ -6140,21 +6140,21 @@ df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
   
 
 plot_df <- df %>%
-  filter(row_number()<=100) %>%
+  #filter(row_number()<=100) %>%
   ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km)) +
   geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
   #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
-  geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
   stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
   scale_x_discrete(name = "Xã/Phường theo khoảng cách tới tâm (km)", 
                      breaks = reorder(factor(rank), distm_km), 
                      labels = reorder(factor(rank), distm_km)) +
   scale_y_continuous(name="Mật độ người/km2") +
   theme_bw() + 
-  theme(text = element_text(size=20), axis.text.x = element_text(size=15, angle = 90), axis.text.y = element_text(size=20)) +
+  theme(text = element_text(size=20), axis.text.x = element_text(size=5, angle = 90), axis.text.y = element_text(size=20)) +
   theme(panel.grid.major = element_blank()) + 
-  annotate(geom='text', x=30, y=200, label="y == 55*e^-{(x^{2}+y^{2})/2*(160)}", parse = TRUE,size=10) +
-  annotate(geom='text', x=30, y=180, label="s.e. = 130 người/xã",parse=F,size=8) +
+  #annotate(geom='text', x=30, y=200, label="y == 55*e^-{(x^{2}+y^{2})/2*(160)}", parse = TRUE,size=10) +
+  #annotate(geom='text', x=30, y=180, label="s.e. = 130 người/xã",parse=F,size=8) +
   #coord_flip() +
   ggtitle("Mai-Nghệ An")
 
@@ -6275,21 +6275,21 @@ df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
   
 
 plot_df <- df %>%
-  filter(row_number()<=100) %>%
+  #filter(row_number()<=100) %>%
   ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km)) +
   geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
   #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
-  geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
   stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
   scale_x_discrete(name = "Xã/Phường theo khoảng cách tới tâm (km)", 
                      breaks = reorder(factor(rank), distm_km), 
                      labels = reorder(factor(rank), distm_km)) +
   scale_y_continuous(name="Mật độ người/km2") +
   theme_bw() + 
-  theme(text = element_text(size=20), axis.text.x = element_text(size=15, angle = 90), axis.text.y = element_text(size=20)) +
+  theme(text = element_text(size=20), axis.text.x = element_text(size=6, angle = 90), axis.text.y = element_text(size=20)) +
   theme(panel.grid.major = element_blank()) + 
-  annotate(geom='text', x=30, y=700, label="y == 200*e^-{(x^{2}+y^{2})/2*(100)}", parse = TRUE,size=10) +
-  annotate(geom='text', x=30, y=650, label="s.e. = 600 người/xã",parse=F,size=8) +
+  #annotate(geom='text', x=30, y=700, label="y == 200*e^-{(x^{2}+y^{2})/2*(100)}", parse = TRUE,size=10) +
+  #annotate(geom='text', x=30, y=650, label="s.e. = 600 người/xã",parse=F,size=8) +
   #coord_flip() +
   ggtitle("Mai-Thanh Hóa")
 
@@ -6411,21 +6411,21 @@ df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
   
 
 plot_df <- df %>%
-  filter(row_number()<=100) %>%
+  #filter(row_number()<=100) %>%
   ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km)) +
   geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
   #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
-  geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
   stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
   scale_x_discrete(name = "Xã/Phường theo khoảng cách tới tâm (km)", 
                      breaks = reorder(factor(rank), distm_km), 
                      labels = reorder(factor(rank), distm_km)) +
   scale_y_continuous(name="Mật độ người/km2") +
   theme_bw() + 
-  theme(text = element_text(size=20), axis.text.x = element_text(size=15, angle = 90), axis.text.y = element_text(size=20)) +
+  theme(text = element_text(size=20), axis.text.x = element_text(size=10, angle = 90), axis.text.y = element_text(size=20)) +
   theme(panel.grid.major = element_blank()) + 
-  annotate(geom='text', x=30, y=500, label="y == 220*e^-{(x^{2}+y^{2})/2*(40)}", parse = TRUE,size=10) +
-  annotate(geom='text', x=30, y=450, label="s.e. = 500 người/xã",parse=F,size=8) +
+  #annotate(geom='text', x=30, y=500, label="y == 220*e^-{(x^{2}+y^{2})/2*(40)}", parse = TRUE,size=10) +
+  #annotate(geom='text', x=30, y=450, label="s.e. = 500 người/xã",parse=F,size=8) +
   #coord_flip() +
   ggtitle("Mai-Nam Định")
 
@@ -6560,7 +6560,7 @@ plot_df <- df %>%
   ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km)) +
   geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
   #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
-  geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
   stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
   scale_x_discrete(name = "Xã/Phường theo khoảng cách tới tâm (km)", 
                      breaks = reorder(factor(rank), distm_km), 
@@ -6569,8 +6569,8 @@ plot_df <- df %>%
   theme_bw() + 
   theme(text = element_text(size=20), axis.text.x = element_text(size=15, angle = 90), axis.text.y = element_text(size=20)) +
   theme(panel.grid.major = element_blank()) + 
-  annotate(geom='text', x=20, y=80, label="y == 50*e^-{(x^{2}+y^{2})/2*(36)}", parse = TRUE,size=10) +
-  annotate(geom='text', x=20, y=70, label="s.e. = 50 người/xã",parse=F,size=8) +
+  #annotate(geom='text', x=20, y=80, label="y == 50*e^-{(x^{2}+y^{2})/2*(36)}", parse = TRUE,size=10) +
+  #annotate(geom='text', x=20, y=70, label="s.e. = 50 người/xã",parse=F,size=8) +
   #coord_flip() +
   ggtitle("Khúc-Hưng Yên")
 

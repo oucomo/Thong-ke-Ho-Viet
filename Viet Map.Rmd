@@ -1,0 +1,93 @@
+---
+title: "Viet Map"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+#library(rmarkdown)
+#library(knitr)
+library(markdown)
+library(stringr)
+library(forcats)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+#library(flextable)
+library(huxtable)
+library(data.table)
+library(lubridate)
+library(stringi)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+#library(dlookr)
+#library(flextable)
+library(haven)
+library(raster)
+library(rgdal)
+library(viridis)
+
+# install.packages("sf")
+# install.packages("terra")
+# install.packages("spData")
+# install.packages("spDataLarge", repos = "https://nowosad.r-universe.dev")
+
+library(sf)          # classes and functions for vector data
+#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE
+library(terra)       # classes and functions for raster data
+library(spData)      # load geographic data
+library(spDataLarge) # load larger geographic data
+library(tmap)
+library(leaflet)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+getData<-raster::getData
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+# Load data
+
+```{r}
+vietnam = world[world$name_long == "Vietnam", ]
+# Add fill layer to nz shape
+tm_shape(vietnam) +
+  tm_fill() 
+# Add border layer to nz shape
+tm_shape(vietnam) +
+  tm_borders() 
+# Add fill and border layers to nz shape
+tm_shape(vietnam) +
+  tm_fill() +
+  tm_borders() 
+```
+
+```{r}
+library(leaflet)
+popup = c("Robin", "Jakub", "Jannes")
+leaflet() |>
+  addProviderTiles("NASAGIBS.ViirsEarthAtNight2012") |>
+  addMarkers(lng = c(-3, 23, 11),
+             lat = c(52, 53, 49), 
+             popup = popup)
+```
+
+
+
+
