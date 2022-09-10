@@ -6058,7 +6058,7 @@ plot_df <- df %>%
   ggtitle("Trần-Nam Định")
 
 plot_df
-ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2(2).jpeg"), width = 25, height = 16)
+ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2(3).jpeg"), width = 25, height = 16)
 ```
 
 ## Họ Mai - Nghệ An
