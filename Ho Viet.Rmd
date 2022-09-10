@@ -7426,7 +7426,9 @@ tran_bacbo <- data_bacbo_tran %>%
          xa=NAME_3,
          danso_km = danso/area_km,
          x = map(centroid,1),
-         y = map(centroid,2)) %>%
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(tran_bacbo, "output/tran_bacbo.xlsx")
 ```
@@ -7452,7 +7454,9 @@ mai_bacbo <- data_bacbo_mai %>%
          xa=NAME_3,
          danso_km = danso/area_km,
          x = map(centroid,1),
-         y = map(centroid,2)) %>%
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(mai_bacbo, "output/mai_bacbo.xlsx")
 ```
@@ -7478,7 +7482,9 @@ ngo_bacbo <- data_bacbo_ngo %>%
          xa=NAME_3,
          danso_km = danso/area_km,
          x = map(centroid,1),
-         y = map(centroid,2)) %>%
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(ngo_bacbo, "output/ngo_bacbo.xlsx")
 ```
@@ -7504,7 +7510,9 @@ phung_bacbo <- data_bacbo_phung %>%
          xa=NAME_3,
          danso_km = danso/area_km,
          x = map(centroid,1),
-         y = map(centroid,2)) %>%
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(phung_bacbo, "output/phung_bacbo.xlsx")
 ```
@@ -7530,7 +7538,9 @@ khuc_bacbo <- data_bacbo_khuc %>%
          xa=NAME_3,
          danso_km = danso/area_km,
          x = map(centroid,1),
-         y = map(centroid,2)) %>%
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(khuc_bacbo, "output/khuc_bacbo.xlsx")
 ```
@@ -7556,7 +7566,9 @@ du_bacbo <- data_bacbo_du %>%
          xa=NAME_3,
          danso_km = danso/area_km,
          x = map(centroid,1),
-         y = map(centroid,2)) %>%
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(du_bacbo, "output/du_bacbo.xlsx")
 ```
