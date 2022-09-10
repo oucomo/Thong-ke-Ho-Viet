@@ -7391,4 +7391,172 @@ trieu_barf <- dat_sff %>% filter(Ho=="Triệu") %>% filter(rank(desc(songuoi_km)
 ggsave(filename = file.path("figures", "General", "Trieu-Density-xa(2).jpeg"), width = 10, height = 7)
 ```
 
+## Export data
 
+```{r}
+bacbo <- c("Bac Giang", "Bac Kan", "Bac Ninh", "Cao Bang", "Dien Bien",  "Ha Giang", "Ha Nam", "Ha Noi", "Ha Tinh", "Hai Duong", "Hai Phong", "Hoa Binh", "Hung Yen", "Lai Chau", "Lang Son", "Lao Cai", "Nam Dinh", "Nghe An", "Ninh Binh", "Phu Tho", "Quang Binh", "Quang Ninh", "Quang Tri", "Son La", "Thai Binh", "Thai Nguyen", "Thanh Hoa", "Tuyen Quang", "Vinh Phuc", "Yen Bai")
+
+data_bacbo <- dat_sff %>% filter(NAME_1 %in% bacbo) %>% st_as_sf(crs = 4326)
+data_bacbo$centroid <- sf::st_transform(data_bacbo, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+```
+
+# Họ Trần - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_tran <- data_bacbo %>% filter(Ho=="Trần") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+tran_bacbo <- data_bacbo_tran %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(tran_bacbo, "output/tran_bacbo.xlsx")
+```
+
+# Họ Mai - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_mai <- data_bacbo %>% filter(Ho=="Mai") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+mai_bacbo <- data_bacbo_mai %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(mai_bacbo, "output/mai_bacbo.xlsx")
+```
+
+# Họ Ngô - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_ngo <- data_bacbo %>% filter(Ho=="Ngô") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+ngo_bacbo <- data_bacbo_ngo %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(ngo_bacbo, "output/ngo_bacbo.xlsx")
+```
+
+# Họ Phùng - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_phung <- data_bacbo %>% filter(Ho=="Phùng") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+phung_bacbo <- data_bacbo_phung %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(phung_bacbo, "output/phung_bacbo.xlsx")
+```
+
+# Họ Khúc - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_khuc <- data_bacbo %>% filter(Ho=="Khúc") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+khuc_bacbo <- data_bacbo_khuc %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(khuc_bacbo, "output/khuc_bacbo.xlsx")
+```
+
+# Họ Dư - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_du <- data_bacbo %>% filter(Ho=="Dư") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+du_bacbo <- data_bacbo_du %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(du_bacbo, "output/du_bacbo.xlsx")
+```
