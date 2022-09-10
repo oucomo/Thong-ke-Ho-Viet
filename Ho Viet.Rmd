@@ -7572,3 +7572,31 @@ du_bacbo <- data_bacbo_du %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(du_bacbo, "output/du_bacbo.xlsx")
 ```
+
+# Họ Dương - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_duong <- data_bacbo %>% filter(Ho=="Dương") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+duong_bacbo <- data_bacbo_duong %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(duong_bacbo, "output/duong_bacbo.xlsx")
+```
