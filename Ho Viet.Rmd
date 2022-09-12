@@ -6211,7 +6211,7 @@ ggsave(filename = file.path("figures", "General", "Mai-Nghe An-Density-2(2).jpeg
 ```
 ```{r}
 #3D
-remotes::install_github("tylermorganwall/rayshader")
+#remotes::install_github("tylermorganwall/rayshader")
 library(rayshader)
 library(sf)
 
@@ -6222,7 +6222,13 @@ gg_nc = ggplot(nc) +
   ggtitle("Area of counties in North Carolina") +
   theme_bw()
 
-plot_gg(gg_nc, multicore = TRUE, width = 6 ,height=2.7, fov = 70)
+gg_mai_nghean = ggplot(mai_nghean) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2") +
+  ggtitle("Mai_Nghệ An") +
+  theme_bw()
+
+plot_gg(gg_mai_nghean, multicore = TRUE, width = 6 ,height=2.7, fov = 70)
 render_depth(focallength=100,focus=0.72)
 
 ```
