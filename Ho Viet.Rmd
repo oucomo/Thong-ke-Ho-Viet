@@ -115,6 +115,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Khuc|khúc|Khúc|Khúc|KHÚC") == 
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kiều|Kiều|Kiều|Kiều|KIỀU|Kieu|Kièu|Kiêu|Kiếu|KiỀU|KIỀU|Kiểu") == TRUE, "Kiều", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lại|Lại|LẠI|Lại|Lại|Laị|LẠI") == TRUE, "Lại", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lam|lâm|Lâm|LÂM|LÂm") == TRUE, "Lâm", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lâ|lã|Lã|Lã|LÃ|Lả") == TRUE, "Lã", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Le|lê|Lê|LÊ|le|LE|Lê|Lế") == TRUE, "Lê", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lo|lò|lò|Lò|Lò|LÒ|LÒ") == TRUE, "Lò", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luong|lương|Lương|LƯƠNG|Lươmg|Lươn|luong|Lưong|Lươnh") == TRUE, "Lương", data_ho$Ho)
@@ -781,6 +782,21 @@ ggplot() + geom_sf() + geom_sf(data=tran_plot, aes(fill=pro.pop), lwd=0) +
 #ggsave(filename = file.path("Ho Tran-PerPop.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "General", "Ho Tran-PerPop.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Lã
+
+```{r}
+la_sf <- dat_sf %>% mutate(prop.la=(sum(subset(., Ho=="Lã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lã")
+la_plot <- la_sf %>% select(pro.pop, prop.la, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=la_plot, aes(fill=pro.pop), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(la_plot$prop.la[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lã")
+#ggsave(filename = file.path("Ho La-PerPop.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho La-PerPop.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Lê
 
 ```{r}
@@ -1208,6 +1224,21 @@ ggplot() + geom_sf() + geom_sf(data=tran_plotf, aes(fill=songuoi_km), lwd=0) +
 #ggsave(filename = file.path("Ho Tran-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "General", "Ho Tran-PerArea.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Lã
+
+```{r}
+la_sff <- dat_sff %>% mutate(prop.la=(sum(subset(., Ho=="Lã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lã")
+la_plotf <- la_sff %>% select(songuoi_km, prop.la, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=la_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(la_plot$prop.la[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lã")
+#ggsave(filename = file.path("Ho La-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho La-PerArea.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Lê
 
 ```{r}
@@ -1603,6 +1634,22 @@ ggplot() + geom_sf() + geom_sf(data=tran_plot, aes(fill=pro.pop), lwd=0) +
 #ggsave(filename = file.path("figures", "Tran-PerPop-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerPop-River", "Tran-PerPop-River.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Lã
+
+```{r}
+la_sf <- dat_sf %>% mutate(prop.la=(sum(subset(., Ho=="Lã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lã")
+la_plot <- la_sf %>% select(pro.pop, prop.la, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=la_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(la_plot$prop.la[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lã")
+#ggsave(filename = file.path("figures", "La-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "La-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Lê
 
 ```{r}
@@ -1998,6 +2045,7 @@ ggplot() + geom_sf() + geom_sf(data=vi_plot, aes(fill=pro.pop), lwd=0) +
 #ggsave(filename = file.path("figures", "Vi-PerPop-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerPop-River", "Vi-PerPop-River.jpeg"), width = 49, height = 33)
 ```
+
 # Bản đồ mật độ họ trên diện tích tính đến xã có sông ngòi
 
 ## Họ Nguyễn
@@ -2031,6 +2079,7 @@ ggplot() + geom_sf() + geom_sf(data=tran_plotf, aes(fill=songuoi_km), lwd=0) +
 #ggsave(filename = file.path("figures", "Tran-PerArea-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerArea-River", "Tran-PerArea-River.jpeg"), width = 49, height = 33)
 ```
+
 ## Họ Lê
 
 ```{r}
@@ -2044,6 +2093,21 @@ ggplot() + geom_sf() + geom_sf(data=le_plotf, aes(fill=songuoi_km), lwd=0) +
   ggtitle("Họ Lê")
 #ggsave(filename = file.path("figures", "Le-PerArea-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerArea-River", "Le-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lã
+
+```{r}
+la_sff <- dat_sff %>% mutate(prop.la=(sum(subset(., Ho=="Lã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lã")
+la_plotf <- la_sff %>% select(songuoi_km, prop.la, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=la_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(la_plot$prop.la[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lã")
+#ggsave(filename = file.path("figures", "La-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "La-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -3194,6 +3258,110 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Lê") +
   coord_sf(crs = 4326)
 ggsave(filename = file.path("figures", "Contour-River", "Le-Contour-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lã
+
+```{r, message=FALSE, warning=FALSE}
+la_sf <- dat_sf %>% mutate(prop.la=(sum(subset(., Ho=="Lã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lã")
+la_f <- la_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+la_f <- sf::st_transform(la_f, 2154)
+la_plot <- la_sf %>% select(pro.pop, prop.la, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+la_sf2 <- la_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+la_sf2 <- sf::st_transform(la_sf2, 2154)
+la_sp <- as(la_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = la_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = la_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = la_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = la_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(la_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = la_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+la_rot <- la_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+la_rot <- as(la_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+#png(filename = "La_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(la_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Lã", paste(round(la_plot$prop.la[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(par)
+}
+#dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(la_plot$prop.la[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Lã") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Contour-River", "La-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -6061,6 +6229,23 @@ plot_df
 ggsave(filename = file.path("figures", "General", "Tran-Nam Dinh-Density-2(3).jpeg"), width = 25, height = 16)
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_tran_namdinh = ggplot(tran_namdinh) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Trần-Nam Định") +
+  theme_bw()
+
+plot_gg(gg_tran_namdinh, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/tran_namdinh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+```
+
 ## Họ Mai - Nghệ An
 
 ```{r}
@@ -6209,28 +6394,24 @@ plot_df <- df %>%
 plot_df
 ggsave(filename = file.path("figures", "General", "Mai-Nghe An-Density-2(2).jpeg"), width = 25, height = 16)
 ```
-```{r}
+
+# 3D plot
+
+```{r, message=FALSE, warning=FALSE}
 #3D
 #remotes::install_github("tylermorganwall/rayshader")
 library(rayshader)
 library(sf)
 
-nc = st_read(system.file("shape/nc.shp", package="sf"), quiet = TRUE)
-gg_nc = ggplot(nc) +
-  geom_sf(aes(fill = AREA)) +
-  scale_fill_viridis("Area") +
-  ggtitle("Area of counties in North Carolina") +
-  theme_bw()
-
 gg_mai_nghean = ggplot(mai_nghean) +
   geom_sf(aes(fill = songuoi_km)) +
-  scale_fill_viridis("Mật độ người/km2") +
-  ggtitle("Mai_Nghệ An") +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Mai-Nghệ An") +
   theme_bw()
 
-plot_gg(gg_mai_nghean, multicore = TRUE, width = 6 ,height=2.7, fov = 70)
+plot_gg(gg_mai_nghean, multicore = TRUE, width = 6 ,height=3, fov = 70)
 render_depth(focallength=100,focus=0.72)
-
+render_movie("figures/mai_nghean.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 ```
 
 ## Họ Mai - Thanh Hóa
@@ -6370,6 +6551,22 @@ plot_df
 ggsave(filename = file.path("figures", "General", "Mai-Thanh Hoa-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_mai_thanhhoa = ggplot(mai_thanhhoa) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Mai-Thanh Hóa") +
+  theme_bw()
+
+plot_gg(gg_mai_thanhhoa, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/mai_thanhhoa.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+```
 
 ## Họ Mai - Nam Định
 
@@ -6506,6 +6703,23 @@ plot_df <- df %>%
 
 plot_df
 ggsave(filename = file.path("figures", "General", "Mai-Nam Dinh-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_mai_namdinh = ggplot(mai_namdinh) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Mai-Nam Định") +
+  theme_bw()
+
+plot_gg(gg_mai_namdinh, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/mai_namdinh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 ```
 
 ## Họ Khúc - Hưng Yên
@@ -6654,6 +6868,23 @@ plot_df <- df %>%
 
 plot_df
 ggsave(filename = file.path("figures", "General", "Khuc-Hung Yen-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_khuc_hungyen = ggplot(khuc_hungyen) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Khúc-Hưng Yên") +
+  theme_bw()
+
+plot_gg(gg_khuc_hungyen, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/khuc_hungyen.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 ```
 
 ## Họ Ngô - Hà Nội
@@ -6812,6 +7043,23 @@ plot_df
 ggsave(filename = file.path("figures", "General", "Ngo-Ha Noi-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_ngo_hanoi = ggplot(ngo_hanoi) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Ngô-Hà Nội") +
+  theme_bw()
+
+plot_gg(gg_ngo_hanoi, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/ngo_hanoi.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+```
+
 ## Họ Phùng - Hà Nội
 
 ```{r}
@@ -6968,6 +7216,23 @@ plot_df
 ggsave(filename = file.path("figures", "General", "Phung-Ha Noi-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_phung_hanoi = ggplot(phung_hanoi) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Phùng-Hà Nội") +
+  theme_bw()
+
+plot_gg(gg_phung_hanoi, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/phung_hanoi.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+```
+
 ## Họ Phùng - Nghệ An
 
 ```{r}
@@ -7039,6 +7304,23 @@ plot_df
 ggsave(filename = file.path("figures", "General", "Phung-Nghe An-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_phung_nghean = ggplot(phung_nghean) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Phùng-Nghệ An") +
+  theme_bw()
+
+plot_gg(gg_phung_nghean, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/phung_nghean.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+```
+
 ## Họ Phùng - Vĩnh Phúc
 
 ```{r}
@@ -7108,6 +7390,23 @@ plot_df <- df %>%
 
 plot_df
 ggsave(filename = file.path("figures", "General", "Phung-Vinh Phuc-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_phung_vinhphuc = ggplot(phung_vinhphuc) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Phùng-Vĩnh Phúc") +
+  theme_bw()
+
+plot_gg(gg_phung_vinhphuc, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/phung_vinhphuc.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 ```
 
 ## Họ Dương - Thanh Hóa
@@ -7197,6 +7496,23 @@ duong_thanhhoa_dens2 <- duong_thanhhoa_radius %>%
 ggsave(filename = file.path("figures", "General", "Duong-Thanh Hoa-Density-2.jpeg"), width = 25, height = 16)
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+gg_duong_thanhhoa = ggplot(duong_thanhhoa) +
+  geom_sf(aes(fill = songuoi_km)) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Dương-Thanh Hóa") +
+  theme_bw()
+
+plot_gg(gg_duong_thanhhoa, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/duong_thanhhoa.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+```
+
 ## Họ Lê - Thanh Hóa
 
 ```{r}
@@ -7282,6 +7598,221 @@ le_thanhhoa_dens2 <- le_thanhhoa_radius %>%
   coord_flip() +
   ggtitle("Lê-Thanh Hóa")
 ggsave(filename = file.path("figures", "General", "Le-Thanh Hoa-Density-2.jpeg"), width = 25, height = 16)
+```
+
+## Họ Lã - Thái Bình
+
+```{r}
+la_barf <- dat_sff %>% filter(Ho=="Lã") %>% filter(rank(desc(songuoi_km))<=50) %>%
+  ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  scale_fill_discrete(name="Tỉnh/thành phố") +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Lã")
+ggsave(filename = file.path("figures", "General", "La-Density-xa(2).jpeg"), width = 10, height = 7)
+```
+
+```{r}
+la_thaibinh <- dat_sff %>% filter(Ho=="Lã" & NAME_1=="Thai Binh") %>% st_as_sf(crs = 4326)
+la_thaibinh$centroid <- sf::st_transform(la_thaibinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+la_thaibinh <- la_thaibinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Thuy Duong"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+la_thaibinh_radius <- la_thaibinh %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+write_xlsx(la_thaibinh_radius, "output/la_thaibinh_radius.xlsx")
+```
+
+```{r}
+distm_km<-la_thaibinh_radius$distm_km
+songuoi_km<-la_thaibinh_radius$songuoi_km
+rank<-la_thaibinh_radius$rank
+commune<-la_thaibinh_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-165*exp(-(distm_km^2)/(2*sqrt(2123)))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km)
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), -distm_km), y=distm_km)) +
+  geom_bar(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=distm_km), stat = "identity", width = 0.5) + 
+  geom_line(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=estimate))
+
+plot_df
+```
+
+```{r}
+la_thaibinh_dens2 <- la_thaibinh_radius %>% 
+  #filter(rank<=100) %>%
+  ggplot(aes(x = reorder(commune, -distm_km), y =distm_km)) +
+  #geom_point() +
+  geom_bar(stat = "identity", width = 0.5) +
+  #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
+  #stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=4, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
+  #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
+  #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #geom_smooth(method = "loess", se = FALSE) +
+  scale_x_discrete(name = "Xã/Phường") +
+  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=12)) +
+  theme(panel.grid.major = element_blank()) + 
+  #annotate(geom='text', x=80, y=8, label="y == 165*e^-{(x^{2}+y^{2})/2*(46.1)}", parse = TRUE,size=10) +
+  coord_flip() +
+  ggtitle("Lã-Thái Bình")
+ggsave(filename = file.path("figures", "General", "La-Thai Binh-Density-2.jpeg"), width = 25, height = 16)
+```
+
+```{r}
+# Phương án 2
+la_thaibinh <- dat_sff %>% filter(Ho=="Lã" & NAME_1=="Thai Binh") %>% st_as_sf(crs = 4326)
+la_thaibinh$centroid <- sf::st_transform(la_thaibinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+la_thaibinh <- la_thaibinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Thuy Duong"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+la_thaibinh_radius <- la_thaibinh %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+#write_xlsx(la_thaibinh_radius, "output/la_thaibinh_radius.xlsx")
+
+distm_km<-la_thaibinh_radius$distm_km
+songuoi_km<-la_thaibinh_radius$songuoi_km
+rank<-la_thaibinh_radius$rank
+commune<-la_thaibinh_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-55*exp(-(distm_km^2)/(2*160))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
+  mutate(num=sum((songuoi_km-estimate)^2),
+         den=(length(df)-1),
+         var=num/den,
+         sd=sqrt(var))
+
+breaks <- c(0, 10, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300)
+
+plot_df <- df %>%
+  #filter(row_number()<=100) %>%
+  ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km, fill=distm_km)) +
+  geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
+  scale_x_discrete(name = "Xã/Phường", 
+                     breaks = reorder(factor(rank), distm_km), 
+                     labels = reorder(factor(rank), distm_km)) +
+  scale_fill_gradientn("Khoảng cách tới tâm (km)", colours = terrain.colors(10), breaks=breaks) +
+  scale_y_continuous(name="Mật độ người/km2") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=10, angle = 90), axis.text.y = element_text(size=20),
+        legend.text=element_text(size=20), legend.key.size = unit(5, "cm"), legend.key.height = unit(2, "cm"), legend.key.width = unit(4, "cm"), legend.position = "bottom") +
+  theme(panel.grid.major = element_blank()) + 
+  #annotate(geom='text', x=30, y=200, label="y == 55*e^-{(x^{2}+y^{2})/2*(160)}", parse = TRUE,size=10) +
+  #annotate(geom='text', x=30, y=180, label="s.e. = 130 người/xã",parse=F,size=8) +
+  #coord_flip() +
+  ggtitle("Lã-Thái Bình")
+
+plot_df
+ggsave(filename = file.path("figures", "General", "La-Thai Binh-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
+## Họ Lã - TPHCM
+
+```{r}
+# Phương án 2
+la_hcm <- dat_sff %>% filter(Ho=="Lã" & NAME_1=="Ho Chi Minh") %>% st_as_sf(crs = 4326)
+la_hcm$centroid <- sf::st_transform(la_hcm, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+la_hcm <- la_hcm %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Phu Trung"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+la_hcm_radius <- la_hcm %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+#write_xlsx(la_hcm_radius, "output/la_hcm_radius.xlsx")
+
+distm_km<-la_hcm_radius$distm_km
+songuoi_km<-la_hcm_radius$songuoi_km
+rank<-la_hcm_radius$rank
+commune<-la_hcm_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-55*exp(-(distm_km^2)/(2*160))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
+  mutate(num=sum((songuoi_km-estimate)^2),
+         den=(length(df)-1),
+         var=num/den,
+         sd=sqrt(var))
+
+breaks <- c(0, 10, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300)
+
+plot_df <- df %>%
+  #filter(row_number()<=100) %>%
+  ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km, fill=distm_km)) +
+  geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
+  scale_x_discrete(name = "Xã/Phường", 
+                     breaks = reorder(factor(rank), distm_km), 
+                     labels = reorder(factor(rank), distm_km)) +
+  scale_fill_gradientn("Khoảng cách tới tâm (km)", colours = terrain.colors(10), breaks=breaks) +
+  scale_y_continuous(name="Mật độ người/km2") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=10, angle = 90), axis.text.y = element_text(size=20),
+        legend.text=element_text(size=20), legend.key.size = unit(5, "cm"), legend.key.height = unit(2, "cm"), legend.key.width = unit(4, "cm"), legend.position = "bottom") +
+  theme(panel.grid.major = element_blank()) + 
+  #annotate(geom='text', x=30, y=200, label="y == 55*e^-{(x^{2}+y^{2})/2*(160)}", parse = TRUE,size=10) +
+  #annotate(geom='text', x=30, y=180, label="s.e. = 130 người/xã",parse=F,size=8) +
+  #coord_flip() +
+  ggtitle("Lã-TP Hồ Chí Minh")
+
+plot_df
+ggsave(filename = file.path("figures", "General", "La-Ho Chi Minh-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
 ## Họ Dư - Hà Nội
@@ -7467,6 +7998,33 @@ mai_bacbo <- data_bacbo_mai %>%
 write_xlsx(mai_bacbo, "output/mai_bacbo.xlsx")
 ```
 
+# Họ Mai
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#mai_bacbo_sf <- data_bacbo %>% filter(Ho=="Mai")
+mai_sff <- dat_sff %>% 
+  mutate(prop.mai=(sum(subset(., Ho=="Mai")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mai") %>% 
+  st_as_sf(crs = 4326)
+gg_mai = ggplot(mai_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mai") +
+  theme_bw()
+
+plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
+#render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Mai.png", clear=T)
+```
+
 # Họ Ngô - Bắc Bộ
 
 ```{r}
@@ -7606,3 +8164,826 @@ duong_bacbo <- data_bacbo_duong %>%
   select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
 write_xlsx(duong_bacbo, "output/duong_bacbo.xlsx")
 ```
+
+# 3D Plot
+
+## Họ Mai
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#mai_bacbo_sf <- data_bacbo %>% filter(Ho=="Mai")
+mai_sff <- dat_sff %>% 
+  mutate(prop.mai=(sum(subset(., Ho=="Mai")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mai") %>% 
+  st_as_sf(crs = 4326)
+gg_mai = ggplot(mai_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mai") +
+  theme_bw()
+
+plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
+#render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Mai.png", clear=T)
+```
+
+## Họ Phùng
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#phung_bacbo_sf <- data_bacbo %>% filter(Ho=="Phùng")
+phung_sff <- dat_sff %>% 
+  mutate(prop.phung=(sum(subset(., Ho=="Phùng")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Phùng") %>% 
+  st_as_sf(crs = 4326)
+gg_phung = ggplot(phung_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(phung_sff$prop.phung[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Phùng") +
+  theme_bw()
+
+plot_gg(gg_phung, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Phung.png")
+#render_movie("figures/3D/phung.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Phung.png", clear=T)
+```
+
+## Họ Ngô
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#ngo_bacbo_sf <- data_bacbo %>% filter(Ho=="Ngô")
+ngo_sff <- dat_sff %>% 
+  mutate(prop.ngo=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Ngô") %>% 
+  st_as_sf(crs = 4326)
+gg_ngo = ggplot(ngo_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(ngo_sff$prop.ngo[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Ngô") +
+  theme_bw()
+
+plot_gg(gg_ngo, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ngo.png")
+#render_movie("figures/3D/ngo.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Ngo.png", clear=T)
+```
+
+## Họ Khúc
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#khuc_bacbo_sf <- data_bacbo %>% filter(Ho=="Khúc")
+khuc_sff <- dat_sff %>% 
+  mutate(prop.khuc=(sum(subset(., Ho=="Khúc")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Khúc") %>% 
+  st_as_sf(crs = 4326)
+gg_khuc = ggplot(khuc_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(khuc_sff$prop.khuc[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Khúc") +
+  theme_bw()
+
+plot_gg(gg_khuc, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Khuc.png")
+#render_movie("figures/3D/khuc.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Khuc.png", clear=T)
+```
+
+## Họ Trần
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#tran_bacbo_sf <- data_bacbo %>% filter(Ho=="Trần")
+tran_sff <- dat_sff %>% 
+  mutate(prop.tran=(sum(subset(., Ho=="Trần")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Trần") %>% 
+  st_as_sf(crs = 4326)
+gg_tran = ggplot(tran_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(tran_sff$prop.tran[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Trần") +
+  theme_bw()
+
+plot_gg(gg_tran, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Tran.png")
+#render_movie("figures/3D/tran.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Tran.png", clear=T)
+```
+
+## Họ Dương
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#duong_bacbo_sf <- data_bacbo %>% filter(Ho=="Dương")
+duong_sff <- dat_sff %>% 
+  mutate(prop.duong=(sum(subset(., Ho=="Dương")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Dương") %>% 
+  st_as_sf(crs = 4326)
+gg_duong = ggplot(duong_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(duong_sff$prop.duong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Dương") +
+  theme_bw()
+
+plot_gg(gg_duong, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Duong.png")
+#render_movie("figures/3D/duong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Duong.png", clear=T)
+```
+
+## Họ Bùi
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#bui_bacbo_sf <- data_bacbo %>% filter(Ho=="Bùi")
+bui_sff <- dat_sff %>% 
+  mutate(prop.bui=(sum(subset(., Ho=="Bùi")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Bùi") %>% 
+  st_as_sf(crs = 4326)
+gg_bui = ggplot(bui_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(bui_sff$prop.bui[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Bùi") +
+  theme_bw()
+
+plot_gg(gg_bui, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Bui.png")
+#render_movie("figures/3D/bui.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Bui.png", clear=T)
+```
+
+## Họ Đinh
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#dinh_bacbo_sf <- data_bacbo %>% filter(Ho=="Đinh")
+dinh_sff <- dat_sff %>% 
+  mutate(prop.dinh=(sum(subset(., Ho=="Đinh")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Đinh") %>% 
+  st_as_sf(crs = 4326)
+gg_dinh = ggplot(dinh_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(dinh_sff$prop.dinh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Đinh") +
+  theme_bw()
+
+plot_gg(gg_dinh, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Dinh.png")
+#render_movie("figures/3D/dinh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Dinh.png", clear=T)
+```
+
+## Họ Đỗ
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#do_bacbo_sf <- data_bacbo %>% filter(Ho=="Đỗ")
+do_sff <- dat_sff %>% 
+  mutate(prop.do=(sum(subset(., Ho=="Đỗ")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Đỗ") %>% 
+  st_as_sf(crs = 4326)
+gg_do = ggplot(do_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(do_sff$prop.do[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Đỗ") +
+  theme_bw()
+
+plot_gg(gg_do, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Do.png")
+#render_movie("figures/3D/do.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Do.png", clear=T)
+```
+
+## Họ Đào
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#dao_bacbo_sf <- data_bacbo %>% filter(Ho=="Đào")
+dao_sff <- dat_sff %>% 
+  mutate(prop.dao=(sum(subset(., Ho=="Đào")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Đào") %>% 
+  st_as_sf(crs = 4326)
+gg_dao = ggplot(dao_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(dao_sff$prop.dao[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Đào") +
+  theme_bw()
+
+plot_gg(gg_dao, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Dao.png")
+#render_movie("figures/3D/dao.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Dao.png", clear=T)
+```
+
+## Họ Đoàn
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#doan_bacbo_sf <- data_bacbo %>% filter(Ho=="Đoàn")
+doan_sff <- dat_sff %>% 
+  mutate(prop.doan=(sum(subset(., Ho=="Đoàn")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Đào") %>% 
+  st_as_sf(crs = 4326)
+gg_doan = ggplot(doan_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(doan_sff$prop.doan[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Đoàn") +
+  theme_bw()
+
+plot_gg(gg_doan, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Doan.png")
+#render_movie("figures/3D/doan.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Doan.png", clear=T)
+```
+
+## Họ Dư
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#du_bacbo_sf <- data_bacbo %>% filter(Ho=="Dư")
+du_sff <- dat_sff %>% 
+  mutate(prop.du=(sum(subset(., Ho=="Dư")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Dư") %>% 
+  st_as_sf(crs = 4326)
+gg_du = ggplot(du_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(du_sff$prop.du[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Dư") +
+  theme_bw()
+
+plot_gg(gg_du, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Du.png")
+#render_movie("figures/3D/du.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Du.png", clear=T)
+```
+
+## Họ Hồ
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#ho_bacbo_sf <- data_bacbo %>% filter(Ho=="Hồ")
+ho_sff <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Hồ")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Hồ") %>% 
+  st_as_sf(crs = 4326)
+gg_ho = ggplot(ho_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(ho_sff$prop.ho[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Hồ") +
+  theme_bw()
+
+plot_gg(gg_ho, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ho.png")
+#render_movie("figures/3D/ho.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Ho.png", clear=T)
+```
+
+## Họ Hoàng
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#hoang_bacbo_sf <- data_bacbo %>% filter(Ho=="Hoàng")
+hoang_sff <- dat_sff %>% 
+  mutate(prop.hoang=(sum(subset(., Ho=="Hoàng")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Hoàng") %>% 
+  st_as_sf(crs = 4326)
+gg_hoang = ggplot(hoang_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(hoang_sff$prop.hoang[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Hoàng") +
+  theme_bw()
+
+plot_gg(gg_hoang, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Hoang.png")
+#render_movie("figures/3D/hoang.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Hoang.png", clear=T)
+```
+
+## Họ Huỳnh
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#huynh_bacbo_sf <- data_bacbo %>% filter(Ho=="Huỳnh")
+huynh_sff <- dat_sff %>% 
+  mutate(prop.huynh=(sum(subset(., Ho=="Huỳnh")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Huỳnh") %>% 
+  st_as_sf(crs = 4326)
+gg_huynh = ggplot(huynh_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(huynh_sff$prop.huynh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Huỳnh") +
+  theme_bw()
+
+plot_gg(gg_huynh, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Huynh.png")
+#render_movie("figures/3D/huynh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Huynh.png", clear=T)
+```
+
+## Họ Lã
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#la_bacbo_sf <- data_bacbo %>% filter(Ho=="Lã")
+la_sff <- dat_sff %>% 
+  mutate(prop.la=(sum(subset(., Ho=="Lã")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Lã") %>% 
+  st_as_sf(crs = 4326)
+gg_la = ggplot(la_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(la_sff$prop.la[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Lã") +
+  theme_bw()
+
+plot_gg(gg_la, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/La.png")
+#render_movie("figures/3D/la.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/La.png", clear=T)
+```
+
+## Họ Lê
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#le_bacbo_sf <- data_bacbo %>% filter(Ho=="Lê")
+le_sff <- dat_sff %>% 
+  mutate(prop.le=(sum(subset(., Ho=="Lê")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Lê") %>% 
+  st_as_sf(crs = 4326)
+gg_le = ggplot(le_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(le_sff$prop.le[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Lê") +
+  theme_bw()
+
+plot_gg(gg_le, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Le.png")
+#render_movie("figures/3D/le.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Le.png", clear=T)
+```
+
+## Họ Lý
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#ly_bacbo_sf <- data_bacbo %>% filter(Ho=="Lý")
+ly_sff <- dat_sff %>% 
+  mutate(prop.ly=(sum(subset(., Ho=="Lý")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Lý") %>% 
+  st_as_sf(crs = 4326)
+gg_ly = ggplot(ly_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(ly_sff$prop.ly[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Lý") +
+  theme_bw()
+
+plot_gg(gg_ly, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ly.png")
+#render_movie("figures/3D/ly.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Ly.png", clear=T)
+```
+
+## Họ Mạc
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#mac_bacbo_sf <- data_bacbo %>% filter(Ho=="Mạc")
+mac_sff <- dat_sff %>% 
+  mutate(prop.mac=(sum(subset(., Ho=="Mạc")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mạc") %>% 
+  st_as_sf(crs = 4326)
+gg_mac = ggplot(mac_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(mac_sff$prop.mac[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mạc") +
+  theme_bw()
+
+plot_gg(gg_mac, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mac.png")
+#render_movie("figures/3D/mac.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Mac.png", clear=T)
+```
+
+## Họ Nguyễn
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#nguyen_bacbo_sf <- data_bacbo %>% filter(Ho=="Nguyễn")
+nguyen_sff <- dat_sff %>% 
+  mutate(prop.nguyen=(sum(subset(., Ho=="Nguyễn")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Nguyễn") %>% 
+  st_as_sf(crs = 4326)
+gg_nguyen = ggplot(nguyen_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(nguyen_sff$prop.nguyen[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Nguyễn") +
+  theme_bw()
+
+plot_gg(gg_nguyen, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Nguyen.png")
+#render_movie("figures/3D/nguyen.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Nguyen.png", clear=T)
+```
+
+## Họ Phạm
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#pham_bacbo_sf <- data_bacbo %>% filter(Ho=="Phạm")
+pham_sff <- dat_sff %>% 
+  mutate(prop.pham=(sum(subset(., Ho=="Phạm")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Phạm") %>% 
+  st_as_sf(crs = 4326)
+gg_pham = ggplot(pham_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(pham_sff$prop.pham[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Phạm") +
+  theme_bw()
+
+plot_gg(gg_pham, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Pham.png")
+#render_movie("figures/3D/pham.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Pham.png", clear=T)
+```
+
+## Họ Phan
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#phan_bacbo_sf <- data_bacbo %>% filter(Ho=="Phan")
+phan_sff <- dat_sff %>% 
+  mutate(prop.phan=(sum(subset(., Ho=="Phan")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Phan") %>% 
+  st_as_sf(crs = 4326)
+gg_phan = ggplot(phan_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(phan_sff$prop.phan[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Phan") +
+  theme_bw()
+
+plot_gg(gg_phan, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Phan.png")
+#render_movie("figures/3D/phan.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Phan.png", clear=T)
+```
+
+## Họ Quách
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#quach_bacbo_sf <- data_bacbo %>% filter(Ho=="Quách")
+quach_sff <- dat_sff %>% 
+  mutate(prop.quach=(sum(subset(., Ho=="Quách")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Quách") %>% 
+  st_as_sf(crs = 4326)
+gg_quach = ggplot(quach_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(quach_sff$prop.quach[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Quách") +
+  theme_bw()
+
+plot_gg(gg_quach, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Quach.png")
+#render_movie("figures/3D/quach.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Quach.png", clear=T)
+```
+
+## Họ Tôn
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#ton_bacbo_sf <- data_bacbo %>% filter(Ho=="Tôn")
+ton_sff <- dat_sff %>% 
+  mutate(prop.ton=(sum(subset(., Ho=="Tôn")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Tôn") %>% 
+  st_as_sf(crs = 4326)
+gg_ton = ggplot(ton_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(ton_sff$prop.ton[1],2), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Tôn") +
+  theme_bw()
+
+plot_gg(gg_ton, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ton.png")
+#render_movie("figures/3D/ton.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Ton.png", clear=T)
+```
+
+## Họ Triệu
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#trieu_bacbo_sf <- data_bacbo %>% filter(Ho=="Triệu")
+trieu_sff <- dat_sff %>% 
+  mutate(prop.trieu=(sum(subset(., Ho=="Triệu")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Triệu") %>% 
+  st_as_sf(crs = 4326)
+gg_trieu = ggplot(trieu_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(trieu_sff$prop.trieu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Triệu") +
+  theme_bw()
+
+plot_gg(gg_trieu, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Trieu.png")
+#render_movie("figures/3D/trieu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Trieu.png", clear=T)
+```
+
+## Họ Trịnh
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#trinh_bacbo_sf <- data_bacbo %>% filter(Ho=="Trịnh")
+trinh_sff <- dat_sff %>% 
+  mutate(prop.trinh=(sum(subset(., Ho=="Trịnh")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Trịnh") %>% 
+  st_as_sf(crs = 4326)
+gg_trinh = ggplot(trinh_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(trinh_sff$prop.trinh[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Trịnh") +
+  theme_bw()
+
+plot_gg(gg_trinh, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Trinh.png")
+#render_movie("figures/3D/trinh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Trinh.png", clear=T)
+```
+
+## Họ Trương
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#truong_bacbo_sf <- data_bacbo %>% filter(Ho=="Trương")
+truong_sff <- dat_sff %>% 
+  mutate(prop.truong=(sum(subset(., Ho=="Trương")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Trương") %>% 
+  st_as_sf(crs = 4326)
+gg_truong = ggplot(truong_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(truong_sff$prop.truong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Trương") +
+  theme_bw()
+
+plot_gg(gg_truong, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Truong.png")
+#render_movie("figures/3D/truong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Truong.png", clear=T)
+```
+
+## Họ Vi
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#vi_bacbo_sf <- data_bacbo %>% filter(Ho=="Vi")
+vi_sff <- dat_sff %>% 
+  mutate(prop.vi=(sum(subset(., Ho=="Vi")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Vi") %>% 
+  st_as_sf(crs = 4326)
+gg_vi = ggplot(vi_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(vi_sff$prop.vi[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Vi") +
+  theme_bw()
+
+plot_gg(gg_vi, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Vi.png")
+#render_movie("figures/3D/vi.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Vi.png", clear=T)
+```
+
+## Họ Võ
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#vo_bacbo_sf <- data_bacbo %>% filter(Ho=="Võ")
+vo_sff <- dat_sff %>% 
+  mutate(prop.vo=(sum(subset(., Ho=="Võ")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Võ") %>% 
+  st_as_sf(crs = 4326)
+gg_vo = ggplot(vo_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(vo_sff$prop.vo[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Võ") +
+  theme_bw()
+
+plot_gg(gg_vo, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Vo.png")
+#render_movie("figures/3D/vo.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Vo.png", clear=T)
+```
+
+## Họ Vũ
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#vu_bacbo_sf <- data_bacbo %>% filter(Ho=="Vũ")
+vu_sff <- dat_sff %>% 
+  mutate(prop.vu=(sum(subset(., Ho=="Vũ")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Vũ") %>% 
+  st_as_sf(crs = 4326)
+gg_vu = ggplot(vu_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(vu_sff$prop.vu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Vũ") +
+  theme_bw()
+
+plot_gg(gg_vu, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Vu.png")
+#render_movie("figures/3D/vu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Vu.png", clear=T)
+```
+
+
+
+
+
+
+
+
+
+
+
