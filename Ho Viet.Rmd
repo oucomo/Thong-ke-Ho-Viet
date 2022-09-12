@@ -7928,74 +7928,33 @@ trieu_barf <- dat_sff %>% filter(Ho=="Triệu") %>% filter(rank(desc(songuoi_km)
 ggsave(filename = file.path("figures", "General", "Trieu-Density-xa(2).jpeg"), width = 10, height = 7)
 ```
 
-## Export data
+# 3D Plot
 
-```{r}
-bacbo <- c("Bac Giang", "Bac Kan", "Bac Ninh", "Cao Bang", "Dien Bien",  "Ha Giang", "Ha Nam", "Ha Noi", "Ha Tinh", "Hai Duong", "Hai Phong", "Hoa Binh", "Hung Yen", "Lai Chau", "Lang Son", "Lao Cai", "Nam Dinh", "Nghe An", "Ninh Binh", "Phu Tho", "Quang Binh", "Quang Ninh", "Quang Tri", "Son La", "Thai Binh", "Thai Nguyen", "Thanh Hoa", "Tuyen Quang", "Vinh Phuc", "Yen Bai")
+## Họ Mai
 
-data_bacbo <- dat_sff %>% filter(NAME_1 %in% bacbo) %>% st_as_sf(crs = 4326)
-data_bacbo$centroid <- sf::st_transform(data_bacbo, 2154) %>% 
-  st_centroid() %>% 
-  # this is the crs from d, which has no EPSG code:
-  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
-  # since you want the centroids in a second geometry col:
-  st_geometry()
-```
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
 
-# Họ Trần - Bắc Bộ
+#mai_bacbo_sf <- data_bacbo %>% filter(Ho=="Mai")
+mai_sff <- dat_sff %>% 
+  mutate(prop.mai=(sum(subset(., Ho=="Mai")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mai") %>% 
+  st_as_sf(crs = 4326)
+gg_mai = ggplot(mai_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mai") +
+  theme_bw()
 
-```{r}
-library(geosphere)
-data_bacbo_tran <- data_bacbo %>% filter(Ho=="Trần") %>%
-  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
-         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000,
-         distm_km2=distm_km^2,
-         sum_distm_km2=sum(distm_km2),
-         var=sum_distm_km2/(n()-1),
-         sd=sqrt(var))
-
-tran_bacbo <- data_bacbo_tran %>%
-  arrange(distm_km) %>%
-  mutate(rank=row_number(),
-         tinh=NAME_1,
-         huyen=NAME_2,
-         xa=NAME_3,
-         danso_km = danso/area_km,
-         x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y)) %>%
-  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
-write_xlsx(tran_bacbo, "output/tran_bacbo.xlsx")
-```
-
-# Họ Mai - Bắc Bộ
-
-```{r}
-library(geosphere)
-data_bacbo_mai <- data_bacbo %>% filter(Ho=="Mai") %>%
-  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
-         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000,
-         distm_km2=distm_km^2,
-         sum_distm_km2=sum(distm_km2),
-         var=sum_distm_km2/(n()-1),
-         sd=sqrt(var))
-
-mai_bacbo <- data_bacbo_mai %>%
-  arrange(distm_km) %>%
-  mutate(rank=row_number(),
-         tinh=NAME_1,
-         huyen=NAME_2,
-         xa=NAME_3,
-         danso_km = danso/area_km,
-         x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y)) %>%
-  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
-write_xlsx(mai_bacbo, "output/mai_bacbo.xlsx")
+plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
+#render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Mai.png", clear=T)
 ```
 
 # Họ Mai
@@ -8025,150 +7984,6 @@ plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 7, height = 4,
 render_snapshot(filename = "figures/3D/Mai.png", clear=T)
 ```
 
-# Họ Ngô - Bắc Bộ
-
-```{r}
-library(geosphere)
-data_bacbo_ngo <- data_bacbo %>% filter(Ho=="Ngô") %>%
-  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
-         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000,
-         distm_km2=distm_km^2,
-         sum_distm_km2=sum(distm_km2),
-         var=sum_distm_km2/(n()-1),
-         sd=sqrt(var))
-
-ngo_bacbo <- data_bacbo_ngo %>%
-  arrange(distm_km) %>%
-  mutate(rank=row_number(),
-         tinh=NAME_1,
-         huyen=NAME_2,
-         xa=NAME_3,
-         danso_km = danso/area_km,
-         x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y)) %>%
-  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
-write_xlsx(ngo_bacbo, "output/ngo_bacbo.xlsx")
-```
-
-# Họ Phùng - Bắc Bộ
-
-```{r}
-library(geosphere)
-data_bacbo_phung <- data_bacbo %>% filter(Ho=="Phùng") %>%
-  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
-         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000,
-         distm_km2=distm_km^2,
-         sum_distm_km2=sum(distm_km2),
-         var=sum_distm_km2/(n()-1),
-         sd=sqrt(var))
-
-phung_bacbo <- data_bacbo_phung %>%
-  arrange(distm_km) %>%
-  mutate(rank=row_number(),
-         tinh=NAME_1,
-         huyen=NAME_2,
-         xa=NAME_3,
-         danso_km = danso/area_km,
-         x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y)) %>%
-  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
-write_xlsx(phung_bacbo, "output/phung_bacbo.xlsx")
-```
-
-# Họ Khúc - Bắc Bộ
-
-```{r}
-library(geosphere)
-data_bacbo_khuc <- data_bacbo %>% filter(Ho=="Khúc") %>%
-  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
-         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000,
-         distm_km2=distm_km^2,
-         sum_distm_km2=sum(distm_km2),
-         var=sum_distm_km2/(n()-1),
-         sd=sqrt(var))
-
-khuc_bacbo <- data_bacbo_khuc %>%
-  arrange(distm_km) %>%
-  mutate(rank=row_number(),
-         tinh=NAME_1,
-         huyen=NAME_2,
-         xa=NAME_3,
-         danso_km = danso/area_km,
-         x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y)) %>%
-  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
-write_xlsx(khuc_bacbo, "output/khuc_bacbo.xlsx")
-```
-
-# Họ Dư - Bắc Bộ
-
-```{r}
-library(geosphere)
-data_bacbo_du <- data_bacbo %>% filter(Ho=="Dư") %>%
-  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
-         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000,
-         distm_km2=distm_km^2,
-         sum_distm_km2=sum(distm_km2),
-         var=sum_distm_km2/(n()-1),
-         sd=sqrt(var))
-
-du_bacbo <- data_bacbo_du %>%
-  arrange(distm_km) %>%
-  mutate(rank=row_number(),
-         tinh=NAME_1,
-         huyen=NAME_2,
-         xa=NAME_3,
-         danso_km = danso/area_km,
-         x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y)) %>%
-  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
-write_xlsx(du_bacbo, "output/du_bacbo.xlsx")
-```
-
-# Họ Dương - Bắc Bộ
-
-```{r}
-library(geosphere)
-data_bacbo_duong <- data_bacbo %>% filter(Ho=="Dương") %>%
-  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
-         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
-         distm_km=distm/1000,
-         distm_km2=distm_km^2,
-         sum_distm_km2=sum(distm_km2),
-         var=sum_distm_km2/(n()-1),
-         sd=sqrt(var))
-
-duong_bacbo <- data_bacbo_duong %>%
-  arrange(distm_km) %>%
-  mutate(rank=row_number(),
-         tinh=NAME_1,
-         huyen=NAME_2,
-         xa=NAME_3,
-         danso_km = danso/area_km,
-         x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y)) %>%
-  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
-write_xlsx(duong_bacbo, "output/duong_bacbo.xlsx")
-```
-
-# 3D Plot
-
-## Họ Mai
-
 ```{r, message=FALSE, warning=FALSE}
 #3D
 #remotes::install_github("tylermorganwall/rayshader")
@@ -8182,16 +7997,21 @@ mai_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 gg_mai = ggplot(mai_sff) +
   geom_sf(aes(fill = songuoi_km), lwd=0) +
-  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=18, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
   scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  theme(text = element_text(size=300), axis.text.x = element_text(size=240), axis.text.y = element_text(size=240), legend.text=element_text(size=240), legend.key.size = unit(20, "cm")) +
   ggtitle("Họ Mai") +
   theme_bw()
 
-plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
-       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+plot_gg(gg_mai, multicore = TRUE, raytrace = F, width = 33, height = 49, 
+       scale = 1500, windowsize = c(11200, 6928), zoom = 0.6, phi = 30, theta = 30)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
 #render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
-render_snapshot(filename = "figures/3D/Mai.png", clear=T)
+render_snapshot(filename = "figures/3D/Mai-HD.png", clear=T)
+
+# Close the window when you're done
+# rgl::rgl.close()
+# render_highquality(filename = "figures/3D/Mai-HD.png", parallel = TRUE, samples = 300, intensity_env = 1.5, rotate_env = 180, width = round(6000 * wr), height = round(6000 * hr))
 ```
 
 ## Họ Phùng
@@ -8977,13 +8797,536 @@ plot_gg(gg_vu, multicore = TRUE, raytrace = TRUE, width = 7, height = 4,
 render_snapshot(filename = "figures/3D/Vu.png", clear=T)
 ```
 
+## Export data
 
+```{r}
+bacbo <- c("Bac Giang", "Bac Kan", "Bac Ninh", "Cao Bang", "Dien Bien",  "Ha Giang", "Ha Nam", "Ha Noi", "Ha Tinh", "Hai Duong", "Hai Phong", "Hoa Binh", "Hung Yen", "Lai Chau", "Lang Son", "Lao Cai", "Nam Dinh", "Nghe An", "Ninh Binh", "Phu Tho", "Quang Binh", "Quang Ninh", "Quang Tri", "Son La", "Thai Binh", "Thai Nguyen", "Thanh Hoa", "Tuyen Quang", "Vinh Phuc", "Yen Bai")
 
+data_bacbo <- dat_sff %>% filter(NAME_1 %in% bacbo) %>% st_as_sf(crs = 4326)
+data_bacbo$centroid <- sf::st_transform(data_bacbo, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+```
 
+# Họ Trần - Bắc Bộ
 
+```{r}
+library(geosphere)
+data_bacbo_tran <- data_bacbo %>% filter(Ho=="Trần") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
 
+tran_bacbo <- data_bacbo_tran %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(tran_bacbo, "output/tran_bacbo.xlsx")
+```
 
+# Họ Mai - Bắc Bộ
 
+```{r}
+library(geosphere)
+data_bacbo_mai <- data_bacbo %>% filter(Ho=="Mai") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
 
+mai_bacbo <- data_bacbo_mai %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(mai_bacbo, "output/mai_bacbo.xlsx")
+```
 
+# Họ Mai
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#mai_bacbo_sf <- data_bacbo %>% filter(Ho=="Mai")
+mai_sff <- dat_sff %>% 
+  mutate(prop.mai=(sum(subset(., Ho=="Mai")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mai") %>% 
+  st_as_sf(crs = 4326)
+gg_mai = ggplot(mai_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mai") +
+  theme_bw()
+
+plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
+       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
+#render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D/Mai.png", clear=T)
+```
+
+# Họ Ngô - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_ngo <- data_bacbo %>% filter(Ho=="Ngô") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+ngo_bacbo <- data_bacbo_ngo %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(ngo_bacbo, "output/ngo_bacbo.xlsx")
+```
+
+# Họ Phùng - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_phung <- data_bacbo %>% filter(Ho=="Phùng") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+phung_bacbo <- data_bacbo_phung %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(phung_bacbo, "output/phung_bacbo.xlsx")
+```
+
+# Họ Khúc - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_khuc <- data_bacbo %>% filter(Ho=="Khúc") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+khuc_bacbo <- data_bacbo_khuc %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(khuc_bacbo, "output/khuc_bacbo.xlsx")
+```
+
+# Họ Dư - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_du <- data_bacbo %>% filter(Ho=="Dư") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+du_bacbo <- data_bacbo_du %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(du_bacbo, "output/du_bacbo.xlsx")
+```
+
+# Họ Dương - Bắc Bộ
+
+```{r}
+library(geosphere)
+data_bacbo_duong <- data_bacbo %>% filter(Ho=="Dương") %>%
+  mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+duong_bacbo <- data_bacbo_duong %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(duong_bacbo, "output/duong_bacbo.xlsx")
+```
+
+# Cả nước
+
+## Họ Trần
+
+```{r}
+library(geosphere)
+library(sf)
+
+tran_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Trần")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Trần") %>% 
+  st_as_sf(crs = 4326)
+
+tran_all$centroid <- sf::st_transform(tran_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_tran <- tran_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+tran <- data_tran %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(tran, "output/tran.xlsx")
+```
+
+## Họ Mai
+
+```{r}
+library(geosphere)
+library(sf)
+
+mai_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Mai")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mai") %>% 
+  st_as_sf(crs = 4326)
+
+mai_all$centroid <- sf::st_transform(mai_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_mai <- mai_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+mai <- data_mai %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(mai, "output/mai.xlsx")
+```
+
+## Họ Ngô
+
+```{r}
+library(geosphere)
+library(sf)
+
+ngo_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Ngô")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Ngô") %>% 
+  st_as_sf(crs = 4326)
+
+ngo_all$centroid <- sf::st_transform(ngo_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_ngo <- ngo_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+ngo <- data_ngo %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(ngo, "output/ngo.xlsx")
+```
+
+## Họ Phùng
+
+```{r}
+library(geosphere)
+library(sf)
+
+phung_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Phùng")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Phùng") %>% 
+  st_as_sf(crs = 4326)
+
+phung_all$centroid <- sf::st_transform(phung_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_phung <- phung_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+phung <- data_phung %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(phung, "output/phung.xlsx")
+```
+
+# Họ Khúc
+
+```{r}
+library(geosphere)
+library(sf)
+
+khuc_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Khúc")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Khúc") %>% 
+  st_as_sf(crs = 4326)
+
+khuc_all$centroid <- sf::st_transform(khuc_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_khuc <- khuc_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+khuc <- data_khuc %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(khuc, "output/khuc.xlsx")
+```
+
+# Họ Dư
+
+```{r}
+library(geosphere)
+library(sf)
+
+du_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Dư")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Dư") %>% 
+  st_as_sf(crs = 4326)
+
+du_all$centroid <- sf::st_transform(du_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_du <- du_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+du <- data_du %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(du, "output/du.xlsx")
+```
+
+# Họ Dương
+
+```{r}
+library(geosphere)
+library(sf)
+
+duong_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Dương")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Dương") %>% 
+  st_as_sf(crs = 4326)
+
+duong_all$centroid <- sf::st_transform(duong_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_duong <- duong_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Trong" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+duong <- data_duong %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(duong, "output/duong.xlsx")
+```
 
