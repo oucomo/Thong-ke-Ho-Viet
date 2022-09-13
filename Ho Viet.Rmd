@@ -7989,6 +7989,7 @@ render_snapshot(filename = "figures/3D/Mai.png", clear=T)
 #remotes::install_github("tylermorganwall/rayshader")
 library(rayshader)
 library(sf)
+library(av)
 
 #mai_bacbo_sf <- data_bacbo %>% filter(Ho=="Mai")
 mai_sff <- dat_sff %>% 
@@ -7997,16 +7998,17 @@ mai_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 gg_mai = ggplot(mai_sff) +
   geom_sf(aes(fill = songuoi_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=18, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
   scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
-  theme(text = element_text(size=300), axis.text.x = element_text(size=240), axis.text.y = element_text(size=240), legend.text=element_text(size=240), legend.key.size = unit(20, "cm")) +
+  theme(text = element_text(size=1200), axis.text.x = element_text(size=600), axis.text.y = element_text(size=600), legend.text=element_text(size=600), legend.key.size = unit(200, "cm")) +
   ggtitle("Họ Mai") +
   theme_bw()
 
-plot_gg(gg_mai, multicore = TRUE, raytrace = F, width = 33, height = 49, 
+plot_gg(gg_mai, multicore = TRUE, raytrace = F, width = 33, height =49, 
        scale = 1500, windowsize = c(11200, 6928), zoom = 0.6, phi = 30, theta = 30)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
-#render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_movie("figures/3D/mai.mp4",frames = 1440, fps=60,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D/Mai-HD.png", clear=T)
 
 # Close the window when you're done
