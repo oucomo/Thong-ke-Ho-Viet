@@ -7972,16 +7972,30 @@ mai_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 gg_mai = ggplot(mai_sff) +
   geom_sf(aes(fill = songuoi_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=3, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
   scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
   ggtitle("Họ Mai") +
   theme_bw()
 
-plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 7, height = 4, 
-       scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
-#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
-#render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
-render_snapshot(filename = "figures/3D/Mai.png", clear=T)
+# plot_gg(gg_mai, multicore = TRUE, raytrace = TRUE, width = 4, height = 7, 
+#        scale = 300, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+
+plot_gg(gg_mai, multicore = TRUE, width = 4 ,height=7, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+# render_snapshot(filename = "figures/3D/Mai.png", clear=T)
+
+gg_mai = ggplot(mai_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mai") +
+  theme_bw()
+
+plot_gg(gg_mai, multicore = TRUE, width = 6 ,height=3, fov = 70)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
@@ -8008,7 +8022,7 @@ gg_mai = ggplot(mai_sff) +
 plot_gg(gg_mai, multicore = TRUE, raytrace = F, width = 33, height =49, 
        scale = 1500, windowsize = c(11200, 6928), zoom = 0.6, phi = 30, theta = 30)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
-render_movie("figures/3D/mai.mp4",frames = 1440, fps=60,zoom=0.6,fov = 30)
+#render_movie("figures/3D/mai.mp4",frames = 1440, fps=60,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D/Mai-HD.png", clear=T)
 
 # Close the window when you're done
