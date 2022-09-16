@@ -1,0 +1,302 @@
+---
+title: "Viet History"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+#library(rmarkdown)
+#library(knitr)
+library(markdown)
+
+library(stringr)
+library(forcats)
+
+library(primer)
+library(latex2exp)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+#library(flextable)
+library(huxtable)
+
+library(data.table)
+library(lubridate)
+library(stringi)
+
+library(psych) # for describing the data
+library(tableone)
+#library(compareGroups)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+
+#library(dlookr)
+#library(flextable)
+
+library(haven)
+
+library(raster)
+library(rgdal)
+library(viridis)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+getData<-raster::getData
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+## Load data
+
+```{r load data, eval=FALSE, message=FALSE, warning=FALSE}
+#load("data/hoviet.RData")
+```
+
+## Inspecting data
+
+```{r, echo=FALSE, results='hide'}
+library(dplyr)
+library(gapminder)
+
+head(gapminder)
+```
+
+## Vietnam
+
+```{r}
+vietnam <- gapminder %>%
+  filter(
+    continent == "Asia",
+    country == "Vietnam"
+  )
+head(vietnam)
+```
+
+
+## Plot the population of Vietnam for all years available.
+
+```{r}
+vietnam %>% ggplot(.,aes(x =year, y= pop)) +
+  geom_line(color ='#1ABC9C') + geom_point(color='#21618C')
+```
+
+## What was the percent growth (or decline) in population in 2007?
+
+```{r}
+vietnam <- vietnam %>%
+  mutate(PercentGrowth = (pop - lag(pop))*100/lag(pop),
+         interval = (year - lag(year))) %>% 
+  arrange(year)
+head(vietnam)
+```
+
+
+## What has been the historical growth (or decline) in population for Vietnam?
+
+```{r}
+vietnam %>% mutate(PercentGrowth = (pop - lag(pop))*100/lag(pop)) %>% 
+           ggplot(.,aes(x=year, y=PercentGrowth)) + geom_line(color ='#1ABC9C') + geom_point(color='#21618C')
+```
+
+
+## Modeling the basic exponential/geometric population growth model
+
+Let’s think of a hypothetical population that you have observed over two years. Say there were 100 individuals in the first year, and 150 individuals in the second year. Then, we can say that the growth rate of the population over those two years is $\frac{N2}{N1}=1.5$.
+
+More generally, we can think of the annual growth rate, $\lambda$ as the number of individuals in one year compared to the year before:
+
+$$
+\lambda = \frac{N_{t+1}}{N_t}
+$$
+
+If this rate of growth is constant over $t$ number of years and the initial population size is $N_{0}$, then the population size at year $t$ is:
+
+$$
+N_{t}=N_{0}\lambda^t
+$$
+
+This is the model of ***geometric population growth***, i.e., a population growing in discrete time steps with constant growth rate.
+
+***Exponential population growth*** occurs when a population is growing in continuous time with a constant growth rate, $r$:
+
+$$
+N_{t} = N_{t}N_{0}e^{rt}
+$$
+
+Here, $r$ is the *instantaneous rate of growth* which is the birth rate (births per individual) minus the death rate (deaths per individual) at any given time scale.
+
+Geometric and exponential growth models are very similar, except that they differ in several mathematical properties. But given a certain time unit, we can go between the two models pretty easily. You just have to remember that $\lambda = e^r$ and $\ln\lambda = r$
+
+Let’s now project population growth over 1000 years with starting population of 100 and $\lambda = 1.5$. What we need to do is assign the constants ($N_{0}$ and $\lambda$) and then project the population sizes at $N_{t}$ when $t$ ranges from 0 (intial population) to 1000
+
+```{r}
+N0 = 100
+lambda = 1.0055
+t = 0:1070
+N = N0 * lambda^t
+round(N, 0)
+
+# I'm rounding this here because it doesn't make sense to have a fraction of an individual.
+```
+
+Let’s plot this on a linear scale and log scale.
+
+```{r}
+plot(t, N, type = "l", pch = 19, las = 1, xaxt='n', xlab="Năm", ylab="", main="Phân bố số người họ Khúc từ 950-2020")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1070), labels=c("950", "1150", "1350", "1550", "1750", "1950", "2020"))
+abline(v=1070, col="red", lty=2, lwd=2)
+text(1020, 35000, "2020")
+```
+
+## Varying the growth rate
+
+Now, let’s try projecting the population with different growth rates, $\lambda$. Let’s think about how to do this. We will now have two parameters that vary ($t$ and $\lambda$). This means that we want an output that is a matrix, with one parameter (say $t$) on the rows and the other parameter ($\lambda$) on the columns. We will do this by employing the `r sapply()` function.
+Now, we will define a sequence numbers for $\lambda$ (here, it will be 1.0052, 1.0054, 1.0056, 1.0058 and 1.006) and then use `r sapply()` to run multiple versions of the population growth rate equation. This function will return a vector or matrix, depending on what is the simplest form.
+
+```{r, results='hide'}
+N0 = 100
+lambda = seq(1.0050, 1.0060, by=0.0002)
+t = 0:1070
+N = sapply(lambda, function(lambda) N0 * lambda^t)
+```
+
+What we end up with is a matrix with 1001 rows corresponding to $t$ = 0 through 1000 and 5 columns corresponding to the five values of $\lambda$ (1.0052, 1.0054, 1.0056, 1.0058, 1.006). We can plot this output nicely using the `r matplot()` function:
+
+```{r}
+matplot(t, N, las = 1, xaxt='n', type = "l", pch = 19)
+#plot(t, N, type = "l", pch = 19, las = 1, xaxt='n')
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1070), labels=c("950", "1150", "1350", "1550", "1750", "1950", "2020"))
+abline(v=1070, col="red", lty=2, lwd=2)
+text(1020, 60000, "2020")
+```
+Let’s make it prettier by creating a color palette in RColorBrewer and using different point types and lines to show the different trajectories.
+
+```{r}
+library(RColorBrewer)
+colors = brewer.pal(5, "Set1")
+matplot(t, N, type = "l", las = 1, pch = 1:5, col = colors, lty = 1:5, xaxt='n')
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1070), labels=c("950", "1150", "1350", "1550", "1750", "1950", "2020"))
+abline(v=1070, col="red", lty=2, lwd=2)
+text(1020, 60000, "2020")
+legend("topleft", legend = c("1.0050", "1.0052", "1.0054", "1.0056", "1.0058", "1.006"), 
+    title = "lambda", pch = 1:5, lty = 1:5, col = colors, cex = 0.8)
+```
+Populations increase when $\lambda$ > 1 and vice versa.
+
+Since the instantaneous rate of growth, $r = \ln\lambda$:
+
+* Population does not change when $\lambda$ = 1 or $r$ = 0
+* Population increases $\lambda$ > 1 or $r$ > 0
+* Population decreases when $\lambda$ < 1 or $r$ < 0
+
+## Simulating stochasticity
+
+Thus far, we have assumed that population growth rate is constant through time. This is clearly not the case in most natural populations. Even disregarding density-dependent mechanisms, populationg growth rates fluctuate due to different sources of stochasticity (i.e., randomness). One major source of randomness in population growth rate is ***environmental stochasticity***: i.e., random fluctuations in population growth rate due to good and bad years.
+
+Let’s say that a population has a stable population growth rate–i.e., average instantaneous growth rate, $\bar{r}$ = 0. But the actual growth rate fluctuates around this average with some variance, $\sigma_{r}^2$ = 0.01. Hence, for each time step (say, 1,000), we could randomly draw a number from a normal distribution with mean of 0 and variance of 0.01 (or $sd = \sqrt{var} = 0.1$), like so:
+
+```{r}
+set.seed(2)
+rs = rnorm(1070, mean = 0, sd = 0.1)
+hist(rs, xlab = "r")
+```
+For consistency of modeling purposes, we want to convert this distribution of growth rates to the discrete population growth rate, $\lambda$, which can also be expressed as $e^r$. So, the distribution of $\lambda$ in this case is:
+
+```{r}
+hist(exp(rs), xlab = "lambda", main = "Histogram of lambdas")
+```
+
+The two distributions look similar, but the top (distribution of $r$) is a **normal distribution** centered around 0, and bottom (distribution of $\lambda$) is **log-normal distribution**–i.e., the log of the value is a normal distribution–centered around 1.
+
+For simplicity, we can also just take the distribution of lambdas from a log-normal distribution directly:
+
+```{r}
+set.seed(2)
+lambdas = rlnorm(1070, meanlog = 0, sdlog = 0.1)
+round(lambdas, 2)
+```
+
+Ok, now let’s use this method of generating stochasticity in population growth rates to simulate population growth. Let’s remind ourselves what the population projection over 1070 years looks like under geometric population growth with $\lambda$ = 1.0055 and $N_{0}$=100.
+
+Here, let’s try generating this plot slightly differently–we will use a for-loop to calculate $N_{t}$ for each time step $t$ and store it as a vector.
+
+```{r}
+N0 = 100  #initial population size
+times = 1070  #number of years into the future
+N = vector(length = times)  #empty vector to store pop. sizes
+N[1] = N0  #initial population size should be the first N
+lambda = 1.0055  #growth rate
+# start loop: Take previous year's N and multiply by lambda
+for (t in 2:times) {
+    N[t] = N[t - 1] * lambda
+}
+plot(1:times, N, type = "o", las = 1)
+```
+
+This is a bit more round-about than before, but this lays the groundwork for our stochasticity simulation. Now, let’s simulate a population with the same mean growth rate but with standard deviation of 0.1.
+
+
+```{r}
+set.seed(2)
+N0 = 100  #initial population size
+times = 1070  #number of years into the future
+N = vector(length = times)  #empty vector to store pop. sizes
+N[1] = N0  #initial population size should be the first N
+
+# lambdas--we only need 19 numbers because growth only
+# happens between 2 years.
+lambda = rlnorm(times - 1, meanlog = 0, sdlog = 0.1)
+
+# start loop: Take previous year's N and multiply by lambda
+for (t in 2:times) {
+    N[t] = N[t - 1] * lambda[t - 1]
+}
+plot(1:times, N, type = "o", las = 1)
+```
+The main take away is that the population grows much more slowly when there is stochasticity in the growth rate. Whereas the exponential growth model predicted the population to be >30,000 in 1000 years, this simulation shows the population to be about >50,000 individuals in 1000 years.
+
+Now, let’s try running this simulation multiple times (10x) and plotting the results in one figure. 
+
+```{r}
+# multiple simulations
+set.seed(2)
+sims = 10
+outmat = sapply(1:sims, function(x) {
+    times = 1070
+    N0 = 100
+    N = vector(length = times)
+    N[1] = N0
+    lambda = rlnorm(times - 1, meanlog = 0, sdlog = 0.1)
+    for (t in 2:times) {
+        N[t] = N[t - 1] * lambda[t - 1]
+    }
+    N
+})
+matplot(1:times, outmat, type = "l", las = 1, ylab = "Population Size", 
+    xlab = "Years")
+abline(h = 100, lty = 2)
+```
+
+
+
+
+
+
+
+

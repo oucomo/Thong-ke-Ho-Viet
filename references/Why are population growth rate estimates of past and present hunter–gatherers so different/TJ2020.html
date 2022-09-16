@@ -1,0 +1,1408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-03-31 ti 09:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Why are population growth rate estimates of past and present hunter-gatherers so different? <br> - Data analyses</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Miikka Tallavaara" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Why are population growth rate estimates of past and present hunter-gatherers so different? <br> - Data analyses</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc6265b1">1. Introduction</a></li>
+<li><a href="#org2dac880">2. Download R-packages</a></li>
+<li><a href="#org203bbbd">3. Data</a>
+<ul>
+<li><a href="#org2de9658">3.1. Simulated hunter-gatherer dynamics</a></li>
+<li><a href="#orged2a32b">3.2. Historical Sámi data</a></li>
+<li><a href="#orge290447">3.3. Global human population growth</a></li>
+<li><a href="#orgba5d8b9">3.4. Ethnographic population growth rate estimates</a>
+<ul>
+<li><a href="#orgde522c4">3.4.1. !Kung</a></li>
+<li><a href="#org98eecfc">3.4.2. Agta</a></li>
+<li><a href="#orgc2f6739">3.4.3. Asmat</a></li>
+<li><a href="#org5978746">3.4.4. Hadza</a></li>
+<li><a href="#org4bdaf91">3.4.5. Ache</a></li>
+</ul>
+</li>
+<li><a href="#orgd4a471d">3.5. Archaeological population growth rate estimates</a>
+<ul>
+<li><a href="#org2a8e9f4">3.5.1. Pleistocene and Holocene Australia</a></li>
+<li><a href="#org4e631c9">3.5.2. Holocene Australia</a></li>
+<li><a href="#orgdd9e995">3.5.3. Wyoming and colorado</a></li>
+<li><a href="#orgac7bfd5">3.5.4. South America</a></li>
+<li><a href="#org87859b2">3.5.5. Kuril Islands</a></li>
+<li><a href="#org03a9bb2">3.5.6. Big Horn Basin in Wyoming</a></li>
+</ul>
+</li>
+<li><a href="#org8a411fb">3.6. Growth rates summarised</a></li>
+</ul>
+</li>
+<li><a href="#org66129a2">4. Figure 1</a>
+<ul>
+<li><a href="#org748f617">4.1. Transparent colors</a></li>
+<li><a href="#org4391207">4.2. Plotting the figure</a></li>
+</ul>
+</li>
+<li><a href="#org46da776">5. Figure 2</a>
+<ul>
+<li><a href="#orge9850e5">5.1. Simulating archaeological SPDs</a></li>
+<li><a href="#orgc7cf270">5.2. Long-term growth rates</a></li>
+<li><a href="#org810f4ae">5.3. Plotting the figure 2</a></li>
+</ul>
+</li>
+<li><a href="#org769f039">6. Figure 3</a></li>
+<li><a href="#org930e562">7. Supplementary figure 1</a></li>
+<li><a href="#org7077b16">8. Supplementary figure 2</a></li>
+<li><a href="#orgfe75f22">9. Supplementary figure 3</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgc6265b1" class="outline-2">
+<h2 id="orgc6265b1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This document makes it possible to reproduce data manipulations and analyses in Tallavaara and Jørgensen (2020: 'Why are population growth rate estimates of past and present hunter-gatherers so different?' in <i>Philosophical transactions of the Royal Society B</i>) by running the following R-code (<a href="https://www.r-project.org/">https://www.r-project.org/</a>). It assumes that <code>dataTJ2020.Rdata</code> -file is placed in your working directory. This file contains all the required data that are not created within this code. The file can be downloaded from the same Zenodo repository, where this document was downloaded. This document contains citations to references that are listed in the original paper. The pure R-code is in the <code>TJ2020.R</code>-file available in the Zenodo repository.  
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org2dac880" class="outline-2">
+<h2 id="org2dac880"><span class="section-number-2">2</span> Download R-packages</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Install following packages, if they are not already installed to your computer:
+</p>
+<div class="org-src-container">
+<pre class="src src-R">install.packages(c(<span style="color: #8b2252;">"rcarbon"</span>, <span style="color: #8b2252;">"truncnorm"</span>, <span style="color: #8b2252;">"WaveletComp"</span>, <span style="color: #8b2252;">"foreach"</span>, <span style="color: #8b2252;">"doParallel"</span>),
+                 dependencies=<span style="color: #228b22;">TRUE</span>)
+</pre>
+</div>
+
+<p>
+Next, load these  packages into workspace:
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #008b8b;">library</span>(rcarbon)
+<span style="color: #008b8b;">library</span>(truncnorm)
+<span style="color: #008b8b;">library</span>(WaveletComp)
+<span style="color: #008b8b;">library</span>(foreach)
+<span style="color: #008b8b;">library</span>(doParallel)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org203bbbd" class="outline-2">
+<h2 id="org203bbbd"><span class="section-number-2">3</span> Data</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+First, load the <code>dataTJ2020.RData</code> file into workspace. It is assumed that this file is in your working directory:
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #008b8b;">load</span>(<span style="color: #8b2252;">"dataTJ2020.Rdata"</span>)
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-org2de9658" class="outline-3">
+<h3 id="org2de9658"><span class="section-number-3">3.1</span> Simulated hunter-gatherer dynamics</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Next, load Belovsky's simulation results. These data are digitised from the original publication (Belovsky 1988). Each individual dataset contains two columns: <code>time</code> (years) and <code>density</code> (#/100km2).
+</p>
+<div class="org-src-container">
+<pre class="src src-R">belo100 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[1]]
+belo200 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[2]]
+belo400 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[3]]
+belo800 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[4]]
+</pre>
+</div>
+
+<p>
+Then, different temporal patterns based on different combinations of Belovsky's simulation. These are used as templates for the simulated SPDs. The aim is to imitate long-term hunter-gatherer population dynamics in changing environment. Each individual data is vector of population densities. 
+</p>
+<div class="org-src-container">
+<pre class="src src-R">tpattern1 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[5]]
+tpattern2 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[6]]
+tpattern3 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[7]]
+tpattern4 <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[8]]
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orged2a32b" class="outline-3">
+<h3 id="orged2a32b"><span class="section-number-3">3.2</span> Historical Sámi data</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Data from N. Norway cover the n. of tax payers and derived population sizes for two Saami communities, Guovdageaidnu (Kautokeino) and Ávjovárri (Karasjok). The data are from Hood 2015. The data have four colums: <code>year</code>; <code>kautok</code> (n. of taxpayers in Kautokeino community); <code>avjo</code> (n. of taxpayers in Kautokeino community); <code>kautoPop</code> (estimated population size based on n. of taxpayers); and <code>avjoPop</code> (estimated population size based on n. of taxpayers). See Hood 2015 for more details.
+</p>
+<div class="org-src-container">
+<pre class="src src-R">saaminor <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[9]]
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Calculate total population size</span>
+saaminor$sum <span style="color: #008b8b;">&lt;-</span> rowSums(saaminor[, 4:5], na.rm=<span style="color: #228b22;">TRUE</span>)
+saaminor$sum[saaminor$sum==0] <span style="color: #008b8b;">&lt;-</span> <span style="color: #228b22;">NA</span> 
+</pre>
+</div>
+
+
+
+<p>
+Data from N. Finland cover the n. of taxpayers from the historical Kemi Lappi region, which includes nine historical Saami communities. The data are extracted from Vahtola 2003 and Enbuske 2008. The data have 11 columns: <code>year</code>; <code>Inari</code> (n. of taxpayers (n.o.t.) in Ánar or Inari community); <code>Sodankyla</code> (n.o.t. in Sodankylä community); <code>Kittila</code> (n.o.t in Kittilä); <code>Sompio</code> (n.o.t. in Sompio); <code>Kemikyla</code> (n.o.t. in Kemikylä); <code>Kitkajarvi</code> (n.o.t. in Kitkajärvi); <code>Maanselka</code> (n.o.t. in Maanselkä); <code>Kuolajarvi</code> (n.o.t in Kuolajärvi); <code>Peltojarvi</code> (n.o.t. in Peltojärvi); <code>refs</code> (reference).
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">N. of taxpayers in historica Kemi Lappi region in N. Finland.</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Peltoj&#228;rvi S&#225;mi community is excluded.</span>
+saamifin <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[10]]
+saamifin$sum <span style="color: #008b8b;">&lt;-</span> rowSums(saamifin[,2:9], na.rm=<span style="color: #228b22;">TRUE</span>)
+saamifin$sum[saamifin$sum==0] <span style="color: #008b8b;">&lt;-</span> <span style="color: #228b22;">NA</span> 
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge290447" class="outline-3">
+<h3 id="orge290447"><span class="section-number-3">3.3</span> Global human population growth</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Global human population growth over times (for the figure 3 in Tallavaara and Jørgensen (2020)). These data are digitised from the Biraben 1979. The data have two columns: <code>age</code> and <code>popsize</code> (human population size).
+</p>
+<div class="org-src-container">
+<pre class="src src-R">wpop <span style="color: #008b8b;">&lt;-</span> dataTJ2020[[11]]
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Let's make it a little shorter</span>
+wpop <span style="color: #008b8b;">&lt;-</span> wpop[wpop$age &lt; 30000,] 
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgba5d8b9" class="outline-3">
+<h3 id="orgba5d8b9"><span class="section-number-3">3.4</span> Ethnographic population growth rate estimates</h3>
+<div class="outline-text-3" id="text-3-4">
+</div>
+<div id="outline-container-orgde522c4" class="outline-4">
+<h4 id="orgde522c4"><span class="section-number-4">3.4.1</span> !Kung</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<p>
+Growth rate of Dobe !Kung is from Howell 2000 (1979) page 213-220. See esp. the table 11.1. It is the intrinsic rate of increase, which is calculated using net reproduction rate. Growth rate is 0.26%. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org98eecfc" class="outline-4">
+<h4 id="org98eecfc"><span class="section-number-4">3.4.2</span> Agta</h4>
+<div class="outline-text-4" id="text-3-4-2">
+<p>
+Agta growth rate is based on the change in population size between 1950-1965. During this period Agta were still foragers. Growth rate is based on population sizes in the table 6.1 in Early and Headland 1998 (page 83). Growth rate is 1.4%. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc2f6739" class="outline-4">
+<h4 id="orgc2f6739"><span class="section-number-4">3.4.3</span> Asmat</h4>
+<div class="outline-text-4" id="text-3-4-3">
+<p>
+Asmat growth rate is from Van Arsdale 1978 (page 457). Annual growth of 1.5% is based on the change in population size between 1956 and 1973. Crude rate of natural population increase would be 1.9%. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5978746" class="outline-4">
+<h4 id="org5978746"><span class="section-number-4">3.4.4</span> Hadza</h4>
+<div class="outline-text-4" id="text-3-4-4">
+<p>
+Hadza growth rates is from Blurton Jones 2016. Different methods give slightly different estimates, but Blurton Jones considers annual growth of 1.6% to be the most reliable one. See e.g. pages 171-174, 181, and 188 in Blurton Jones 2016. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4bdaf91" class="outline-4">
+<h4 id="org4bdaf91"><span class="section-number-4">3.4.5</span> Ache</h4>
+<div class="outline-text-4" id="text-3-4-5">
+<p>
+Growth rate of Ache is from Hill and Hurtado 1996 page 84. Growth rate of 2% is based on the change in population size between 1930 (241) and 1970 (544), i.e., during the forest phase.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd4a471d" class="outline-3">
+<h3 id="orgd4a471d"><span class="section-number-3">3.5</span> Archaeological population growth rate estimates</h3>
+<div class="outline-text-3" id="text-3-5">
+</div>
+<div id="outline-container-org2a8e9f4" class="outline-4">
+<h4 id="org2a8e9f4"><span class="section-number-4">3.5.1</span> Pleistocene and Holocene Australia</h4>
+<div class="outline-text-4" id="text-3-5-1">
+<p>
+Growth rate in Williams 2013 is rather complex one. Williams fits a smoothing spline to archaeological SPD and then determines the growth rate at every time point in the curve. Then he averages these negative and positive rates and gets an averaged annual growth rate of 0.01%. However, we will use here maximum positive rate estimated from the figure 4 in Williams 2013 (taphonomically corrected). This growth rate is approximately 0.045% annually at 20,000 and 2000 years ago in Australia.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4e631c9" class="outline-4">
+<h4 id="org4e631c9"><span class="section-number-4">3.5.2</span> Holocene Australia</h4>
+<div class="outline-text-4" id="text-3-5-2">
+<p>
+Growth rate in Johnson and Brook 2011 is based on the temporal distribution of radiocarbon dates from rock shelters for the last 5000 years. It does give an annual growth rate of 0.04%.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdd9e995" class="outline-4">
+<h4 id="orgdd9e995"><span class="section-number-4">3.5.3</span> Wyoming and colorado</h4>
+<div class="outline-text-4" id="text-3-5-3">
+<p>
+Growth rate in Zahid et al. 2016 is calculated by fitting an exponential model to the SPD covering the period between 13,000 and 6000 years ago in Wyoming and Colorado. This growth rate is 0.04%. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgac7bfd5" class="outline-4">
+<h4 id="orgac7bfd5"><span class="section-number-4">3.5.4</span> South America</h4>
+<div class="outline-text-4" id="text-3-5-4">
+<p>
+Growth rate in Goldberg et al. 2016 is calculated by fitting a logistic model to SPD covering the hunter-gatherer period between 14,000 and 6000 years ago in South America. We use here the maximum growth rate of 0.132%.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org87859b2" class="outline-4">
+<h4 id="org87859b2"><span class="section-number-4">3.5.5</span> Kuril Islands</h4>
+<div class="outline-text-4" id="text-3-5-5">
+<p>
+Growth rate in Fitzhugh et al. 2016 is calculated from the SPD between 2500 and 2000 years ago, i.e.,over 500 years. Growth rate is 0.2%. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org03a9bb2" class="outline-4">
+<h4 id="org03a9bb2"><span class="section-number-4">3.5.6</span> Big Horn Basin in Wyoming</h4>
+<div class="outline-text-4" id="text-3-5-6">
+<p>
+Growth rate in Kelly et al. 2013 is calculated from smoothed SPD. Mean annual growth rates for five marjor phases of population growth range between 0.16% and 0.31% in Wyoming. We use the largest maximum growth rate. 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8a411fb" class="outline-3">
+<h3 id="org8a411fb"><span class="section-number-3">3.6</span> Growth rates summarised</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+This presents ethnographic, archaeological and historical growth rates in tabular form.
+</p>
+
+<table id="org4647b91" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> Ethnographic population growth rate estimates</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Group</th>
+<th scope="col" class="org-right">Growth rate (%)</th>
+<th scope="col" class="org-left">Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Dobe !Kung</td>
+<td class="org-right">0.26</td>
+<td class="org-left">Howell, N., 2000</td>
+</tr>
+
+<tr>
+<td class="org-left">Agta</td>
+<td class="org-right">1.8</td>
+<td class="org-left">Early, J.D., Headland, T.N., 1998</td>
+</tr>
+
+<tr>
+<td class="org-left">Asmat</td>
+<td class="org-right">1.9</td>
+<td class="org-left">Van Arsdale, P.W., 1978.</td>
+</tr>
+
+<tr>
+<td class="org-left">Hadza</td>
+<td class="org-right">1.6</td>
+<td class="org-left">Blurton Jones, N.G., 2016.</td>
+</tr>
+
+<tr>
+<td class="org-left">Ache</td>
+<td class="org-right">2</td>
+<td class="org-left">Hill, K., Hurtado, A.M., 1996.</td>
+</tr>
+</tbody>
+</table>
+
+
+<table id="orgded3b04" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 2:</span> Archaeological population growth rate estimates</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Region</th>
+<th scope="col" class="org-right">Growth rate (%)</th>
+<th scope="col" class="org-left">Time range</th>
+<th scope="col" class="org-left">Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Australia</td>
+<td class="org-right">0.045</td>
+<td class="org-left">40,000 - 0</td>
+<td class="org-left">Williams, A.N., 2013</td>
+</tr>
+
+<tr>
+<td class="org-left">Australia</td>
+<td class="org-right">0.04</td>
+<td class="org-left">5000 - 0</td>
+<td class="org-left">Johnson, C.N., Brook, B.W., 2011</td>
+</tr>
+
+<tr>
+<td class="org-left">Wyoming and Colorado</td>
+<td class="org-right">0.04</td>
+<td class="org-left">13,000 - 6000</td>
+<td class="org-left">Zahid, H.J. et al., 2016</td>
+</tr>
+
+<tr>
+<td class="org-left">South America</td>
+<td class="org-right">0.132</td>
+<td class="org-left">14,000 - 6000</td>
+<td class="org-left">Goldberg, A., et al. 2016</td>
+</tr>
+
+<tr>
+<td class="org-left">Kuril Islands</td>
+<td class="org-right">0.2</td>
+<td class="org-left">2500 - 2000</td>
+<td class="org-left">Fitzhugh, B., et al. 2016</td>
+</tr>
+
+<tr>
+<td class="org-left">Big Horn Basin (WY)</td>
+<td class="org-right">0.31</td>
+<td class="org-left">Several periods</td>
+<td class="org-left">Kelly, R.L., 2013</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Growth rate (<i>r</i>) for historical Sámi populations in N. Norway (Kautokeino and Karasjok communities) and in N. Finland (Kemi Lappi region) are calculated as changes in population size through time during selected growth periods using the following equation:
+</p>
+
+
+\begin{equation}
+    r =  \ln(N_t/N_0)/t
+\end{equation}
+
+<p>
+where <i>N<sub>0</sub></i> is the size of the population at the start of growth and <i>N<sub>t</sub></i> is the size of the population at time <i>t</i> later. <i>t</i> is calculated as a difference between <i>End date</i> and <i>Start date</i> of the period over which the growth rate is calculated. 
+</p>
+
+<table id="org56f8b69" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 3:</span> Historical Sámi population growth rates</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Region</th>
+<th scope="col" class="org-right"><i>Start date</i></th>
+<th scope="col" class="org-right"><i>End date</i></th>
+<th scope="col" class="org-right"><i>t</i></th>
+<th scope="col" class="org-right"><i>N<sub>0</sub></i></th>
+<th scope="col" class="org-right"><i>N<sub>t</sub></i></th>
+<th scope="col" class="org-right"><i>r (%)</i></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">N. Norway</td>
+<td class="org-right">1559</td>
+<td class="org-right">1602</td>
+<td class="org-right">43</td>
+<td class="org-right">137</td>
+<td class="org-right">302</td>
+<td class="org-right">1.84</td>
+</tr>
+
+<tr>
+<td class="org-left">N. Norway</td>
+<td class="org-right">1679</td>
+<td class="org-right">1752</td>
+<td class="org-right">73</td>
+<td class="org-right">106</td>
+<td class="org-right">523</td>
+<td class="org-right">2.19</td>
+</tr>
+
+<tr>
+<td class="org-left">N. Finland</td>
+<td class="org-right">1555</td>
+<td class="org-right">1605</td>
+<td class="org-right">50</td>
+<td class="org-right">72</td>
+<td class="org-right">111</td>
+<td class="org-right">0.87</td>
+</tr>
+
+<tr>
+<td class="org-left">N. Finland</td>
+<td class="org-right">1620</td>
+<td class="org-right">1645</td>
+<td class="org-right">25</td>
+<td class="org-right">85</td>
+<td class="org-right">188</td>
+<td class="org-right">3.18</td>
+</tr>
+
+<tr>
+<td class="org-left">N. Finland</td>
+<td class="org-right">1655</td>
+<td class="org-right">1692</td>
+<td class="org-right">37</td>
+<td class="org-right">86</td>
+<td class="org-right">229</td>
+<td class="org-right">2.65</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org66129a2" class="outline-2">
+<h2 id="org66129a2"><span class="section-number-2">4</span> Figure 1</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Following code produces the figure 1 in Tallavaara and Jørgensen (2020). This figure compares population growth rates and dynamics between ethnographic, historical, and archaeological data. 
+</p>
+</div>
+
+<div id="outline-container-org748f617" class="outline-3">
+<h3 id="org748f617"><span class="section-number-3">4.1</span> Transparent colors</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+First, we build a transparent color -function by Mark Gardener (<a href="https://www.dataanalytics.org.uk/make-transparent-colors-in-r/">https://www.dataanalytics.org.uk/make-transparent-colors-in-r/</a>) 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R">  <span style="color: #0000ff;">t_col</span> <span style="color: #008b8b;">&lt;-</span> <span style="color: #a020f0;">function</span>(color, percent = 50, name = <span style="color: #228b22;">NULL</span>) {
+
+<span style="color: #b22222;">#</span><span style="color: #b22222;">         color = color name</span>
+<span style="color: #b22222;">#</span><span style="color: #b22222;">       percent = % transparency</span>
+<span style="color: #b22222;">#</span><span style="color: #b22222;">          name = an optional name for the color</span>
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Get RGB values for named color</span>
+  rgb.val <span style="color: #008b8b;">&lt;-</span> col2rgb(color)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Make new color using input color as base and alpha set by transparency</span>
+  t.col <span style="color: #008b8b;">&lt;-</span> rgb(rgb.val[1], rgb.val[2], rgb.val[3],
+               max = 255,
+               alpha = (100-percent)*255/100,
+               names = name)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Save the color</span>
+  invisible(t.col)
+
+  }
+<span style="color: #b22222;">## </span><span style="color: #b22222;">END</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4391207" class="outline-3">
+<h3 id="org4391207"><span class="section-number-3">4.2</span> Plotting the figure</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+This code produces the actual multipanel figure. 
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">Population growth rates in ethnographic data</span>
+<span style="color: #008b8b;">par</span>(cex.axis=0.7)
+<span style="color: #008b8b;">par</span>(fig=c(0,0.35,0.60,1), mar=c(3,4,1,3))
+plot(<span style="color: #228b22;">NA</span>, xlim=c(0.5,2.5), ylim=c(0.01, 10), xlab=<span style="color: #8b2252;">"Index"</span>, ylab=<span style="color: #8b2252;">""</span>,
+     log=<span style="color: #8b2252;">"y"</span>, yaxt=<span style="color: #8b2252;">"n"</span>, xaxt=<span style="color: #8b2252;">"n"</span>)
+text(-0.6, 0.3, <span style="color: #8b2252;">"Population growth rate (%)"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=90)
+at.y <span style="color: #008b8b;">&lt;-</span> outer(1:9, 10^(-2:1))
+lab.y <span style="color: #008b8b;">&lt;-</span> ifelse(log10(at.y) %% 1 == 0, at.y, <span style="color: #228b22;">NA</span>)
+abline(h=at.y, col=<span style="color: #8b2252;">"lightgrey"</span>, lty=2)
+axis(2, at=at.y, labels=lab.y, las=1, tcl=-0.3, mgp=c(3, 0.5,0))
+text(-1.1, 17, <span style="color: #8b2252;">"(a)"</span>, xpd=<span style="color: #228b22;">NA</span>)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Population growth rates in archaeological data</span>
+stripchart(ethnogr[,2], method=<span style="color: #8b2252;">"jitter"</span>, jitter=0.1, vertical=<span style="color: #228b22;">TRUE</span>, pch=21,
+           cex=1.5, bg=t_col(<span style="color: #8b2252;">"#FAAB18"</span>,40), col=<span style="color: #8b2252;">"black"</span>, add=<span style="color: #228b22;">TRUE</span>, at=1)
+text(1, 0.002, <span style="color: #8b2252;">"ethno"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=90)
+stripchart(archgr[,2], method=<span style="color: #8b2252;">"jitter"</span>, jitter=0.15, vertical=<span style="color: #228b22;">TRUE</span>, pch=21,
+           cex=1.5, bg=t_col(<span style="color: #8b2252;">"#588300"</span>, 40), col=<span style="color: #8b2252;">"black"</span>, add=<span style="color: #228b22;">TRUE</span>, at=2)
+text(2, 0.002, <span style="color: #8b2252;">"arch"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=90)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Simulated H-G population dynamics according to Belovsky (1988) </span>
+<span style="color: #008b8b;">par</span>(fig=c(0.33,0.66,0.79,0.99), mar=c(1,2,0,1), new=<span style="color: #228b22;">TRUE</span>)
+plot(belo100, type=<span style="color: #8b2252;">"l"</span>, las=1, axes=<span style="color: #228b22;">FALSE</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">""</span>, ylim=c(0,4))
+axis(side=2, at=seq(0,4,1), las=2, tcl=-0.3, mgp=c(3, 0.5,0))
+abline(h=mean(belo100$density, na.rm=<span style="color: #228b22;">TRUE</span>))
+text(250,2, <span style="color: #8b2252;">"0.8%"</span>, cex=0.7)
+text(150, 3.8, <span style="color: #8b2252;">"Productivity 100 g/m2"</span>, cex=0.7, font=2)
+text(-90, 0, <span style="color: #8b2252;">"Population density (#/100km2)"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=90)
+text(-136, 4, <span style="color: #8b2252;">"(b)"</span>, xpd=<span style="color: #228b22;">NA</span>)
+
+<span style="color: #008b8b;">par</span>(fig=c(0.66,0.99,0.79,0.99), mar=c(1,2,0,1), new=<span style="color: #228b22;">TRUE</span>)
+plot(belo200, type=<span style="color: #8b2252;">"l"</span>, las=1, axes=<span style="color: #228b22;">FALSE</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">""</span>, ylim=c(0,15))
+axis(side=2, at=seq(0,15,5), las=2, tcl=-0.3, mgp=c(3, 0.5,0))
+abline(h=mean(belo200$density[belo200$time &gt; 70], na.rm=<span style="color: #228b22;">TRUE</span>))
+text(250,4, <span style="color: #8b2252;">"1.2%"</span>, cex=0.7)
+text(150, 14, <span style="color: #8b2252;">"Productivity 200 g/m2"</span>, cex=0.7, font=2)
+
+<span style="color: #008b8b;">par</span>(fig=c(0.33,0.66,0.6,0.8), mar=c(1,2,0,1), new=<span style="color: #228b22;">TRUE</span>)
+plot(belo400, type=<span style="color: #8b2252;">"l"</span>, las=1, axes=<span style="color: #228b22;">FALSE</span>,  xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">""</span>, ylim=c(0,70))
+axis(side=2, at=seq(0,60,20), las=2, tcl=-0.3, mgp=c(3, 0.5,0))
+axis(side=1, at=seq(0,300, 50), tcl=-0.3, mgp=c(3, 0.5,0))
+abline(h=mean(belo400$density[belo400$time &gt; 70], na.rm=<span style="color: #228b22;">TRUE</span>))
+text(75,10, <span style="color: #8b2252;">"3%"</span>, cex=0.7)
+text(200,10,<span style="color: #8b2252;">"0.4%"</span>, cex=0.7)
+text(150, 66, <span style="color: #8b2252;">"Productivity 400 g/m2"</span>, cex=0.7, font=2)
+text(350, -30, <span style="color: #8b2252;">"Time in years"</span>, xpd=<span style="color: #228b22;">NA</span>)
+
+<span style="color: #008b8b;">par</span>(fig=c(0.66,0.99,0.6,0.8), mar=c(1,2,0,1), new=<span style="color: #228b22;">TRUE</span>)
+plot(belo800, type=<span style="color: #8b2252;">"l"</span>, las=1, axes=<span style="color: #228b22;">FALSE</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">""</span>, ylim=c(0,200))
+axis(side=2, at=seq(0,160,40), las=2, tcl=-0.3, mgp=c(3, 0.5,0))
+axis(side=1, at=seq(0,300, 50), tcl=-0.3, mgp=c(3, 0.5,0))
+abline(h=mean(belo800$density[belo800$time &gt; 90], na.rm=<span style="color: #228b22;">TRUE</span>))
+text(200,10,<span style="color: #8b2252;">"3%"</span>, cex=0.7)
+text(150, 190, <span style="color: #8b2252;">"Productivity 800 g/m2"</span>, cex=0.7, font=2)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Changes in S&#225;mi population size in Northern Norway</span>
+<span style="color: #008b8b;">par</span>(fig=c(0,1,0.25,0.55),mar=c(3,5,1,1), new=<span style="color: #228b22;">TRUE</span>)
+plot(saaminor$year, saaminor$sum, type=<span style="color: #8b2252;">"n"</span>, lwd=1.7, las=1,xaxt=<span style="color: #8b2252;">"n"</span>, yaxt=<span style="color: #8b2252;">"n"</span>,
+     xlim=c(1550,1750), xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">"Population size"</span>)
+abline(h=seq(50,500,50), v=seq(1550,1750,10), col=<span style="color: #8b2252;">"darkgrey"</span>, lty=3)
+lines(saaminor$year, saaminor$sum, lwd=2, col=<span style="color: #8b2252;">"#990000"</span>)
+axis(side=2, at=seq(50,500,50), las=2, tcl=-0.3)
+text(1580, 300, paste(samigr[1, 7],<span style="color: #8b2252;">"%"</span>), cex=0.7)
+text(1700, 350, paste(samigr[2, 7],<span style="color: #8b2252;">"%"</span>), cex=0.7)
+text(1570,450, <span style="color: #8b2252;">"N. Norway"</span>, cex=1)
+text(1507, 520, <span style="color: #8b2252;">"(c)"</span>, xpd=<span style="color: #228b22;">NA</span>)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Changes in the number of S&#225;mi taxpayers in Northern Finland</span>
+<span style="color: #008b8b;">par</span>(fig=c(0,1,0.05,0.35), new=<span style="color: #228b22;">TRUE</span>)
+plot(saamifin$year, saamifin$sum, type=<span style="color: #8b2252;">"n"</span>, lwd=1.7, las=1, xlim=c(1550,1750),yaxt=<span style="color: #8b2252;">"n"</span>,
+     xaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">"N. of taxpayers"</span>)
+mtext(<span style="color: #8b2252;">"Years (AD)"</span>, side=1, line=2, cex=1)
+abline(h=seq(80,220,20), v=seq(1550,1750,10), col=<span style="color: #8b2252;">"darkgrey"</span>, lty=3)
+lines(saamifin$year, saamifin$sum, type=<span style="color: #8b2252;">"l"</span>, cex=1, pch=19, lwd=2, col=<span style="color: #8b2252;">"#1380A1"</span>)
+axis(side=1, at=seq(1550,1750,10), lab=rep(<span style="color: #8b2252;">""</span>,21), tcl=-0.3)
+axis(side=2, at=seq(80,220,20), las=2, tcl=-0.3)
+axis(side=1, at=seq(1550,1750,50), tcl=-0.4)
+axis(side=1, at=seq(1550,1750,10), lab=rep(<span style="color: #8b2252;">""</span>,21), tcl=-0.3)
+text(1580, 120, paste(samigr[3, 7],<span style="color: #8b2252;">"%"</span>), cex=0.7)
+text(1620, 150, paste(samigr[4, 7],<span style="color: #8b2252;">"%"</span>), cex=0.7)
+text(1670, 185, paste(samigr[5, 7],<span style="color: #8b2252;">"%"</span>), cex=0.7)
+text(1570,200, <span style="color: #8b2252;">"N. Finland"</span>, cex=1)
+text(1507, 230, <span style="color: #8b2252;">"(d)"</span>, xpd=<span style="color: #228b22;">NA</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="fig1.png" alt="fig1.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Archaeological hunter-gatherer population growth rates as compared to ethnographic, simulated and historical estimates. (a) Ethnographic and archaeological estimates of annual change in population size (see table 1). (b) Belovsky’s simulation of hunter-gatherer population dynamics in environments with different productivity. Horizontal lines indicate mean population density. (c) Sámi population size in Guovdageaidnu and Ávjovárri communities in northern Norway. (d) Number of tax payers in the Kemi Lappi region in northern Finland. This is assumed to reflect the Sámi population size in the region. (b–d) Show annual population growth rates (%) during growth periods.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org46da776" class="outline-2">
+<h2 id="org46da776"><span class="section-number-2">5</span> Figure 2</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orge9850e5" class="outline-3">
+<h3 id="orge9850e5"><span class="section-number-3">5.1</span> Simulating archaeological SPDs</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Here, we simulate archaeological SPDs based on Belovsky's simulated hunter-gatherer dynamics (see <code>tpatterns</code> above). We sample archaeological radiocarbon dates assuming that their temporal distribution follows simulated hunter-gatherer population dynamics. Then, we create SPDs based on these dates. Following code uses functions from <code>rcarbon</code> packages (as is or slightly modified versions). Errors of the simulated dates are sampled from the truncated normal distributions (<code>rtruncnorm</code>).
+</p>
+
+<p>
+The simulation uses <code>foreach</code> -loop from <code>foreach</code> package. It assumes that you have a multi-core setup. If your computer has a single core, you should switch <code>dopar</code> to <code>do</code> in the code or change the loop into traditional <code>for</code> -loop. 
+</p>
+
+<p>
+The results of the first simulation are used in fig 2b and supplementary figures 2 and 3.
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">Parameter values for the simulation</span>
+startyr <span style="color: #008b8b;">&lt;-</span> 10000
+yearRange1 <span style="color: #008b8b;">&lt;-</span> c(startyr,startyr - length(tpattern1)+1)
+ndates1 <span style="color: #008b8b;">&lt;-</span> length(yearRange1[1]:yearRange1[2])
+dnorm <span style="color: #008b8b;">&lt;-</span> <span style="color: #228b22;">TRUE</span>
+dnormspd <span style="color: #008b8b;">&lt;-</span> <span style="color: #228b22;">TRUE</span>
+spdnorm <span style="color: #008b8b;">&lt;-</span> <span style="color: #228b22;">TRUE</span>
+pweights1 <span style="color: #008b8b;">&lt;-</span> tpattern1/sum(tpattern1) <span style="color: #b22222;">## </span><span style="color: #b22222;">Temporal distribution follows tpattern1     </span>
+samplesize <span style="color: #008b8b;">&lt;-</span> 5000 <span style="color: #b22222;">## </span><span style="color: #b22222;">Number of calendar dates in each sample</span>
+error <span style="color: #008b8b;">&lt;-</span> round(rtruncnorm(samplesize, a=20, b=80, mean = 50, sd = 15),0) 
+nsim <span style="color: #008b8b;">&lt;-</span> 9 <span style="color: #b22222;">## </span><span style="color: #b22222;">Number of samples/simulation rounds</span>
+sim1 <span style="color: #008b8b;">&lt;-</span> matrix(<span style="color: #228b22;">NA</span>,nrow=ndates1,ncol=nsim)
+n_cores <span style="color: #008b8b;">&lt;-</span> detectCores()/2 <span style="color: #b22222;">## </span><span style="color: #b22222;">parallel processing will use half of the available cores</span>
+</pre>
+</div>
+
+<p>
+The simulation itself starts here. Parallel execution using 4 cores on i7 machine would usually take less than 5min. 
+</p>
+<div class="org-src-container">
+<pre class="src src-R">cl <span style="color: #008b8b;">&lt;-</span> makeCluster(n_cores)
+registerDoParallel(cl)
+
+sim1 <span style="color: #008b8b;">&lt;-</span> foreach(i = 1:nsim,
+               export=c(yearRange1, samplesize, pweights1, error, dnorm, dnormspd, spdnorm),
+               .packages=<span style="color: #8b2252;">"rcarbon"</span>, .combine=cbind) <span style="color: #008b8b;">%dopar%</span> {
+                 randomDates1.1<span style="color: #008b8b;">&lt;-</span>round(sample(yearRange1[1]:yearRange1[2],size=samplesize,
+                                              replace=<span style="color: #228b22;">TRUE</span>, prob=pweights1))
+                 randomSDs1<span style="color: #008b8b;">&lt;-</span>sample(size=length(randomDates1.1),error,replace=<span style="color: #228b22;">TRUE</span>)
+                 randomDates1.2<span style="color: #008b8b;">&lt;-</span>uncalibrate(randomDates1.1)$rCRA
+                 calibdates1 <span style="color: #008b8b;">&lt;-</span> calibrate(x=randomDates1.2, errors=randomSDs1,
+                                          timeRange=yearRange1,
+                                          calCurves=<span style="color: #8b2252;">'intcal13'</span>, normalised=dnorm,
+                                          ncores = n_cores, verbose = <span style="color: #228b22;">FALSE</span>)
+                 spd(calibdates1, timeRange=yearRange1, datenormalised = dnormspd,
+                     spdnormalised = spdnorm, verbose = <span style="color: #228b22;">FALSE</span>)$grid$PrDens
+               }
+
+stopCluster(cl)
+</pre>
+</div>
+
+<p>
+Make a data frame from the resulting matrix and add time variable <code>date</code> and the underlying "true" temporal pattern <code>tpattern</code> to the data.
+</p>
+<div class="org-src-container">
+<pre class="src src-R">res <span style="color: #008b8b;">&lt;-</span> as.data.frame(sim1) <span style="color: #b22222;"># </span><span style="color: #b22222;">matrix as data frame</span>
+res$date <span style="color: #008b8b;">&lt;-</span> yearRange1[1]:yearRange1[2] <span style="color: #b22222;"># </span><span style="color: #b22222;">add time variable</span>
+res$tpattern <span style="color: #008b8b;">&lt;-</span> tpattern1 <span style="color: #b22222;"># </span><span style="color: #b22222;">add the underlying temporal pattern to the dataset</span>
+</pre>
+</div>
+
+<p>
+The results of the second simulation are used in fig 2c-d. Here, we produce only one round of simulations, so no loop here. This simulation uses also slightly different parameters.
+</p>
+
+<p>
+This simulation and parameters are for the fig 2c
+</p>
+<div class="org-src-container">
+<pre class="src src-R">yearRange2 <span style="color: #008b8b;">&lt;-</span> c(startyr,startyr - length(tpattern3)+1)
+pweights2 <span style="color: #008b8b;">&lt;-</span> tpattern3/sum(tpattern3)       
+</pre>
+</div>
+
+<p>
+Simulation starts here:
+</p>
+<div class="org-src-container">
+<pre class="src src-R">randomDates2.1<span style="color: #008b8b;">&lt;-</span>round(sample(yearRange2[1]:yearRange2[2],size=samplesize,replace=<span style="color: #228b22;">TRUE</span>,
+                           prob=pweights2))
+randomSDs2<span style="color: #008b8b;">&lt;-</span>sample(size=length(randomDates2.1),error,replace=<span style="color: #228b22;">TRUE</span>)
+randomDates2.2<span style="color: #008b8b;">&lt;-</span>uncalibrate(randomDates2.1)$rCRA
+calibdates2 <span style="color: #008b8b;">&lt;-</span> calibrate(x=randomDates2.2, errors=randomSDs2, timeRange=yearRange2,
+                         calCurves=<span style="color: #8b2252;">'intcal13'</span>, normalised=dnorm, ncore=n_cores, verbose=<span style="color: #228b22;">FALSE</span>)
+sim2 <span style="color: #008b8b;">&lt;-</span> as.data.frame(spd(calibdates2, timeRange=yearRange2, datenormalised = dnormspd,
+                          spdnormalised = spdnorm, verbose=<span style="color: #228b22;">FALSE</span>)$grid)
+</pre>
+</div>
+
+<p>
+This simulation and parameters are for the fig 2d
+</p>
+<div class="org-src-container">
+<pre class="src src-R">yearRange3 <span style="color: #008b8b;">&lt;-</span> c(startyr,startyr - length(tpattern2)+1)
+pweights3 <span style="color: #008b8b;">&lt;-</span> tpattern2/sum(tpattern2)       
+</pre>
+</div>
+
+<p>
+Simulation starts here:
+</p>
+<div class="org-src-container">
+<pre class="src src-R">randomDates3.1<span style="color: #008b8b;">&lt;-</span>round(sample(yearRange3[1]:yearRange3[2],size=samplesize,
+                           replace=<span style="color: #228b22;">TRUE</span>, prob=pweights3))
+randomSDs3<span style="color: #008b8b;">&lt;-</span>sample(size=length(randomDates3.1),error,replace=<span style="color: #228b22;">TRUE</span>)
+randomDates3.2<span style="color: #008b8b;">&lt;-</span>uncalibrate(randomDates3.1)$rCRA
+calibdates3 <span style="color: #008b8b;">&lt;-</span> calibrate(x=randomDates3.2, errors=randomSDs3, timeRange=yearRange3,
+                        calCurves=<span style="color: #8b2252;">'intcal13'</span>, normalised=dnorm, ncores=n_cores, verbose=<span style="color: #228b22;">FALSE</span>)
+sim3 <span style="color: #008b8b;">&lt;-</span> as.data.frame(spd(calibdates3, timeRange=yearRange3, datenormalised = dnormspd,
+                          spdnormalised = spdnorm, verbose=<span style="color: #228b22;">FALSE</span>)$grid)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc7cf270" class="outline-3">
+<h3 id="orgc7cf270"><span class="section-number-3">5.2</span> Long-term growth rates</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Long-term growth rates are calculated by fitting exponential models to SPDs. The (exponential) growth rate is the coefficient for the <code>time</code> variable. 
+</p>
+
+<p>
+This is for the figure 2b
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">Exponential fit</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Add new time variable "yr" to the simulated data just for calculating the exp fit.</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">This is only to get positive coefficient</span>
+res$yr <span style="color: #008b8b;">&lt;-</span> 1:4120 
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Fitting the exponential model to the firts sample</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">of the simulated data</span>
+expfit1 <span style="color: #008b8b;">&lt;-</span> lm(log(res[,1]) ~ yr, data=res)
+grSIM1 <span style="color: #008b8b;">&lt;-</span> summary(expfit1)$coefficients[[2]]
+
+<span style="color: #b22222;"># </span><span style="color: #b22222;">Predicted </span>
+exprob1 <span style="color: #008b8b;">&lt;-</span> exp(predict(expfit1))
+
+</pre>
+</div>
+
+<p>
+This is the rate of change in environmental productivity
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">"Growth rate" for environmental productivity </span>
+n0 <span style="color: #008b8b;">&lt;-</span> 100 <span style="color: #b22222;"># </span><span style="color: #b22222;">productivity at the beginning</span>
+nT <span style="color: #008b8b;">&lt;-</span> 800 <span style="color: #b22222;"># </span><span style="color: #b22222;">productivity in the end</span>
+t <span style="color: #008b8b;">&lt;-</span> 3000 <span style="color: #b22222;"># </span><span style="color: #b22222;">time, 9500-6500 yrs ago</span>
+grEP <span style="color: #008b8b;">&lt;-</span> log(nT/n0)/t
+</pre>
+</div>
+
+<p>
+These are the growth rates for the figure 2c-d
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">Exponential fits for the fig 2c-d</span>
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Adding time variables just to get calculate positive growth rates</span>
+sim2$yr <span style="color: #008b8b;">&lt;-</span> 1:nrow(sim2) 
+sim3$yr <span style="color: #008b8b;">&lt;-</span> 1:nrow(sim3)
+
+fitSim2 <span style="color: #008b8b;">&lt;-</span> lm(log(PrDens) ~ yr, data=sim2)
+grSIM2 <span style="color: #008b8b;">&lt;-</span>  summary(fitSim2)$coefficients[[2]]
+exprobSim2 <span style="color: #008b8b;">&lt;-</span> exp(predict(fitSim2))
+
+fitSim3 <span style="color: #008b8b;">&lt;-</span> lm(log(PrDens) ~ yr, data=sim3)
+grSIM3 <span style="color: #008b8b;">&lt;-</span> summary(fitSim3)$coefficients[[2]]
+exprobSim3 <span style="color: #008b8b;">&lt;-</span> exp(predict(fitSim3))
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org810f4ae" class="outline-3">
+<h3 id="org810f4ae"><span class="section-number-3">5.3</span> Plotting the figure 2</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+This code produces  the actual 4 by 4 multipanel figure.
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #008b8b;">par</span>(mar=c(3,5,1,5), mfcol=c(2,2), cex.lab=1)
+<span style="color: #b22222;">##</span><span style="color: #b22222;">par(fig=c(0,1,0.45,0.95), mar=c(3,5,1,1))</span>
+plot(res$date*-1, res$tpattern, type=<span style="color: #8b2252;">"l"</span>, xlim=c(-10000,-5800),
+     ylab=<span style="color: #8b2252;">"Population density (#/100km2)"</span>, las=1, xaxt=<span style="color: #8b2252;">"n"</span>, yaxt=<span style="color: #8b2252;">"n"</span>)
+text(-10000, 130, <span style="color: #8b2252;">"(a)"</span>)
+axis(1, at=seq(-10000,-6000, by=1000), lab=seq(10000,6000, by=-1000), tcl=-0.3)
+axis(2, at=seq(0,140, by=20), las=2, hadj=0.7, tcl=-0.3)
+
+<span style="color: #b22222;">##</span><span style="color: #b22222;">par(fig=c(0,1,0.02,0.52),new=TRUE, mar=c(3,5,1,1))</span>
+plot(res$date*-1, res[, 1], type=<span style="color: #8b2252;">"l"</span>, xlim=c(-10000,-5800),
+     xaxt=<span style="color: #8b2252;">"n"</span>, yaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">"Summed probability"</span>)
+text(-10000, 0.00058, <span style="color: #8b2252;">"(b)"</span>)
+mtext( <span style="color: #8b2252;">"Years ago"</span>, side=1, line=2)
+axis(1, at=seq(-10000,-6000, by=1000), lab=seq(10000,6000, by=-1000), tcl=-0.3)
+axis(2, at=seq(0e-00,8e-04, by=2e-04), lab=c(<span style="color: #8b2252;">"0.0000"</span>,<span style="color: #8b2252;">"0.0002"</span>,<span style="color: #8b2252;">"0.0004"</span>,<span style="color: #8b2252;">"0.0006"</span>, <span style="color: #8b2252;">"0.0008"</span>),
+     las=2, hadj=0.7,  tcl=-0.3)
+lines(res$date*-1, exprob1, col=<span style="color: #8b2252;">"red"</span>)
+text(-9000, 0.0005, paste(<span style="color: #8b2252;">"Growth rate="</span>, round(grSIM1*100, 2),<span style="color: #8b2252;">"%"</span>))
+text(-8600, 0.00045, paste(<span style="color: #8b2252;">"Rate of ghange in env. prod="</span>, round(grEP*100, 2),<span style="color: #8b2252;">"%"</span>))
+
+
+<span style="color: #b22222;">##</span><span style="color: #b22222;">par(mar=c(3,5,1,5))</span>
+plot(sim2$calBP*-1, tpattern3, type=<span style="color: #8b2252;">"l"</span>, col=<span style="color: #8b2252;">"darkgrey"</span>,
+     xlim=c(-10000,-7500), xaxt=<span style="color: #8b2252;">"n"</span>, yaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>,
+     ylab=<span style="color: #8b2252;">"Population density (#/100km2)"</span>, lwd=1.5)
+text(-10000, 130, <span style="color: #8b2252;">"(c)"</span>)
+mtext(<span style="color: #8b2252;">"Summed probability"</span>, side=4, line=4, cex=1)
+axis(side=2, at=seq(0,140,20), las=2, tcl=-0.3)
+axis(side=1, at=seq(-10000,-7500, 500), lab=seq(10000,7500,-500),
+     tcl=- 0.3)<span style="color: #b22222;">#</span><span style="color: #b22222;">, lab=c("10,000","9,500", "9,000", "8,500", "8,000", "7,500"))</span>
+<span style="color: #008b8b;">par</span>(new=<span style="color: #228b22;">TRUE</span>)
+plot(sim2$calBP*-1, sim2$PrDens, type=<span style="color: #8b2252;">"l"</span>,
+     xlim=c(-10000,-7500), lwd=2, xaxt=<span style="color: #8b2252;">"n"</span>, yaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>,
+     ylab=<span style="color: #8b2252;">""</span>, axes=<span style="color: #228b22;">FALSE</span>)
+axis(side=4, at=seq(0.0001,0.0004, 0.0001),
+     lab=c(<span style="color: #8b2252;">"0.0001"</span>,<span style="color: #8b2252;">"0.0002"</span>,<span style="color: #8b2252;">"0.0003"</span>,<span style="color: #8b2252;">"0.0004"</span>), las=2, tcl=-0.3)
+text(-9000, 0.00015, paste(<span style="color: #8b2252;">"Growth rate="</span>, round(grSIM2*100, 2), <span style="color: #8b2252;">"%"</span>))
+lines(sim2$calBP*-1, exprobSim2, lwd=2, col=<span style="color: #8b2252;">"red"</span>)
+
+plot(sim3$calBP*-1, tpattern2, type=<span style="color: #8b2252;">"l"</span>, col=<span style="color: #8b2252;">"darkgrey"</span>,
+     xlim=c(-10000,-7500), yaxt=<span style="color: #8b2252;">"n"</span>, xaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>,
+     ylab=<span style="color: #8b2252;">"Population density (#/100km2)"</span>, lwd=1.5)
+text(-10000, 130, <span style="color: #8b2252;">"(d)"</span>)
+mtext(<span style="color: #8b2252;">"Summed probability"</span>, side=4, line=4)
+mtext(<span style="color: #8b2252;">"Years ago"</span>, side=1, line=2)
+axis(side=2, at=seq(0,140,20), las=2, tcl=-0.3)
+axis(side=1, at=seq(-10000,-7500, 500), lab=seq(10000,7500,-500), tcl=-0.3)
+<span style="color: #008b8b;">par</span>(new=<span style="color: #228b22;">TRUE</span>)
+plot(sim3$calBP*-1, sim3$PrDens, type=<span style="color: #8b2252;">"l"</span>,
+     xlim=c(-10000,-7500), lwd=2, xaxt=<span style="color: #8b2252;">"n"</span>,yaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">""</span>, axes=<span style="color: #228b22;">FALSE</span>)
+axis(side=4, at=seq(0,0.0012, 0.0002),las=2, tcl=-0.3)
+text(-9200, 0.0003, paste(<span style="color: #8b2252;">"Growth rate="</span>, round(grSIM3*100, 2),<span style="color: #8b2252;">"%"</span>))
+lines(sim3$calBP*-1, exprobSim3, lwd=2, col=<span style="color: #8b2252;">"red"</span>)
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="fig2.png" alt="fig2.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Simulated archaeological proxies of hunter-gatherer population dynamics. (a) Simulated hunter-gatherer population trajectory based on Belovsky´s simulation. Different regimes of environmental productivity are shown below the curve. These regimes correspond to different long-term mean population densities. (b) Archaeological proxy (SPD) of the population pattern shown in (a). The proxy is based on dates sampled under the assumption that their distribution follows the underlying pattern shown in (a). (c—d) Underlying population patterns (grey curves) and their archaeological proxies (black curves) in environments with constant (c) and changing (d) productivity. Productivity regimes are shown above (c) and below (d) the curves. (b—d) Show exponential growth models and annual growth rates (%).</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org769f039" class="outline-2">
+<h2 id="org769f039"><span class="section-number-2">6</span> Figure 3</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+This figure illustrates differences between different scales of analysis/dynamics - global (partly "imaginary"), regional (archaeological proxies), and actual dynamics (not captured by archaeological proxies). Regional archaeological proxy in this figure is, again, based on simulated data. The simulation code is shown first.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">This is the regional long-term scale, i.e., archaeological proxy</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Requires some more simulation using yet another underlying pattern</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">(tpattern4)</span>
+
+startyr2 <span style="color: #008b8b;">&lt;-</span> 17000
+yearRange4 <span style="color: #008b8b;">&lt;-</span> c(startyr2,startyr2 - length(tpattern4)+1)
+pweights4 <span style="color: #008b8b;">&lt;-</span> tpattern4/sum(tpattern4)       
+
+randomDates4.1<span style="color: #008b8b;">&lt;-</span>round(sample(yearRange4[1]:yearRange4[2],size=samplesize,
+                           replace=<span style="color: #228b22;">TRUE</span>, prob=pweights4))       
+randomSDs4<span style="color: #008b8b;">&lt;-</span>sample(size=length(randomDates4.1),error,replace=<span style="color: #228b22;">TRUE</span>)
+randomDates4.2<span style="color: #008b8b;">&lt;-</span>uncalibrate(randomDates4.1)$rCRA
+
+calibdates4 <span style="color: #008b8b;">&lt;-</span> calibrate(x=randomDates4.2, errors=randomSDs4, timeRange=yearRange4,
+                         calCurves=<span style="color: #8b2252;">'intcal13'</span>, normalised=dnorm,
+                         ncores=n_cores, verbose=<span style="color: #228b22;">FALSE</span>)
+simpal <span style="color: #008b8b;">&lt;-</span> as.data.frame(spd(calibdates4, timeRange=yearRange4,
+                            datenormalised = dnormspd, spdnormalised = spdnorm,
+                            verbose=<span style="color: #228b22;">FALSE</span>)$grid)
+
+</pre>
+</div>
+
+<p>
+Following code produces the figure.
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #008b8b;">par</span>(mfrow=c(3,1), mar=c(3,5,1,1))
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Global scale population growth based on Biraben 1979</span>
+plot(wpop$age*-1, wpop$popsize, type=<span style="color: #8b2252;">"l"</span>, xlim=c(-30000,0), axes=F,
+     xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">"Global population size (billions)"</span>)
+axis(side=1, at=seq(-30000,0, 10000), lab=seq(30000,0,-10000),
+     pos=-0.3e+09, tcl=-0.3, mgp=c(3,0.5,0))
+axis(side=1, at=c(seq(-25000,-5000, 10000)), lab=rep(<span style="color: #8b2252;">""</span>,3),
+     tck=-0.03, pos=-0.3e+09, tcl=-0.2)
+axis(side=2, at=seq(0,8e+09, 2e+09), lab=seq(0,8,2), las=2, tcl=-0.3)
+axis(side=2, at=seq(1e+09,7e+09, 2e+09), lab=rep(<span style="color: #8b2252;">""</span>,4), las=2, tcl=-0.2)
+text(-30000,  7.5e+09, <span style="color: #8b2252;">"(a)"</span>)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Plotting the regional long-term scale</span>
+plot(simpal$calBP*-1, simpal$PrDens, type=<span style="color: #8b2252;">"l"</span>, axes=<span style="color: #228b22;">FALSE</span>,
+     ylab=<span style="color: #8b2252;">"Summed probability"</span>, xlab=<span style="color: #8b2252;">""</span>, xlim=c(-17000,-11000))
+<span style="color: #b22222;">## </span><span style="color: #b22222;">mtext("Summed probability", side=2, line=3, cex=1)</span>
+axis(1, at=seq(-17000,-11000, by=1000), lab=seq(17000,11000, by=-1000),
+     tcl=-0.3, mgp=c(3,0.5,0))
+axis(1, at=seq(-16500,-11500, by=1000), lab=rep(<span style="color: #8b2252;">""</span>,6), tcl=-0.2, mgp=c(3,0.5,0))
+axis(2, at=seq(0e-00,4e-04, by=1e-04), las=2, hadj=0.7, tcl=-0.3)
+text(-17000,  3.5e-04, <span style="color: #8b2252;">"(b)"</span>)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">And finally te "true" population dynamics</span>
+plot(simpal$calBP*-1, tpattern4, type=<span style="color: #8b2252;">"l"</span>, axes=F, ylab=<span style="color: #8b2252;">"Population density (#/100km2)"</span>,
+     xlab=<span style="color: #8b2252;">""</span>, xlim=c(-14700,-13200), ylim=c(0,150))
+mtext(<span style="color: #8b2252;">"Years ago"</span>, side=1, line=2)
+<span style="color: #b22222;">## </span><span style="color: #b22222;">mtext("Population density (#/100km2)", side=2, line=3, cex=1)</span>
+axis(1, at=seq(-14700,-13200, by=300), lab=seq(14700,13200, by=-300),
+     tcl=-0.3, mgp=c(3,0.5,0))
+axis(1, at=seq(-14550,-13350, by=300), lab=rep(<span style="color: #8b2252;">""</span>,5), tcl=-0.2, mgp=c(3,0.5,0))
+axis(2, at=seq(0,140, by=10), las=2, hadj=0.7, tcl=-0.3)
+text(-14700,  125, <span style="color: #8b2252;">"(c)"</span>) 
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="fig3.png" alt="fig3.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Figure 3. Schematic representation of different scales of analyses and population dynamics of hunter-gatherers. (a) Global scale trajectory of human population size [47] implies that hunter-gatherer populations have been stationary. Prehistoric sections of such reconstructions are usually assumed rather than inferred from data. (b) Continental-to-regional scale, which is trackable with archaeological proxies, suggest that long-term population dynamics are characterised by periods of growth and decline. (c) The scale of actual population size is maybe the most dynamic, but it is usually beyond the resolution of archaeological methods.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org930e562" class="outline-2">
+<h2 id="org930e562"><span class="section-number-2">7</span> Supplementary figure 1</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+This figure shows the change in the number of taxpayers through time in the historical Kemi Lappi region in northern Finland. See <a href="#org66129a2">Figure 1</a> for the combined curve.   
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #b22222;">## </span><span style="color: #b22222;">Plotting individual Saami communities (excluding Peltoj&#228;rvi)</span>
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Vector of individual communities in 'correct order'</span>
+communities <span style="color: #008b8b;">&lt;-</span> c(<span style="color: #8b2252;">"Inari"</span>, <span style="color: #8b2252;">"Kittila"</span>, <span style="color: #8b2252;">"Sodankyla"</span>, <span style="color: #8b2252;">"Sompio"</span>, <span style="color: #8b2252;">"Kemikyla"</span>, <span style="color: #8b2252;">"Kuolajarvi"</span>,
+                 <span style="color: #8b2252;">"Kitkajarvi"</span>, <span style="color: #8b2252;">"Maanselka"</span>)
+commNames <span style="color: #008b8b;">&lt;-</span> c(<span style="color: #8b2252;">"Inari"</span>, <span style="color: #8b2252;">"Kitti&#228;"</span>, <span style="color: #8b2252;">"Sodankyl&#228;"</span>, <span style="color: #8b2252;">"Sompio"</span>, <span style="color: #8b2252;">"Kemikyl&#228;"</span>, <span style="color: #8b2252;">"Kuolaj&#228;rvi"</span>,
+               <span style="color: #8b2252;">"Kitkaj&#228;rvi"</span>, <span style="color: #8b2252;">"Maanselk&#228;"</span>)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">For loop to create a multipanel plot</span>
+<span style="color: #008b8b;">par</span>(mfrow=c(4,2), mar=c(4,4,1,1))
+<span style="color: #a020f0;">for</span>(i <span style="color: #a020f0;">in</span> 1:length(communities)){
+  plot(saamifin$year, saamifin[,communities[i]], type=<span style="color: #8b2252;">"l"</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">""</span>, col=<span style="color: #8b2252;">"black"</span>,
+       lwd=1, las=1, xaxt=<span style="color: #8b2252;">"n"</span>, tcl=-0.3, main=commNames[i])
+  axis(side=1, at=seq(1550, 1700,50), tcl=-0.3)
+  axis(side=1, at=seq(1550, 1700, 10), lab=rep(<span style="color: #8b2252;">""</span>, length(seq(1550, 1700,10))), tcl=-0.2)
+}
+text(1530, -10, <span style="color: #8b2252;">"Year AD"</span>, xpd=<span style="color: #228b22;">NA</span>)
+text(1330, 75, <span style="color: #8b2252;">"N. of taxpayers"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=90)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="supplementary_figure_1.png" alt="supplementary_figure_1.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>(Supplementary figure 1) Number of taxpayers in individual Sámi communities in the historical Kemi Lappi region in northern Finland.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7077b16" class="outline-2">
+<h2 id="org7077b16"><span class="section-number-2">8</span> Supplementary figure 2</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+This figure shows all the nine samples of simulated SPDs created in the <a href="#orge9850e5">section 5</a>. In addition, it shows the underlying population dynamics (on the top panel of the figure).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R">
+<span style="color: #b22222;">## </span><span style="color: #b22222;">First, a layout with the top panel having only the</span>
+<span style="color: #b22222;">## </span><span style="color: #b22222;">underlying simulated population dynamics (tpattern)</span>
+layout(matrix(c(1,0,0,
+                2,3,4,
+                5,6,7,
+                8,9,10), 4,3, byrow = <span style="color: #228b22;">TRUE</span>))
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Plotting the underlying dynamics</span>
+<span style="color: #008b8b;">par</span>(mar=c(3,4,1,1))
+plot(res$date*-1, res$tpattern, type=<span style="color: #8b2252;">"l"</span>, xlim=c(-10000,-5800),
+xaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">"Population density (#/100km2)"</span>, las=2)
+axis(1, at=seq(-10000,-6000, by=1000), lab=seq(10000,6000, by=-1000), tck=-0.04, mgp=c(3,0.2,0))
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Plotting the rest using for loop</span>
+<span style="color: #a020f0;">for</span>(i <span style="color: #a020f0;">in</span> 1:9){
+  plot(res$date*-1, res[,i], type=<span style="color: #8b2252;">"l"</span>, ylim=c(0,0.0008), xlim=c(-10000,-5800),
+       xaxt=<span style="color: #8b2252;">"n"</span>, yaxt=<span style="color: #8b2252;">"n"</span>, xlab=<span style="color: #8b2252;">""</span>, ylab=<span style="color: #8b2252;">""</span>)
+  axis(1, at=seq(-10000,-6000, by=1000), lab=seq(10000,6000, by=-1000),
+       tck=-0.04, mgp=c(3,0.2,0))
+  axis(2, at=seq(0e-00,8e-04, by=2e-04), las=2, hadj=0.7, tcl=-0.2)
+}
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">Adding axis labels</span>
+text(-13800, -2.2e-04, <span style="color: #8b2252;">"Years ago"</span>, xpd=<span style="color: #228b22;">NA</span>)
+text(-23000, 2.2e-03, <span style="color: #8b2252;">"Summed probability"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=90)
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="supplementary_figure_2.png" alt="supplementary_figure_2.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>(Supplementary figure 2) SPDs based on nine different random samples (N=5000) of calendar dates from the population pattern shown on the top row of the figure.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfe75f22" class="outline-2">
+<h2 id="orgfe75f22"><span class="section-number-2">9</span> Supplementary figure 3</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+This figure shows the wavelet coherence between the underlying population dynamics and archaeological SPDs. It uses the simulated data created in the <a href="#orge9850e5">section 5</a>. First part of the code runs a <code>foreach</code> -loop that compares each archaeological SPD to the underlying dynamics. Parallel execution of the loop using 4 cores on i7 machine would take c. 10min.  
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R">cl <span style="color: #008b8b;">&lt;-</span> makeCluster(n_cores)
+registerDoParallel(cl)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">strt&lt;-Sys.time()</span>
+    wc_list <span style="color: #008b8b;">&lt;-</span> foreach(i = 1:9, .packages=<span style="color: #8b2252;">"WaveletComp"</span>) <span style="color: #008b8b;">%dopar%</span> {
+        analyze.coherency(res, my.pair=c(i, 11),
+                          loess.span=1, n.sim=100, window.type.t=3, window.type.s=3,
+                          window.size.t=1, window.size.s=1, verbose=<span style="color: #228b22;">FALSE</span>)
+    }
+
+stopCluster(cl)
+
+<span style="color: #b22222;">## </span><span style="color: #b22222;">print(Sys.time()-strt)</span>
+
+</pre>
+</div>
+
+<p>
+The second part of the code produces the multipanel figure.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R">
+<span style="color: #b22222;"># </span><span style="color: #b22222;">Plotting the wavelet coherence</span>
+
+<span style="color: #008b8b;">par</span>(mfrow=c(3,3), mar=c(4,5,1,5))
+<span style="color: #a020f0;">for</span>(i <span style="color: #a020f0;">in</span> 1:9){
+    wc.image(wc_list[[i]], which.image=<span style="color: #8b2252;">"wc"</span>, color.key=<span style="color: #8b2252;">"interval"</span>,
+         spec.time.axis=list(at=c(1,1000,2000,3000,4000), labels=c(10000,9000,8000,7000,6000)),
+         periodlab=<span style="color: #8b2252;">""</span>, plot.ridge=<span style="color: #228b22;">FALSE</span>, graphics.reset=<span style="color: #228b22;">FALSE</span>,
+         legend.params = list(width=1.2, shrink = 0.9, mar = 12.1,
+                              n.ticks = 6, label.digits = 1,
+                              label.format = <span style="color: #8b2252;">"f"</span>,lab = <span style="color: #228b22;">NULL</span>,
+                              lab.line = 1.5))
+}
+
+text(-17200, 19, <span style="color: #8b2252;">"Period"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=90, cex=1.5)
+text(5900, 19, <span style="color: #8b2252;">"Wavelet coherence level"</span>, xpd=<span style="color: #228b22;">NA</span>, srt=-90, cex=1.5)
+text(-4300, -1, <span style="color: #8b2252;">"Years ago"</span>, xpd=<span style="color: #228b22;">NA</span>, cex=1.5)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="supplementary_figure_3.png" alt="supplementary_figure_3.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>(Supplementary figure 3) Wavelet coherence plots showing the similarity between sample SPDs and the underlying actual population pattern. Significant similarities in the periodicity are indicated by the white contour and red colour. Horizontal arrows pointing to the right indicate that the two series (actual pattern and SPD) are in phase at the respective period. Arrows pointing to the left indicate that the two series are in anti-phase.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Miikka Tallavaara</p>
+<p class="date">Created: 2020-03-31 ti 09:47</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

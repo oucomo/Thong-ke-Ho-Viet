@@ -1,0 +1,355 @@
+---
+title: "Viet History"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
+knitr::opts_chunk$set(cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+#library(rmarkdown)
+#library(knitr)
+library(markdown)
+
+library(stringr)
+library(forcats)
+
+library(primer)
+library(latex2exp)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+#library(flextable)
+library(huxtable)
+
+library(data.table)
+library(lubridate)
+library(stringi)
+
+library(psych) # for describing the data
+library(tableone)
+#library(compareGroups)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+
+#library(dlookr)
+#library(flextable)
+
+library(haven)
+
+library(raster)
+library(rgdal)
+library(viridis)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+getData<-raster::getData
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+```{r load data, eval=FALSE, message=FALSE, warning=FALSE}
+#load("data/hoviet.RData")
+```
+
+## Dữ liệu dân số Vietnam từ Gapminder
+
+```{r, echo=FALSE, results='hide'}
+library(dplyr)
+library(gapminder)
+
+head(gapminder)
+```
+
+```{r}
+vietnam <- gapminder %>%
+  filter(
+    continent == "Asia",
+    country == "Vietnam"
+  )
+head(vietnam)
+```
+
+
+## Đồ thị dân số Việt Nam qua các năm có dữ liệu
+
+```{r}
+vietnam %>% ggplot(.,aes(x =year, y= pop)) +
+  geom_line(color ='#1ABC9C') + geom_point(color='#21618C')
+```
+
+## Phân trăm tăng (giảm) dân số qua các năm?
+
+```{r}
+vietnam <- vietnam %>%
+  mutate(PercentGrowth = (pop - lag(pop))*100/lag(pop),
+         interval = (year - lag(year))) %>% 
+  arrange(year)
+head(vietnam)
+```
+
+
+## Sự tăng (giảm) dân số Việt Nam trong quá khứ
+
+```{r}
+vietnam %>% mutate(PercentGrowth = (pop - lag(pop))*100/lag(pop)) %>% 
+           ggplot(.,aes(x=year, y=PercentGrowth)) + geom_line(color ='#1ABC9C') + geom_point(color='#21618C')
+```
+
+
+## Mô hình tăng dân số theo cấp số nhân
+
+Giả định quan sát một dân số giả định trong 2 năm. Giả sử có 100 người trong năm đầu và 150 người trong năm thứ 2. Khi đó, tốc độ tăng dân số (population growth rate) trong 2 năm đó bằng $\frac{N2}{N1}=1.5$.
+
+Tổng quát, tốc độ tăng trưởng hàng năm, $\lambda$ bằng số lượng người trong 1 năm so với năm trước đó:
+
+$$
+\lambda = \frac{N_{t+1}}{N_t}
+$$
+
+Nếu tốc độ tăng trưởng này không đổi trong $t$ năm và quy mô dân số ban đầu là $N_{0}$, thì quy mô dân số tại năm $t$ bằng:
+
+$$
+N_{t}=N_{0}\lambda^t
+$$
+
+Đây là mô hình ***geometric population growth***, tức là dân số tăng hình học theo các bước thời gian rời rạc và tốc độ tăng trưởng không đổi.
+
+***Exponential population growth*** (tăng trưởng dân số theo cấp số nhân) xảy ra khi dân số gia tăng trong thời gian liên tục với tốc độ tăng trưởng không đổi, $r$:
+
+$$
+N_{t} = N_{0}e^{rt}
+$$
+
+Ở đây, $r$ là tốc độ tăng trưởng tức thời (*instantaneous rate of growth*) bằng tỉ lệ sinh (số sinh trên mỗi cá nhân) trừ đi tỉ lệ chết (số chết trên mỗi cá nhân) tại bất kỳ khoảng thời gian nào.
+
+Mô hình tăng trưởng theo cấp số nhân và hình học rất giống nhau, trừ một số tính chất toán học. Với 1 đơn vị thời gian nhất định, chúng ta có thể chuyển đổi qua 2 mô hình dễ dàng. Lưu ý $\lambda = e^r$ và $\ln\lambda = r$
+
+Bây giờ, lập mô hình tăng trưởng dân số (họ Khúc) trong 1120 năm với dân số ban đầu là 100 (năm 900) và dân số thời điểm cuối là 22000 (năm 2020, theo thống kê tính được), từ đó tính được $\lambda = 1.0052$. Gán hằng số ($N_{0}$ và $\lambda$) và lập mô hình tăng trưởng dân số tới thời điểm $N_{t}$ với $t$ nằm trong khoảng từ 0 (năm 900) đến 1120 (năm 2020).
+
+```{r}
+N0 = 100
+lambda = 1.0048
+t = 0:1120
+N = N0 * lambda^t
+round(N, 0)
+
+# I'm rounding this here because it doesn't make sense to have a fraction of an individual.
+```
+
+Biểu đồ phân bố dân số họ Khúc từ năm 900 đến 2020
+
+```{r}
+plot(t, N, type = "l", pch = 19, las = 1, xaxt='n', xlab="Năm", ylab="", main="Phân bố dân số họ Khúc từ năm 900 đến 2020")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1120), labels=c("900", "1100", "1300", "1500", "1700", "1900", "2020"))
+abline(v=1120, col="red", lty=2, lwd=2)
+text(1050, 20000, "2020")
+```
+
+## Thay đổi tốc độ tăng trưởng dân số
+
+Bây giờ, lập mô hình dân số với các tỉ lệ tăng trưởng khác nhau, $\lambda$. Với 2 tham số thay đổi ($t$ và $\lambda$). Điều đó nghĩa là chúng ta cần đầu ra là một ma trận, với 1 tham số ($t$) theo hàng và một tham số khác ($\lambda$) theo cột.
+
+Sau đó, chúng ta cần xác định một số $\lambda$ (ở đây, là 1.0044, 1.0046, 1.0048, 1.0050 và 1.052) sau đó chạy tất cả các khả năng theo công thức tỉ lệ tăng trưởng dân số. Hàm này sẽ trả về một vector hoặc một ma trận, tùy thuộc vào dạng đơn giản nhất.
+
+```{r, results='hide'}
+N0 = 100
+lambda = seq(1.0044, 1.0052, by=0.0002)
+t = 0:1120
+N = sapply(lambda, function(lambda) N0 * lambda^t)
+```
+
+Kết quả thu được là 1 ma trận với 1121 hàng tương ứng với $t$ = 0 đến 1120 và 5 cột tương ứng với 5 giá trị của $\lambda$ (1.0044, 1.0046, 1.0048, 1.0050, 1.052). Biểu đồ phân bố dân số được biểu diễn như sau:
+
+```{r}
+matplot(t, N, las = 1, xaxt='n', type = "l", pch = 19, xaxt='n', xlab="Năm", ylab="", main="Phân bố dân số họ Khúc từ năm 900 đến 2020")
+#plot(t, N, type = "l", pch = 19, las = 1, xaxt='n')
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1120), labels=c("900", "1100", "1300", "1500", "1700", "1900", "2020"))
+abline(v=1120, col="red", lty=2, lwd=2)
+text(1050, 30000, "2020")
+```
+
+Phân bố dân số họ Khúc từ năm 900 đến 2020
+
+```{r}
+library(RColorBrewer)
+colors = brewer.pal(5, "Set1")
+matplot(t, N, type = "l", las = 1, pch = 1:5, col = colors, lty = 1:5, xaxt='n', xlab="Năm", ylab="", main="Phân bố dân số họ Khúc từ năm 900 đến 2020")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1120), labels=c("900", "1100", "1300", "1500", "1700", "1900", "2020"))
+abline(v=1120, col="red", lty=2, lwd=2)
+text(1050, 30000, "2020")
+legend("topleft", legend = c("1.0044", "1.0046", "1.0048", "1.0050", "1.0052"), 
+    title = "lambda", pch = 1:5, lty = 1:5, col = colors, cex = 0.8)
+```
+
+Dân số tăng khi $\lambda$ > 1 và ngược lại.
+
+Với tốc độ tăng trưởng tức thời (instantaneous rate of growth), $r = \ln\lambda$:
+
+* Dân số không thay đổi khi $\lambda$ = 1 hoặc $r$ = 0
+* Dân số tăng khi $\lambda$ > 1 hoặc $r$ > 0
+* Dân số giảm khi $\lambda$ < 1 hoặc $r$ < 0
+
+## Mô hình ngẫu nhiên
+
+Chúng ta đang giả định rằng tốc độ gia tăng dân số là không đổi theo thời gian. Điều này rõ ràng không phải là đúng trong hầu hết các quần thể tự nhiên. Ngay cả khi bỏ qua các cơ chế phụ thuộc vào mật độ, tỷ lệ tăng trưởng phổ biến cũng dao động do các nguồn ngẫu nhiên khác nhau (tức là ngẫu nhiên). Một nguồn chính của tính ngẫu nhiên trong tỷ lệ gia tăng dân số là ***môi trường ngẫu nhiên***: tức là sự biến động ngẫu nhiên của tỷ lệ gia tăng dân số do các năm tốt và xấu.
+
+Giả sử một quần thể có tỷ lệ tăng dân số ổn định – tức là tỷ lệ tăng trưởng tức thời trung bình, $\bar{r}$ = 0. Nhưng tỷ lệ tăng trưởng thực tế dao động xung quanh mức trung bình này với một số phương sai, $\sigma_{r}^2$ = 0.01. Do đó, đối với mỗi bước thời gian (giả sử, 1120), ta có thể lấy ngẫu nhiên một số từ phân phối chuẩn với giá trị trung bình là 0 và phương sai là 0,01 (hoặc độ lệch chuẩn $sd = \sqrt{var} = 0.1$), như sau:
+
+```{r}
+set.seed(2)
+rs = rnorm(1120, mean = 0, sd = 0.1)
+hist(rs, xlab = "r")
+```
+
+Để có tính nhất quán trong mục đích lập mô hình, ta chuyển đổi phân phối tỷ lệ tăng trưởng này thành tỷ lệ tăng trưởng dân số rời rạc $\lambda$, được biểu thị bằng $e^r$. Theo đó, phân phối $\lambda$ trong trường hợp này là:
+
+```{r}
+hist(exp(rs), xlab = "lambda", main = "Histogram of lambdas")
+```
+
+2 phân phối nhìn khá giống nhau, nhưng phân phối trên (phân phối của $r$) là 1 **phân phối chuẩn** tập trung quanh 0, và phân phối dưới (phân phối của $\lambda$) là **phân phối log-normal** – nghĩa là, log của giá trị là 1 phân phối chuẩn – tập trung quanh 1.
+
+Chúng ta có thể lấy trực tiếp phân phối của $\lambda$ từ phân phối log-normal:
+
+```{r}
+set.seed(2)
+lambdas = rlnorm(1120, meanlog = 0, sdlog = 0.1)
+round(lambdas, 2)
+```
+
+Chúng ta sử dụng phương pháp ngẫu nhiên về tỷ lệ gia tăng dân số này để mô hình sự gia tăng dân số. Dự báo dân số trong 1120 năm dưới sự gia tăng dân số hình học với $\lambda$ = 1.0046 và $N_{0}$=100.
+
+Sử dụng vòng lặp để tính $N_{t}$ cho mỗi bước thời gian $t$ và lưu trữ nó dưới dạng vector.
+
+```{r}
+N0 = 100  #initial population size
+times = 1120  #number of years into the future
+N = vector(length = times)  #empty vector to store pop. sizes
+N[1] = N0  #initial population size should be the first N
+lambda = 1.0048  #growth rate
+# start loop: Take previous year's N and multiply by lambda
+for (t in 2:times) {
+    N[t] = N[t - 1] * lambda
+}
+
+plot(1:times, N, type = "l", pch = 19, las = 1, xaxt='n', xlab="Năm", ylab="")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1120), labels=c("900", "1100", "1300", "1500", "1700", "1900", "2020"))
+abline(v=1120, col="red", lty=2, lwd=2)
+text(1050, 20000, "2020")
+```
+
+Mô phỏng một quần thể có cùng tốc độ tăng trưởng trung bình nhưng với độ lệch chuẩn là 0,1.
+
+```{r}
+set.seed(2)
+N0 = 100  #initial population size
+times = 1120  #number of years into the future
+N = vector(length = times)  #empty vector to store pop. sizes
+N[1] = N0  #initial population size should be the first N
+
+# lambdas--we only need 19 numbers because growth only
+# happens between 2 years.
+lambda = rlnorm(times - 1, meanlog = 0, sdlog = 0.1)
+
+# start loop: Take previous year's N and multiply by lambda
+for (t in 2:times) {
+    N[t] = N[t - 1] * lambda[t - 1]
+}
+
+plot(1:times, N, type = "l", pch = 19, las = 1, xaxt='n', xlab="Năm", ylab="")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1120), labels=c("900", "1100", "1300", "1500", "1700", "1900", "2020"))
+abline(v=1120, col="red", lty=2, lwd=2)
+text(1050, 200000, "2020")
+```
+
+Dân số tăng chậm hơn khi có sự ngẫu nhiên trong tốc độ tăng trưởng nhưng kết thúc với dân số lớn hơn. Trong khi mô hình tăng trưởng theo cấp số nhân dự đoán dân số sẽ >20.000 trong 1120 năm, mô phỏng này cho thấy dân số sẽ vào khoảng >50.000 người trong 1120 năm.
+
+Chạy mô hình mô phỏng nhiều lần (10 lần) và vẽ biểu đồ kết quả trong 1 mô hình. 
+
+```{r}
+# multiple simulations
+set.seed(2)
+sims = 10
+outmat = sapply(1:sims, function(x) {
+    times = 1120
+    N0 = 100
+    N = vector(length = times)
+    N[1] = N0
+    lambda = rlnorm(times - 1, meanlog = 0, sdlog = 0.1)
+    for (t in 2:times) {
+        N[t] = N[t - 1] * lambda[t - 1]
+    }
+    N
+})
+
+matplot(1:times, outmat, type = "l", las = 1, pch = 1:5, col = colors, lty = 1:5, xaxt='n', xlab="Năm", ylab="")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1120), labels=c("900", "1100", "1300", "1500", "1700", "1900", "2020"))
+abline(v=1120, col="red", lty=2, lwd=2)
+text(1050, 200000, "2020")
+```
+
+Áp dụng hệ số vào mô hình phân bố các dòng họ
+
+Lập mô hình tăng trưởng dân số (họ Trần) trong 1020 năm với dân số thời điểm cuối là 8406888 (năm 2020, theo thống kê tính được) và $\lambda = 1.0058$, từ đó tính được ước lượng dân số ban đầu là 65000 (năm 1000). 
+
+```{r}
+N0 = 65000
+lambda = 1.0048
+t = 0:1020
+N = N0 * lambda^t
+round(N, 0)
+```
+
+Phân bố dân số họ Trần từ năm 1000 đến 2020
+
+```{r}
+plot(t, N/1000, type = "l", pch = 19, las = 1, xaxt='n', xlab="Năm", ylab="Số người (x 10^3)", main="Phân bố dân số họ Trần từ năm 1000 đến 2020")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1020), labels=c("1000", "1200", "1400", "1600", "1800", "2000", "2020"))
+abline(v=c(0,1020), col=c("blue", "red"), lty=c(2,2), lwd=c(1, 2))
+text(940, 8500, "8,500,000")
+text(50, 300, "65,000")
+```
+```{r}
+# multiple simulations
+set.seed(2)
+sims = 10
+times=1020
+outmat = sapply(1:sims, function(x) {
+    times = 1020
+    N0 = 65000
+    N = vector(length = times)
+    N[1] = N0
+    lambda = rlnorm(times - 1, meanlog = 0, sdlog = 0.1)
+    for (t in 2:times) {
+        N[t] = N[t - 1] * lambda[t - 1]
+    }
+    N
+})
+
+matplot(1:times, outmat/1000, type = "l", las = 1, xaxt='n', xlab="Năm", ylab="Số người (x 10^3)", main="Phân bố dân số họ Trần từ năm 1000 đến 2020")
+axis(side=1, at=c(0, 200, 400, 600, 800, 1000, 1020), labels=c("1000", "1200", "1400", "1600", "1800", "2000", "2020"))
+abline(v=c(0,1020), col=c("blue", "red"), lty=c(2,2), lwd=c(1, 2))
+text(980, 125000, "2020")
+```
+
+
+
+
+
+
+
+
