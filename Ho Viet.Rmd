@@ -8570,6 +8570,48 @@ mai <- data_mai %>%
 write_xlsx(mai, "output/mai.xlsx")
 ```
 
+## Họ Mã
+
+```{r}
+library(geosphere)
+library(sf)
+
+ma_all <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mã") %>% 
+  st_as_sf(crs = 4326)
+
+ma_all$centroid <- sf::st_transform(ma_all, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+data_ma <- ma_all %>% 
+   mutate(centroid_0 = centroid[NAME_3=="Phuong Hang Buom" & NAME_2=="Hoan Kiem"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+ma <- data_ma %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number(),
+         tinh=NAME_1,
+         huyen=NAME_2,
+         xa=NAME_3,
+         danso_km = danso/area_km,
+         x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y)) %>%
+  select(tinh, huyen, xa, Ho, x, y, prop.ho, songuoi, danso, pro.pop, area_km, songuoi_km, danso_km, distm_km, rank)
+write_xlsx(ma, "output/ma.xlsx")
+```
+
 ## Họ Ngô
 
 ```{r}
