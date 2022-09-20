@@ -122,6 +122,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luong|lương|Lương|LƯƠNG|Lươ
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lường|Lường|lường|Lường|Lường|LƯỜNG|Luòng|Luờng|Lường|LƯỜNG|Lừơng|Lươờng") == TRUE, "Lường", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Luu|lưu|Lưu|LƯU|luu|LUU|Luư|Lưư") == TRUE, "Lưu", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ly|lý|Lý|Lý|LÝ|ly|LY|lý|Lý") == TRUE, "Lý", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Mă|Mẵ|mã|Mã|Mã|MÃ|MÃ|mả|Mả") == TRUE, "Mã", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Mạc|Mạc|MẠC|mạc|Mặc") == TRUE, "Mạc", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "mai|Mai|MAI|MAi") == TRUE, "Mai", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ngo|ngô|Ngô|NGÔ|NGô") == TRUE, "Ngô", data_ho$Ho)
@@ -896,6 +897,20 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop), lwd=0) +
 ggsave(filename = file.path("figures", "General", "Ho Trieu-PerPop.jpeg"), width = 49, height = 33)
 ```
 
+## Họ Mã
+
+```{r}
+ma_sf <- dat_sf %>% mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mã")
+ma_plot <- ma_sf %>% select(pro.pop, prop.ma, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ma_plot, aes(fill=pro.pop), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ma_plot$prop.ma[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Mã")
+#ggsave(filename = file.path("Ho Ma-PerPop.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ma-PerPop.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Mạc
 
 ```{r}
@@ -1338,6 +1353,21 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plotf, aes(fill=songuoi_km), lwd=0) +
 #ggsave(filename = file.path("Ho Trieu-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "General", "Ho Trieu-PerArea.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Mã
+
+```{r}
+ma_sff <- dat_sff %>% mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mã")
+ma_plotf <- ma_sff %>% select(songuoi_km, prop.ma, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ma_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ma_plot$prop.ma[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Mã")
+#ggsave(filename = file.path("Ho Ma-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Ma-PerArea.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Mạc
 
 ```{r}
@@ -1351,6 +1381,7 @@ ggplot() + geom_sf() + geom_sf(data=mac_plotf, aes(fill=songuoi_km), lwd=0) +
 #ggsave(filename = file.path("Ho Mac-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "General", "Ho Mac-PerArea.jpeg"), width = 49, height = 33)
 ```
+
 ## Họ Mai
 
 ```{r}
@@ -1593,6 +1624,7 @@ ggplot() + geom_sf() + geom_sf(data=vo_plotf, aes(fill=songuoi_km), lwd=0) +
 #ggsave(filename = file.path("Ho Vo-PerArea.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "General", "Ho Vo-PerArea.jpeg"), width = 49, height = 33)
 ```
+
 # Bản đồ tỉ lệ % họ tính đến xã có sông ngòi
 
 ## Get river data
@@ -1759,6 +1791,21 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plot, aes(fill=pro.pop), lwd=0) +
 ggsave(filename = file.path("figures", "PerPop-River", "Trieu-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
+## Họ Mã
+
+```{r}
+ma_sf <- dat_sf %>% mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mã")
+ma_plot <- ma_sf %>% select(pro.pop, prop.ma, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ma_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ma_plot$prop.ma[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Mã")
+#ggsave(filename = file.path("figures", "Ma-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Ma-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Mạc
 
 ```{r}
@@ -1773,6 +1820,7 @@ ggplot() + geom_sf() + geom_sf(data=mac_plot, aes(fill=pro.pop), lwd=0) +
 #ggsave(filename = file.path("figures", "Mac-PerPop-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerPop-River", "Mac-PerPop-River.jpeg"), width = 49, height = 33)
 ```
+
 ## Họ Mai
 
 ```{r}
@@ -2201,6 +2249,22 @@ ggplot() + geom_sf() + geom_sf(data=trieu_plotf, aes(fill=songuoi_km), lwd=0) +
 #ggsave(filename = file.path("figures", "Trieu-PerArea-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerArea-River", "Trieu-PerArea-River.jpeg"), width = 49, height = 33)
 ```
+
+## Họ Mã
+
+```{r}
+ma_sff <- dat_sff %>% mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mã")
+ma_plotf <- ma_sff %>% select(songuoi_km, prop.ma, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=ma_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ma_plot$prop.ma[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Mã")
+#ggsave(filename = file.path("figures", "Ma-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Ma-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Mạc
 
 ```{r}
@@ -2215,6 +2279,7 @@ ggplot() + geom_sf() + geom_sf(data=mac_plotf, aes(fill=songuoi_km), lwd=0) +
 #ggsave(filename = file.path("figures", "Mac-PerArea-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerArea-River", "Mac-PerArea-River.jpeg"), width = 49, height = 33)
 ```
+
 ## Họ Mai
 
 ```{r}
@@ -5070,6 +5135,110 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
 ggsave(filename = file.path("figures", "Contour-River", "Khuc-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
+## Họ Mã
+
+```{r, message=FALSE, warning=FALSE}
+ma_sf <- dat_sf %>% mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mã")
+ma_f <- ma_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ma_f <- sf::st_transform(ma_f, 2154)
+ma_plot <- ma_sf %>% select(pro.pop, prop.ma, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+ma_sf2 <- ma_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+ma_sf2 <- sf::st_transform(ma_sf2, 2154)
+ma_sp <- as(ma_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = ma_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = ma_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = ma_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = ma_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(ma_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = ma_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+ma_rot <- ma_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+ma_rot <- as(ma_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+#png(filename = "Ma_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(ma_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Mã", paste(round(ma_plot$prop.ma[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(par)
+}
+#dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(ma_plot$prop.ma[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Mã") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Contour-River", "Ma-Contour-River.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Mạc
 
 ```{r, message=FALSE, warning=FALSE}
@@ -7817,6 +7986,154 @@ plot_df
 ggsave(filename = file.path("figures", "General", "La-Ho Chi Minh-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
+## Họ Mã - Thái Nguyên
+
+```{r}
+ma_barf <- dat_sff %>% filter(Ho=="Mã") %>% filter(rank(desc(songuoi_km))<=50) %>%
+  ggplot(aes(x = reorder(NAME_3, songuoi_km, decreasing=F), y =songuoi_km, fill=factor(NAME_1))) +
+  geom_bar(stat = "identity", width = 0.75) +
+  scale_x_discrete(name = NULL) +
+  scale_fill_discrete(name="Tỉnh/thành phố") +
+  theme_bw() + 
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Mã")
+ggsave(filename = file.path("figures", "General", "Ma-Density-xa(2).jpeg"), width = 10, height = 7)
+```
+
+```{r}
+ma_thanhhoa <- dat_sff %>% filter(Ho=="Mã" & NAME_1=="Thanh Hoa") %>% st_as_sf(crs = 4326)
+ma_thanhhoa$centroid <- sf::st_transform(ma_thanhhoa, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+ma_thanhhoa <- ma_thanhhoa %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Nga Thach"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+ma_thanhhoa_radius <- ma_thanhhoa %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+write_xlsx(ma_thanhhoa_radius, "output/ma_thanhhoa_radius.xlsx")
+```
+
+```{r}
+distm_km<-la_thaibinh_radius$distm_km
+songuoi_km<-la_thaibinh_radius$songuoi_km
+rank<-la_thaibinh_radius$rank
+commune<-la_thaibinh_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-165*exp(-(distm_km^2)/(2*sqrt(2123)))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km)
+
+plot_df <- df %>%
+  ggplot(aes(x=reorder(factor(rank), -distm_km), y=distm_km)) +
+  geom_bar(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=distm_km), stat = "identity", width = 0.5) + 
+  geom_line(aes(x=as.numeric(reorder(factor(rank), -distm_km)), y=estimate))
+
+plot_df
+```
+
+```{r}
+la_thaibinh_dens2 <- la_thaibinh_radius %>% 
+  #filter(rank<=100) %>%
+  ggplot(aes(x = reorder(commune, -distm_km), y =distm_km)) +
+  #geom_point() +
+  geom_bar(stat = "identity", width = 0.5) +
+  #geom_line(aes(x=reorder(NAME_3, -distm_km), y=predict(fit5), col='blue')) +
+  #stat_summary(aes(label=paste0(round(songuoi_km,0), "", "ng/km2")), geom="text", size=4, position = position_dodge(width= 1), vjust= 0.5, hjust = 0) +
+  #stat_smooth(method = 'lm', formula = distm_km ~ poly(reorder(NAME_3, -distm_km),5), aes(colour = 'polynomial'), se= TRUE) +
+  #stat_function(fun = dnorm, args = list(mean = 0, sd = 26.2)) +
+  #geom_line(aes(x = exp(-distm_km^2/685), y=distm_km)) +
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #geom_smooth(method = "loess", se = FALSE) +
+  scale_x_discrete(name = "Xã/Phường") +
+  scale_y_continuous(name="Khoảng cách tới tâm (km)") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=20), axis.text.y = element_text(size=12)) +
+  theme(panel.grid.major = element_blank()) + 
+  #annotate(geom='text', x=80, y=8, label="y == 165*e^-{(x^{2}+y^{2})/2*(46.1)}", parse = TRUE,size=10) +
+  coord_flip() +
+  ggtitle("Lã-Thái Bình")
+ggsave(filename = file.path("figures", "General", "La-Thai Binh-Density-2.jpeg"), width = 25, height = 16)
+```
+
+```{r}
+# Phương án 2
+la_thaibinh <- dat_sff %>% filter(Ho=="Lã" & NAME_1=="Thai Binh") %>% st_as_sf(crs = 4326)
+la_thaibinh$centroid <- sf::st_transform(la_thaibinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+la_thaibinh <- la_thaibinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Thuy Duong"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+la_thaibinh_radius <- la_thaibinh %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+#write_xlsx(la_thaibinh_radius, "output/la_thaibinh_radius.xlsx")
+
+distm_km<-la_thaibinh_radius$distm_km
+songuoi_km<-la_thaibinh_radius$songuoi_km
+rank<-la_thaibinh_radius$rank
+commune<-la_thaibinh_radius$NAME_3
+rank<-factor(rank, labels = commune)
+estimate<-55*exp(-(distm_km^2)/(2*160))
+
+df<-data.frame(distm_km, rank, commune, estimate, songuoi_km) %>%
+  mutate(num=sum((songuoi_km-estimate)^2),
+         den=(length(df)-1),
+         var=num/den,
+         sd=sqrt(var))
+
+breaks <- c(0, 10, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300)
+
+plot_df <- df %>%
+  #filter(row_number()<=100) %>%
+  ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km, fill=distm_km)) +
+  geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
+  #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
+  #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
+  stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=7)) +
+  scale_x_discrete(name = "Xã/Phường", 
+                     breaks = reorder(factor(rank), distm_km), 
+                     labels = reorder(factor(rank), distm_km)) +
+  scale_fill_gradientn("Khoảng cách tới tâm (km)", colours = terrain.colors(10), breaks=breaks) +
+  scale_y_continuous(name="Mật độ người/km2") +
+  theme_bw() + 
+  theme(text = element_text(size=20), axis.text.x = element_text(size=10, angle = 90), axis.text.y = element_text(size=20),
+        legend.text=element_text(size=20), legend.key.size = unit(5, "cm"), legend.key.height = unit(2, "cm"), legend.key.width = unit(4, "cm"), legend.position = "bottom") +
+  theme(panel.grid.major = element_blank()) + 
+  #annotate(geom='text', x=30, y=200, label="y == 55*e^-{(x^{2}+y^{2})/2*(160)}", parse = TRUE,size=10) +
+  #annotate(geom='text', x=30, y=180, label="s.e. = 130 người/xã",parse=F,size=8) +
+  #coord_flip() +
+  ggtitle("Lã-Thái Bình")
+
+plot_df
+ggsave(filename = file.path("figures", "General", "La-Thai Binh-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
 ## Họ Dư - Hà Nội
 
 ```{r}
@@ -8463,6 +8780,7 @@ duong <- data_duong %>%
 write_xlsx(duong, "output/duong.xlsx")
 ```
 
+
 # 3D Plot - Area
 
 ## Họ Mai
@@ -8569,11 +8887,48 @@ plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 30, height = 45,
        scale = 1500, windowsize = c(10500, 6495), zoom = 0.6, phi = 30, theta = 30)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
 #render_movie("figures/3D/mai.mp4",frames = 1440, fps=60,zoom=0.6,fov = 30)
-render_snapshot(filename = "figures/3D2/Mai-HD.png", clear=T)
+render_snapshot(filename = "figures/3D2/Mai-PerArea-HD.png", clear=T)
 
 # Close the window when you're done
 rgl::rgl.close()
-# render_highquality(filename = "figures/3D/Mai-HD.png", parallel = TRUE, samples = 300, intensity_env = 1.5, rotate_env = 180, width = round(6000 * wr), height = round(6000 * hr))
+# render_highquality(filename = "figures/3D2/Mai-HD.png", parallel = TRUE, samples = 300, intensity_env = 1.5, rotate_env = 180, width = round(6000 * wr), height = round(6000 * hr))
+```
+
+## Họ Mã
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#ma_bacbo_sf <- data_bacbo %>% filter(Ho=="Mã")
+ma_sff <- dat_sff %>% 
+  mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mã") %>% 
+  st_as_sf(crs = 4326)
+
+gg_ma = ggplot(ma_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ma_sff$prop.ma[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mã") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.key.height = unit(10, "mm"),
+        legend.key.width = unit(1, "mm"))
+
+plot_gg(gg_ma, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ma.png")
+#render_movie("figures/3D/ma.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+#render_snapshot(filename = "figures/3D/Ma.png", clear=T)
+render_snapshot(filename = "figures/3D2/Ma-PerArea.png", clear=T)
+
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Phùng
@@ -9538,6 +9893,43 @@ plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 10, height = 15,
 #render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 #render_snapshot(filename = "figures/3D/Mai.png", clear=T)
 render_snapshot(filename = "figures/3D2/Mai-PerPop.png", clear=T)
+
+# Close the window when you're done
+rgl::rgl.close()
+```
+
+## Họ Mã
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#ma_bacbo_sf <- data_bacbo %>% filter(Ho=="Mã")
+ma_sff <- dat_sff %>% 
+  mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mã") %>% 
+  st_as_sf(crs = 4326)
+
+gg_ma = ggplot(ma_sff) +
+  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ma_sff$prop.ma[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Mã") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.key.height = unit(10, "mm"),
+        legend.key.width = unit(1, "mm"))
+
+plot_gg(gg_ma, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ma.png")
+#render_movie("figures/3D/ma.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+#render_snapshot(filename = "figures/3D/Ma.png", clear=T)
+render_snapshot(filename = "figures/3D2/Ma-PerPop.png", clear=T)
 
 # Close the window when you're done
 rgl::rgl.close()
