@@ -8892,6 +8892,11 @@ gg_mai = ggplot(mai_sff) +
 
 plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_depth(focallength=100,focus=0.72)
+render_movie("figures/3D2/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+
+plot_gg(gg_mai, multicore = TRUE, width = 10 ,height=15, fov = 70)
+#render_depth(focallength=100,focus=0.72)
 render_movie("figures/3D2/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 # Close the window when you're done
 rgl::rgl.close()
