@@ -8917,18 +8917,19 @@ mai_df <- mai_sff %>% st_drop_geometry() %>% arrange(desc(songuoi_km))
 gg_mai = ggplot(mai_sff) +
   geom_sf(aes(fill = songuoi_km), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=104.5, y=16, color="red", size=22.5, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
-  annotate(geom="text", x=107, y=20, color="purple", size=15, label= mai_df[1,"NAME_3"]) +
+  annotate(geom="text", x=104.5, y=16, color="red", size=15, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
+  annotate(geom="text", x=107, y=20, color="purple", size=10, label= mai_df[1,"NAME_3"]) +
   scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
-  theme(text = element_text(size=45), axis.text.x = element_text(size=45), axis.text.y = element_text(size=45), legend.text=element_text(size=45)) +
+  theme(text = element_text(size=10000), axis.text.x = element_text(size=10000), axis.text.y = element_text(size=10000), legend.text=element_text(size=10000)) +
   ggtitle("Họ Mai") +
   theme_bw() +
-  theme(legend.key.height = unit(18, "mm"),
-        legend.key.width = unit(3, "mm"))
+  theme(legend.key.height = unit(20, "mm"),
+        legend.key.width = unit(2, "mm"))
 
 
-plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 30, height = 45, 
-       scale = 1500, windowsize = c(10500, 6495), zoom = 0.6, phi = 30, theta = 30)
+plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 20, height = 30, 
+       scale = 1000, windowsize = c(7000, 4330), zoom = 0.6, phi = 30, theta = 30)
+rglwidget()
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
 #render_movie("figures/3D/mai.mp4",frames = 1440, fps=60,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Mai-PerArea-HD.png", clear=T)
