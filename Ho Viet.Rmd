@@ -8891,10 +8891,11 @@ gg_mai = ggplot(mai_sff) +
   theme(legend.key.height = unit(10, "mm"),
         legend.key.width = unit(1, "mm"))
 
+#rgl<-rglwidget()
 plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
 rglwidget()
-render_movie("figures/3D2/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_movie("figures/3D2/mai(2).mp4",frames = 720, fps=24,zoom=0.6,fov = 30)
 # Close the window when you're done
 rgl::rgl.close()
 ```
