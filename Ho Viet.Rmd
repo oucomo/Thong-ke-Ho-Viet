@@ -8869,6 +8869,7 @@ rgl::rgl.close()
 #remotes::install_github("tylermorganwall/rayshader")
 library(rayshader)
 library(sf)
+library(av)
 
 #mai_bacbo_sf <- data_bacbo %>% filter(Ho=="Mai")
 mai_sff <- dat_sff %>% 
@@ -8882,7 +8883,7 @@ gg_mai = ggplot(mai_sff) +
   geom_sf(aes(fill = songuoi_km), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
-  annotate(geom="text", x=106, y=19.5, color="purple", size=2, label= mai_df[1,"NAME_3"]) +
+  annotate(geom="text", x=107, y=20, color="purple", size=5, label= mai_df[1,"NAME_3"]) +
   scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
   ggtitle("Họ Mai") +
   theme_bw() +
@@ -8890,11 +8891,19 @@ gg_mai = ggplot(mai_sff) +
   theme(legend.key.height = unit(10, "mm"),
         legend.key.width = unit(1, "mm"))
 
-#rgl<-rglwidget()
 plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
 render_movie("figures/3D2/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 #rglwidget()
+
+# Set up the camera position and angle
+phivechalf = 30 + 60 * 1/(1 + exp(seq(-7, 20, length.out = 180)/2))
+phivecfull = c(phivechalf, rev(phivechalf))
+thetavec = 0 + 60 * sin(seq(0,359,length.out = 360) * pi/180)
+zoomvec = 0.45 + 0.2 * 1/(1 + exp(seq(-5, 20, length.out = 180)))
+zoomvecfull = c(zoomvec, rev(zoomvec))
+render_movie("figures/3D2/mai(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
+
 # Close the window when you're done
 rgl::rgl.close()
 ```
@@ -9002,9 +9011,12 @@ gg_phung = ggplot(phung_sff) +
 
 plot_gg(gg_phung, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/phung(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Phung.png")
 #render_movie("figures/3D/phung.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Phung-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Ngô
@@ -9036,7 +9048,10 @@ plot_gg(gg_ngo, multicore = TRUE, raytrace = T, width = 10, height = 15,
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ngo.png")
 #render_movie("figures/3D/ngo.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_movie("figures/3D2/ngo(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 render_snapshot(filename = "figures/3D2/Ngo-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Khúc
@@ -9066,9 +9081,12 @@ gg_khuc = ggplot(khuc_sff) +
 
 plot_gg(gg_khuc, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/khuc(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Khuc.png")
 #render_movie("figures/3D/khuc.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Khuc-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Trần
@@ -9098,9 +9116,12 @@ gg_tran = ggplot(tran_sff) +
 
 plot_gg(gg_tran, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/tran(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Tran.png")
 #render_movie("figures/3D/tran.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Tran-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Dương
@@ -9130,9 +9151,12 @@ gg_duong = ggplot(duong_sff) +
 
 plot_gg(gg_duong, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/duong(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Duong.png")
 #render_movie("figures/3D/duong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Duong-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Bùi
@@ -9194,9 +9218,12 @@ gg_dinh = ggplot(dinh_sff) +
 
 plot_gg(gg_dinh, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/dinh(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Dinh.png")
 #render_movie("figures/3D/dinh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Dinh-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Đỗ
@@ -9482,9 +9509,12 @@ gg_le = ggplot(le_sff) +
 
 plot_gg(gg_le, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/le(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Le.png")
 #render_movie("figures/3D/le.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Le-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Lý
@@ -9514,9 +9544,12 @@ gg_ly = ggplot(ly_sff) +
 
 plot_gg(gg_ly, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/ly(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ly.png")
 #render_movie("figures/3D/ly.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Ly-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Mạc
