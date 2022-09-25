@@ -8894,9 +8894,8 @@ gg_mai = ggplot(mai_sff) +
 plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
 render_movie("figures/3D2/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
-<<<<<<< HEAD
+
 rglwidget()
-=======
 #rglwidget()
 
 # Set up the camera position and angle
@@ -8907,7 +8906,6 @@ zoomvec = 0.45 + 0.2 * 1/(1 + exp(seq(-5, 20, length.out = 180)))
 zoomvecfull = c(zoomvec, rev(zoomvec))
 render_movie("figures/3D2/mai(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 
->>>>>>> 29c48005a0694db1a0feadb1c8747ac6cd8d4e81
 # Close the window when you're done
 rgl::rgl.close()
 ```
