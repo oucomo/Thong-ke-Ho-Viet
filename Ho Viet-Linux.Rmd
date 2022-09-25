@@ -8869,6 +8869,8 @@ rgl::rgl.close()
 #remotes::install_github("tylermorganwall/rayshader")
 library(rayshader)
 library(sf)
+library(av)
+library(rgl)
 
 #mai_bacbo_sf <- data_bacbo %>% filter(Ho=="Mai")
 mai_sff <- dat_sff %>% 
@@ -8892,14 +8894,27 @@ gg_mai = ggplot(mai_sff) +
 
 plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
-render_depth(focallength=100,focus=0.72)
-render_movie("figures/3D2/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+#render_depth(focallength=100,focus=0.72)
+rglwidget()
+render_movie("figures/3D2/mai(2).mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 
 plot_gg(gg_mai, multicore = TRUE, width = 10 ,height=15, fov = 70)
 #render_depth(focallength=100,focus=0.72)
 render_movie("figures/3D2/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
-# Close the window when you're done
+#render_camera()
+phivec = 20 + 70 * 1/(1 + exp(seq(-5, 10, length.out = 180)))
+phivecfull = c(phivec, rev(phivec))
+thetavec = 270 + 45 * sin(seq(0,359,length.out = 360) * pi/180)
+zoomvechalf = 0.5 + 0.5 * 1/(1 + exp(seq(-5, 10, length.out = 180)))
+zoomvec = c(zoomvechalf, rev(zoomvechalf))
+for(i in 1:2) {
+ render_camera(theta = thetavec[i],phi = phivecfull[i],zoom = zoomvec[i])
+ #uncomment the next line to save each frame to the working directory
+ render_snapshot(paste0("figures/3D2/frame", i, ".png"))}
+  # Close the window when you're done
 rgl::rgl.close()
+rglwidget()
+
 ```
 
 ```{r, message=FALSE, warning=FALSE}
