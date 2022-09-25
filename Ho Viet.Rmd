@@ -9771,9 +9771,12 @@ gg_trieu = ggplot(trieu_sff) +
 
 plot_gg(gg_trieu, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/trieu(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Trieu.png")
 #render_movie("figures/3D/trieu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Trieu-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
 ```
 
 ## Họ Trịnh
