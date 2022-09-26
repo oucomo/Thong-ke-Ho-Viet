@@ -5956,10 +5956,6 @@ du_tinh = merge(du_tinh, data_tinh, by="MATINH") %>%
 write_xlsx(du_tinh, "output/Du_tinh.xlsx")
 ```
 
-```{r}
-#save(dat_f, dat_sf, dat_sff, data_ho, data_ho_overall, data_ho_tinh, data_ho_xa, data_huyen, data_pop, data_tinh, data_xa, river3, file = "data/hoviet.RData")
-```
-
 ## Phân bố mật độ tỉ lệ người mang 1 họ
 
 ```{r}
@@ -8248,6 +8244,10 @@ ggsave(filename = file.path("figures", "General", "Trieu-Density-xa(2).jpeg"), w
 ```
 
 ## Export data
+
+```{r}
+# save(dat_f, dat_sf, dat_sff, data_ho, data_ho_overall, data_ho_tinh, data_ho_xa, data_huyen, data_pop, data_tinh, data_xa, river3, file = "data/hoviet.RData")
+```
 
 ```{r}
 bacbo <- c("Bac Giang", "Bac Kan", "Bac Ninh", "Cao Bang", "Dien Bien",  "Ha Giang", "Ha Nam", "Ha Noi", "Ha Tinh", "Hai Duong", "Hai Phong", "Hoa Binh", "Hung Yen", "Lai Chau", "Lang Son", "Lao Cai", "Nam Dinh", "Nghe An", "Ninh Binh", "Phu Tho", "Quang Binh", "Quang Ninh", "Quang Tri", "Son La", "Thai Binh", "Thai Nguyen", "Thanh Hoa", "Tuyen Quang", "Vinh Phuc", "Yen Bai")
