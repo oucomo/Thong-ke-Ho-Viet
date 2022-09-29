@@ -1,0 +1,261 @@
+---
+title: "Ho Viet"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+#library(rmarkdown)
+#library(knitr)
+library(markdown)
+library(stringr)
+library(forcats)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+#library(flextable)
+library(huxtable)
+library(data.table)
+library(lubridate)
+library(stringi)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+#library(dlookr)
+#library(flextable)
+library(haven)
+library(raster)
+library(rgdal)
+library(viridis)
+library(sf)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+getData<-raster::getData
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+```{r}
+# if Shiny is not installed, install it.
+if (!require("shiny")) { install.packages("shiny", repos="http://cran.us.r-project.org") }
+    
+# Load the Shiny library
+library(shiny)
+
+# Set `leaflet` as our current working directory.
+setwd("D:/Viet/Thong-ke-Ho-Viet/shiny/leaflet")
+```
+
+```{r}
+# Now let’s create our starter files
+file.create("global.R")
+file.create("server.R")
+file.create("ui.R")
+```
+
+# Load data
+
+```{r load data2}
+load("D:/Viet/Thong-ke-Ho-Viet/data/hoviet.RData")
+```
+
+# Creating our Map
+
+We will be using Leaflet to create our map, so we will need to include the leaflet library. First let’s install the leaflet package.
+
+```{r}
+if (!require("leaflet")) { install.packages("leaflet", repos="http://cran.us.r-project.org")}
+library(leaflet)
+```
+
+We will start with the global.R file. The global.R file stores all our global variables. Let’s edit it.
+
+```{r}
+file.edit("global.R")
+```
+
+Copy the following into the global.R file:
+
+```{r}
+# Loads the Shiny and leaflet libraries.
+library(shiny)
+library(leaflet)
+
+# Saves the breakfast cereal dataset to the `cereals` variable.
+crime <- read.csv("crime.csv", header=TRUE, stringsAsFactors=FALSE)
+```
+
+Save and close the global.R file. Let’s setup our server.R file. Open up the file.
+
+```{r}
+file.edit("server.R")
+```
+
+
+```{r}
+library(leaflet)
+mai_sff <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Mai")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mai") %>% 
+  st_as_sf(crs = 4326)
+
+mai_sff$centroid <- sf::st_transform(mai_sff, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+mai <- mai_sff %>%
+  mutate(x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y))
+
+pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = mai_sff$songuoi_km, alpha = TRUE)
+
+mai_sff %>%
+    st_transform(crs = "+init=epsg:4326") %>%
+    leaflet(width = "100%") %>%
+    addProviderTiles(provider = "Esri.WorldStreetMap") %>%
+    addPolygons(popup = ~ str_extract(NAME_3, "^([^,]*)"),
+                stroke = FALSE,
+                smoothFactor = 0,
+                fillOpacity = 0.4,
+                color = ~ pal(songuoi_km)) %>%
+    addLegend("bottomright", 
+              pal = pal, 
+              values = ~ songuoi_km,
+              title = "Mật độ người/km2",
+              opacity = 1)
+
+save(mai, file = "D:/Viet/Thong-ke-Ho-Viet/data/mai.RData")
+saveRDS(mai, file = "D:/Viet/Thong-ke-Ho-Viet/data/mai.rds")
+```
+
+```{r}
+library(leaflet)
+nguyen_sff <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Nguyễn")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Nguyễn") %>% 
+  st_as_sf(crs = 4326)
+
+nguyen_sff$centroid <- sf::st_transform(nguyen_sff, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+nguyen <- nguyen_sff %>%
+  mutate(x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y))
+
+pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = nguyen_sff$songuoi_km, alpha = TRUE)
+
+nguyen_sff %>%
+    st_transform(crs = "+init=epsg:4326") %>%
+    leaflet(width = "100%") %>%
+    addProviderTiles(provider = "Esri.WorldStreetMap") %>%
+    addPolygons(popup = ~ str_extract(NAME_3, "^([^,]*)"),
+                stroke = FALSE,
+                smoothFactor = 0,
+                fillOpacity = 0.4,
+                color = ~ pal(songuoi_km)) %>%
+    addLegend("bottomright", 
+              pal = pal, 
+              values = ~ songuoi_km,
+              title = "Mật độ người/km2",
+              opacity = 1)
+
+save(nguyen, file = "D:/Viet/Thong-ke-Ho-Viet/data/nguyen.RData")
+saveRDS(nguyen, file = "D:/Viet/Thong-ke-Ho-Viet/data/nguyen.rds")
+```
+
+```{r}
+library(leaflet)
+tran_sff <- dat_sff %>% 
+  mutate(prop.ho=(sum(subset(., Ho=="Trần")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Trần") %>% 
+  st_as_sf(crs = 4326)
+
+tran_sff$centroid <- sf::st_transform(tran_sff, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+tran <- tran_sff %>%
+  mutate(x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y))
+
+pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = tran_sff$songuoi_km, alpha = TRUE)
+
+tran_sff %>%
+    st_transform(crs = "+init=epsg:4326") %>%
+    leaflet(width = "100%") %>%
+    addProviderTiles(provider = "Esri.WorldStreetMap") %>%
+    addPolygons(popup = ~ str_extract(NAME_3, "^([^,]*)"),
+                stroke = FALSE,
+                smoothFactor = 0,
+                fillOpacity = 0.4,
+                color = ~ pal(songuoi_km)) %>%
+    addLegend("bottomright", 
+              pal = pal, 
+              values = ~ songuoi_km,
+              title = "Mật độ người/km2",
+              opacity = 1)
+
+save(tran, file = "D:/Viet/Thong-ke-Ho-Viet/data/tran.RData")
+saveRDS(tran, file = "D:/Viet/Thong-ke-Ho-Viet/data/tran.rds")
+```
+
+
+```{r}
+library(leaflet)
+dat_sff <- dat_sff %>% st_as_sf(crs = 4326)
+
+dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+dat <- dat_sff %>%
+  mutate(x = map(centroid,1),
+         y = map(centroid,2),
+         x = as.numeric(x),
+         y = as.numeric(y))
+
+ho <- dat %>% 
+  st_drop_geometry() %>% 
+  count(Ho) %>% 
+  arrange(desc(n)) %>% 
+  filter(row_number()<=100)
+dat <- dat %>% 
+  filter(Ho %in% ho$Ho)
+
+save(dat, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat.RData")
+saveRDS(dat, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat.rds")
+```
