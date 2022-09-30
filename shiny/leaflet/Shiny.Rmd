@@ -71,7 +71,7 @@ file.create("ui.R")
 # Load data
 
 ```{r load data2}
-load("D:/Viet/Thong-ke-Ho-Viet/data/hoviet.RData")
+load("../../data/hoviet.RData")
 ```
 
 # Creating our Map
@@ -262,8 +262,10 @@ dat <- dat_sff %>%
 
 ho <- dat %>% 
   st_drop_geometry() %>% 
-  count(Ho) %>% 
-  arrange(desc(n)) %>% 
+  group_by(Ho) %>%
+  summarise(songuoi=sum(songuoi)) %>%
+  ungroup() %>% 
+  arrange(desc(songuoi)) %>% 
   filter(row_number()<=100)
 
 dat <- dat %>% 
@@ -271,7 +273,7 @@ dat <- dat %>%
 
 dat1 <- dat %>% filter(Ho %in% c("Mai", "Phùng", "Ngô"))
 
-save(dat, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat.RData")
-saveRDS(dat, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat.rds")
-saveRDS(dat1, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat1.rds")
+save(dat, file = "../../data/dat.RData")
+saveRDS(dat, file = "../../data/dat.rds")
+saveRDS(dat1, file = "../../data/dat1.rds")
 ```
