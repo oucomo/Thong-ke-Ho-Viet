@@ -22,6 +22,7 @@ library(tmaptools)
 library(leaflet)
 library(mapdeck)
 library(sf)
+library(data.table)
 
 key <- ''    ## put your own token here
 mapdeck(token = key)
@@ -34,10 +35,8 @@ mai$longitude <- jitter(mai$y)
 m_Tinh <- c("Select All", as.character(sort(unique(mai$NAME_1))))
 m_Huyen <- c("Select All", as.character(sort(unique(mai$NAME_2))))
 
-dict <- mai %>% 
-  group_by(NAME_1) %>% 
-  distinct(NAME_2) %>% 
-  select(NAME_1, NAME_2) 
+dat2 = as.data.table(mai)
+dict = unique(dat2[,.(NAME_1, NAME_2), by=NAME_1], by = 'NAME_1')
 
 s2_Tinh <- as.character(sort(unique(mai$NAME_1)))
 s2_Huyen <- as.character(sort(unique(mai$NAME_2)))
@@ -141,6 +140,7 @@ server <- function(input, output, session) {
       m_Huyen
     }
   })
+  
   observe({
     updateSelectInput(session, "i2_huyen",choices = outVar())
   })

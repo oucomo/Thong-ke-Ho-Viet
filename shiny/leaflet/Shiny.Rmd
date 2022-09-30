@@ -233,6 +233,18 @@ saveRDS(tran, file = "D:/Viet/Thong-ke-Ho-Viet/data/tran.rds")
 
 ```{r}
 library(leaflet)
+dat_sff <- dat_sff %>%
+  group_by(Ho) %>%
+  mutate(pro.ho=(sum(songuoi)/sum(danso))*100)
+
+dat_sff <- dat_sff %>%
+  group_by(NAME_1, Ho) %>%
+  mutate(pro.tinh=(sum(songuoi)/sum(danso))*100)
+
+dat_sff <- dat_sff %>%
+  group_by(NAME_1, NAME_2, Ho) %>%
+  mutate(pro.huyen=(sum(songuoi)/sum(danso))*100)
+
 dat_sff <- dat_sff %>% st_as_sf(crs = 4326)
 
 dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>% 
@@ -253,9 +265,13 @@ ho <- dat %>%
   count(Ho) %>% 
   arrange(desc(n)) %>% 
   filter(row_number()<=100)
+
 dat <- dat %>% 
   filter(Ho %in% ho$Ho)
 
+dat1 <- dat %>% filter(Ho %in% c("Mai", "Phùng", "Ngô"))
+
 save(dat, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat.RData")
 saveRDS(dat, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat.rds")
+saveRDS(dat1, file = "D:/Viet/Thong-ke-Ho-Viet/data/dat1.rds")
 ```

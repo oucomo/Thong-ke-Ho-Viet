@@ -22,11 +22,20 @@ library(tmaptools)
 library(leaflet)
 library(mapdeck)
 library(sf)
+library(data.table)
 
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat.rds")
+dat <- readRDS("dat1.rds")
+
+dat2 = as.data.table(dat)
+dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
+
+# dict1 <- dat %>%
+#   group_by(NAME_1) %>%
+#   distinct(NAME_2) %>%
+#   select(NAME_1, NAME_2)
 
 # dat <- mai_df %>% 
 #   st_drop_geometry()
@@ -37,15 +46,10 @@ m_Ho <- c("Select All", as.character(sort(unique(dat$Ho))))
 m_Tinh <- c("Select All", as.character(sort(unique(dat$NAME_1))))
 m_Huyen <- c("Select All", as.character(sort(unique(dat$NAME_2))))
 
-dict <- dat %>% 
-  group_by(NAME_1) %>% 
-  distinct(NAME_2) %>% 
-  select(NAME_1, NAME_2) 
-
 s2_Tinh <- as.character(sort(unique(dat$NAME_1)))
 s2_Huyen <- as.character(sort(unique(dat$NAME_2)))
-s2_Ho <- as.character(sort(unique(ho$Ho)))
-title <- "a"
+s2_Ho <- as.character(sort(unique(dat$Ho)))
+
 # cleantable <- dat %>%
 #   select(
 #     Tinh = NAME_1,
@@ -66,7 +70,7 @@ title <- "a"
 
 # Define UI for application
 ui <- shinydashboard::dashboardPage(skin='black',
-                    shinydashboard::dashboardHeader(title = title),
+                    shinydashboard::dashboardHeader(title = "Họ Việt"),
                     shinydashboard::dashboardSidebar(width=275,
 
                                          # The dynamically-generated user panel
@@ -77,7 +81,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
 
                                                      menuItem("Overview", tabName = "iaa", icon = icon("th")),
 
-                                                     menuItem("CSO Dashboard", tabName = "cso", icon = icon("desktop"),
+                                                     menuItem("VN Dashboard", tabName = "cso", icon = icon("desktop"),
                                                               badgeLabel = "new",
                                                               badgeColor = "green"),
 
@@ -87,9 +91,9 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                                        useShinyjs(),
                                                        div(id = "form",
                                                            tags$hr(),
-                                                           selectInput("i2_ho", "Ho", choices = m_Ho),
-                                                           selectInput("i2_tinh", "Tinh", choices = m_Tinh,bookmarkButton(id = "bookmark1")),
-                                                           selectInput("i2_huyen", "Huyen",choices = "", bookmarkButton(id = "bookmark2")),
+                                                           selectInput("i2_ho", "Ho", choices = m_Ho, bookmarkButton(id = "bookmark1")),
+                                                           selectInput("i2_tinh", "Tinh", choices = m_Tinh, bookmarkButton(id = "bookmark2")),
+                                                           selectInput("i2_huyen", "Huyen",choices = "", bookmarkButton(id = "bookmark3")),
                                                            column(6,offset = 6,height = 100,style='padding100px;',
                                                                   actionButton("reset_button", "Reset",icon = icon("repeat")))
                                                        ))
@@ -105,7 +109,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                     br()
                             ),
                             tabItem(tabName = "cso",
-                                    fluidRow(column(10, offset = 0.5, h1("CSO DASHBOARD"))),
+                                    fluidRow(column(10, offset = 0.5, h1("VN DASHBOARD"))),
                                     fluidRow(style="height:50px;",
                                              valueBoxOutput("count1",width = 3),
                                              valueBoxOutput("count2",width = 3),
@@ -128,7 +132,7 @@ server <- function(input, output, session) {
   # Reset Button
 
   # Need to exclude the buttons from themselves being bookmarked
-  setBookmarkExclude(c("bookmark1", "bookmark2"))
+  setBookmarkExclude(c("bookmark1", "bookmark2", "bookmark3"))
 
   # Trigger bookmarking with either button
   observeEvent(input$bookmark1, {
@@ -137,15 +141,19 @@ server <- function(input, output, session) {
   observeEvent(input$bookmark2, {
     session$doBookmark()
   })
+  observeEvent(input$bookmark3, {
+    session$doBookmark()
+  })
   
   outVar <- reactive({
     if (input$i2_tinh != "Select All"){
       current_tinh <- input$i2_tinh
-      dict$NAME_2[dict$NAME_1==current_tinh]} 
+      c("Select All", dict$NAME_2[dict$NAME_1==current_tinh])} 
     else {
       m_Huyen
     }
   })
+  
   observe({
     updateSelectInput(session, "i2_huyen",choices = outVar())
     })
@@ -179,72 +187,93 @@ server <- function(input, output, session) {
       )
   })
 
-
   # Value Box 1
   output$count1 <- renderValueBox({
     hc12 <- round(sum(as.numeric(filt_mai1()$songuoi)),digits = 0)
-    valueBox(paste0(hc12), "Tong so nguoi", icon = icon("users"),
+    valueBox(paste0(hc12), "Số người", icon = icon("users"),
              color = "green"
     )
   })
-
+  
   # Value Box 2
   output$count2 <- renderValueBox({
     hc13 <-  round(sum(as.numeric(filt_mai1()$danso)),digits = 0)
-    valueBox( paste0(hc13), "Tong dan so", icon = icon("users"),
+    valueBox( paste0(hc13), "Dân số", icon = icon("circle-user"),
               color = "olive"
     )
   })
-
-
+  
+  
   # Value Box 3
   output$count3 <- renderValueBox({
-    hc14 <- sum(filt_mai1()$area)
-    valueBox(paste0(hc14), "Dien tich", icon = icon("user-circle-o"),
+    hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 2)
+    valueBox(paste0(hc14), "Diện tích (km2)", icon = icon("circle-user"),
              color = "blue"
     )
   })
-
+  
   # Value Box 4
-  output$count4 <- renderValueBox({
-    hc15 <- sum(as.numeric(filt_mai1()$pro.pop))
-    valueBox(paste0(hc15), "Ti le", icon = icon("user-circle-o"),
-             color = "blue"
-    )
-  })
+  # output$count4 <- renderValueBox({
+  #   if (input$i2_tinh == "Select All"){
+  #     hc15 <- round(as.numeric(filt_mai1()$pro.ho),digits = 2)}
+  #   if (input$i2_tinh != "Select All" & input$i2_huyen == "Select All"){
+  #     hc15 <- round(as.numeric(filt_mai1()$pro.tinh),digits = 2)}
+  #   if (input$i2_tinh != "Select All" & input$i2_huyen != "Select All"){
+  #     hc15 <- round(as.numeric(filt_mai1()$pro.huyen),digits = 2)}
+  #   else{
+  #     hc15 <- round(as.numeric(filt_mai1()$pro.pop),digits = 2)
+  #   }
+  #   valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("users"), color = "blue")
+  # })
 
+  # output$count4 <- renderValueBox({
+  #   if (input$i2_tinh == "Select All"){
+  #     hc15 <- round(as.numeric(filt_mai1()$pro.ho),digits = 2)} 
+  #   if (input$i2_tinh != "Select All" & input$i2_huyen == "Select All"){
+  #     hc15 <- round(as.numeric(filt_mai1()$pro.tinh),digits = 2)}
+  #   if (input$i2_tinh != "Select All" & input$i2_huyen != "Select All"){
+  #     hc15 <- round(as.numeric(filt_mai1()$pro.huyen),digits = 2)}
+  # })
+  
   # Maps
 
   mappalette <- reactive ({
-    colorNumeric("Reds", filt_mai1()$"songuoi")
+    colorNumeric("Reds", filt_mai1()$songuoi_km)
   })
 
   #Popup
   mappopup <- reactive ({
     paste(sep = "<br/>",
-          "<b>Huyen: </b>",filt_mai1()$NAME_2,
-          "<i>Tong so nguoi</i>",filt_mai1()$"songuoi",
-          "<i>Dien tich</i>",filt_mai1()$"area",
-          "<i>Ti le</i>", filt_mai1()$"pro.pop")
+          "<b>Huyện: </b>",filt_mai1()$NAME_2,
+          "<i>Số người</i>",filt_mai1()$songuoi,
+          "<i>Diện tích</i>",filt_mai1()$area_km,
+          "<i>Mật độ</i>",filt_mai1()$songuoi_km,
+          "<i>Tỉ lệ</i>", filt_mai1()$pro.pop)
   })
 
   output$map1 <- renderLeaflet({
     leaflet(filt_mai1()) %>%
-      addProviderTiles(providers$OpenStreetMap) %>%
-      setView(lng = "108.2772", lat="16.0583", zoom = 6) %>%
-      addProviderTiles("CartoDB.Positron")
+      addProviderTiles(provider = "Esri.WorldStreetMap") %>%
+      setView(lng = "108.2772", lat="16.0583", zoom = 6)
+    
+  # output$map1 <- renderLeaflet({
+  #   leaflet(filt_mai1()) %>%
+  #     addProviderTiles(providers$OpenStreetMap) %>%
+  #     setView(lng = "108.2772", lat="16.0583", zoom = 6) %>%
+  #     addProviderTiles("CartoDB.Positron")
 
   }) # render Leaflet
 
   observe({
-    pal1 <- mappalette()
-
+    # pal1 <- mappalette()
+    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
+    
     leafletProxy("map1", data = filt_mai1()) %>%
       addPolygons(stroke = FALSE,
-                  smoothFactor = 0.2,
-                  fillOpacity = .75,
+                  smoothFactor = 0,
+                  fillOpacity = .4,
                   popup = mappopup(),
-                  color = ~pal1(dat$songuoi)
+                  color = ~ pal(filt_mai1()$songuoi_km)
       ) %>%
       addMiniMap(position = "bottomleft", width = 150, height = 150,
                  collapsedWidth = 19, collapsedHeight = 19, zoomLevelOffset = -5,
@@ -254,26 +283,26 @@ server <- function(input, output, session) {
                  shadowRectOptions = list(color = "#000000", weight = 1, clickable = TRUE,
                                           opacity = 0, fillOpacity = 0), strings = list(hideText = "Hide MiniMap", showText = "Show MiniMap"),
                  tiles = (providers$OpenStreetMap), mapOptions = list()) %>%
-      addLegend("bottomright", pal = mappalette(), values = ~filt_mai1()$"songuoi",
-                title = "INTELLIGENT ACQUISITION",
+      addLegend("bottomright", pal = pal, values = ~filt_mai1()$songuoi_km,
+                title = "Mật độ người/km2",
                 opacity = 1)
   })
 
-# output$map_value <- renderMapdeck({
-#   mapdeck(token = key,
-#           style = mapdeck_style("streets")
-#           ,pitch = 60
-#           ,zoom = 10
-#   ) %>%
-#     add_grid(
-#       data = dat
-#       , lat = "x"
-#       , lon = "y"
-#       , cell_size = 500
-#       , elevation_scale = 15
-#       , layer_id = "grid_layer"
-#     )
-# }) # render MapDeck
+output$map_value <- renderMapdeck({
+  mapdeck(token = key,
+          style = mapdeck_style("streets")
+          ,pitch = 60
+          ,zoom = 10
+  ) %>%
+    add_grid(
+      data = dat
+      , lat = "x"
+      , lon = "y"
+      , cell_size = 500
+      , elevation_scale = 15
+      , layer_id = "grid_layer"
+    )
+}) # render MapDeck
 }
 
 # Run the application
