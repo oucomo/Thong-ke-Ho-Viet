@@ -27,7 +27,7 @@ library(data.table)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat.rds")
+dat <- readRDS("dat1.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -189,16 +189,26 @@ server <- function(input, output, session) {
 
   # Value Box 1
   output$count1 <- renderValueBox({
-    hc12 <- round(sum(as.numeric(filt_mai1()$songuoi)),digits = 0)
-    valueBox(paste0(hc12), "Số người", icon = icon("users"),
+    if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
+      hc12 <- "-"
+    }
+    else{
+      hc12 <- round(sum(as.numeric(filt_mai1()$songuoi)),digits = 0)
+    }
+    valueBox(paste0(hc12), "Số người", icon = icon("circle-user"),
              color = "green"
     )
   })
   
   # Value Box 2
   output$count2 <- renderValueBox({
-    hc13 <-  round(sum(as.numeric(filt_mai1()$danso)),digits = 0)
-    valueBox( paste0(hc13), "Dân số", icon = icon("circle-user"),
+    if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
+      hc13 <- "-"
+    }
+    else{
+      hc13 <-  round(sum(as.numeric(filt_mai1()$danso)),digits = 0)
+    }
+    valueBox( paste0(hc13), "Dân số", icon = icon("users"),
               color = "olive"
     )
   })
@@ -206,34 +216,28 @@ server <- function(input, output, session) {
   
   # Value Box 3
   output$count3 <- renderValueBox({
-    hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 2)
-    valueBox(paste0(hc14), "Diện tích (km2)", icon = icon("circle-user"),
+    if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
+      hc14 <- "-"
+    }
+    else{
+      hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 2)
+    }
+    valueBox(paste0(hc14), "Diện tích (km2)", icon = icon("users"),
              color = "blue"
     )
   })
   
   # Value Box 4
-  # output$count4 <- renderValueBox({
-  #   if (input$i2_tinh == "Select All"){
-  #     hc15 <- round(as.numeric(filt_mai1()$pro.ho),digits = 2)}
-  #   if (input$i2_tinh != "Select All" & input$i2_huyen == "Select All"){
-  #     hc15 <- round(as.numeric(filt_mai1()$pro.tinh),digits = 2)}
-  #   if (input$i2_tinh != "Select All" & input$i2_huyen != "Select All"){
-  #     hc15 <- round(as.numeric(filt_mai1()$pro.huyen),digits = 2)}
-  #   else{
-  #     hc15 <- round(as.numeric(filt_mai1()$pro.pop),digits = 2)
-  #   }
-  #   valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("users"), color = "blue")
-  # })
+  output$count4 <- renderValueBox({
+    if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
+      hc15 <- "-"
+    }
+    else {
+      hc15 <- round((sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$danso)))*100,digits = 2)
+    }
+    valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "blue")
+  })
 
-  # output$count4 <- renderValueBox({
-  #   if (input$i2_tinh == "Select All"){
-  #     hc15 <- round(as.numeric(filt_mai1()$pro.ho),digits = 2)} 
-  #   if (input$i2_tinh != "Select All" & input$i2_huyen == "Select All"){
-  #     hc15 <- round(as.numeric(filt_mai1()$pro.tinh),digits = 2)}
-  #   if (input$i2_tinh != "Select All" & input$i2_huyen != "Select All"){
-  #     hc15 <- round(as.numeric(filt_mai1()$pro.huyen),digits = 2)}
-  # })
   
   # Maps
 
