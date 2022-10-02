@@ -24,7 +24,7 @@ library(mapdeck)
 library(sf)
 library(data.table)
 
-# remotes::install_github('yonicd/covrpage')
+# devtools::install_github("yonicd/covrpage", dependencies = T)
 library(covrpage)
 library(rhub)
 library(whoami)
