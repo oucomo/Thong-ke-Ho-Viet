@@ -5,9 +5,9 @@ account: duhongduc
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7181604
-bundleId: 6360504
+bundleId: 6360573
 url: https://duhongduc.shinyapps.io/HoViet/
-when: 1664700506.70599
-lastSyncTime: 1664700506.706
+when: 1664702628.43211
+lastSyncTime: 1664702628.43212
 asMultiple: FALSE
 asStatic: FALSE

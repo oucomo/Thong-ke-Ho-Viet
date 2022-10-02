@@ -29,7 +29,7 @@ library(covrpage)
 library(rhub)
 library(whoami)
 
-# devtools::install_version("MASS", "7.3-51.1")
+devtools::install_version("MASS", "7.3-51.1")
 
 key <- ''    ## put your own token here
 mapdeck(token = key)
@@ -44,7 +44,7 @@ dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
 #   distinct(NAME_2) %>%
 #   select(NAME_1, NAME_2)
 
-# dat <- mai_df %>% 
+# dat <- mai_df %>%
 #   st_drop_geometry()
 # dat$latitude <- jitter(dat$latitude)
 # dat$longitude <- jitter(dat$longitude)
@@ -156,16 +156,16 @@ server <- function(input, output, session) {
   observeEvent(input$bookmark3, {
     session$doBookmark()
   })
-  
+
   outVar <- reactive({
     if (input$i2_tinh != "Select All"){
       current_tinh <- input$i2_tinh
-      c("Select All", dict$NAME_2[dict$NAME_1==current_tinh])} 
+      c("Select All", dict$NAME_2[dict$NAME_1==current_tinh])}
     else {
       m_Huyen
     }
   })
-  
+
   observe({
     updateSelectInput(session, "i2_huyen",choices = outVar())
     })
@@ -188,7 +188,7 @@ server <- function(input, output, session) {
   })
 
   # Data
-  
+
 
   filt_mai1 <- reactive({
     dat %>%
@@ -211,7 +211,7 @@ server <- function(input, output, session) {
              color = "green"
     )
   })
-  
+
   # Value Box 2
   output$count2 <- renderValueBox({
     if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
@@ -224,8 +224,8 @@ server <- function(input, output, session) {
               color = "olive"
     )
   })
-  
-  
+
+
   # Value Box 3
   output$count3 <- renderValueBox({
     if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
@@ -238,7 +238,7 @@ server <- function(input, output, session) {
              color = "blue"
     )
   })
-  
+
   # Value Box 4
   output$count4 <- renderValueBox({
     if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
@@ -250,7 +250,7 @@ server <- function(input, output, session) {
     valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
   })
 
-  
+
   # Maps
 
   mappalette <- reactive ({
@@ -271,7 +271,7 @@ server <- function(input, output, session) {
     leaflet(filt_mai1()) %>%
       addProviderTiles(provider = "Esri.WorldStreetMap") %>%
       setView(lng = "108.2772", lat="16.0583", zoom = 6)
-    
+
   # output$map1 <- renderLeaflet({
   #   leaflet(filt_mai1()) %>%
   #     addProviderTiles(providers$OpenStreetMap) %>%
@@ -283,7 +283,7 @@ server <- function(input, output, session) {
   observe({
     # pal1 <- mappalette()
     pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
-    
+
     leafletProxy("map1", data = filt_mai1()) %>%
       addPolygons(stroke = FALSE,
                   smoothFactor = 0,
