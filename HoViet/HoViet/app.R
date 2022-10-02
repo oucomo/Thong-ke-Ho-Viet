@@ -29,7 +29,7 @@ library(covrpage)
 library(rhub)
 library(whoami)
 
-devtools::install_version("MASS", "7.3-51.1")
+# devtools::install_version("MASS", "7.3-51.1")
 
 key <- ''    ## put your own token here
 mapdeck(token = key)
