@@ -24,6 +24,11 @@ library(mapdeck)
 library(sf)
 library(data.table)
 
+# remotes::install_github('yonicd/covrpage')
+library(covrpage)
+library(rhub)
+library(whoami)
+
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
