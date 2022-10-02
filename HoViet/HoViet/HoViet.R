@@ -70,7 +70,12 @@ s2_Ho <- as.character(sort(unique(dat$Ho)))
 
 # Define UI for application
 ui <- shinydashboard::dashboardPage(skin='black',
-                    shinydashboard::dashboardHeader(title = "Họ Việt"),
+                    shinydashboard::dashboardHeader(title = "Họ Việt",
+                                                    tags$li(a(href = 'http://shinyapps.company.com',
+                                                              img(src = 'vietnam.png',
+                                                                  title = "Vietnam", height='60',width='200'),
+                                                              style = "padding-top:10px; padding-bottom:10px;"),
+                                                            class = "dropdown")),
                     shinydashboard::dashboardSidebar(width=275,
 
                                          # The dynamically-generated user panel
@@ -235,7 +240,7 @@ server <- function(input, output, session) {
     else {
       hc15 <- round((sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$danso)))*100,digits = 2)
     }
-    valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "blue")
+    valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
   })
 
   
