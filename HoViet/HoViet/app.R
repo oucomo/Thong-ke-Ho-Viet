@@ -24,7 +24,7 @@ library(mapdeck)
 library(sf)
 library(data.table)
 
-# remotes::install_github('yonicd/covrpage')
+# devtools::install_github("yonicd/covrpage", dependencies = T)
 library(covrpage)
 library(rhub)
 library(whoami)
@@ -78,7 +78,7 @@ s2_Ho <- as.character(sort(unique(dat$Ho)))
 # Define UI for application
 ui <- shinydashboard::dashboardPage(skin='black',
                     shinydashboard::dashboardHeader(title = "Họ Việt",
-                                                    tags$li(a(href = 'http://shinyapps.company.com',
+                                                    tags$li(a(href = 'https://duhongduc.shinyapps.io/HoViet/',
                                                               img(src = 'vietnam.png',
                                                                   title = "Vietnam", height='60',width='200'),
                                                               style = "padding-top:10px; padding-bottom:10px;"),
