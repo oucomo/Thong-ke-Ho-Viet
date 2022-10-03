@@ -77,79 +77,75 @@ s2_Ho <- as.character(sort(unique(dat$Ho)))
 
 # Define UI for application
 ui <- shinydashboard::dashboardPage(skin='black',
-                    shinydashboard::dashboardHeader(title = "Họ Việt",
-                                                    tags$li(a(href = 'https://duhongduc.shinyapps.io/HoViet/',
-<<<<<<< HEAD
-                                                              img(src = 'vietnam.png',
-=======
-                                                              img(src = 'vietnam.png', icon = icon("star"),
->>>>>>> cf8689e671c114df488a8facfe7b35ea1e0cd30a
-                                                                  title = "Vietnam", height='60',width='200'),
-                                                              style = "padding-top:10px; padding-bottom:10px;"),
-                                                            class = "dropdown")),
-                    shinydashboard::dashboardSidebar(width=275,
-
-                                         # The dynamically-generated user panel
-                                         uiOutput("userpanel"),
-
-                                         # Side Bar Menu
-                                         sidebarMenu(style = "position: Scroll; overflow: visible;",id = "sidebarmenu",
-
-                                                     menuItem("Overview", tabName = "iaa", icon = icon("globe")),
-
-                                                     menuItem("VN Dashboard", tabName = "cso", icon = icon("desktop"),
-                                                              badgeLabel = "new",
-                                                              badgeColor = "green"),
-
-                                                     conditionalPanel(
-                                                       "input.sidebarmenu === 'cso'",
-                                                       # a. FILTERS
-                                                       useShinyjs(),
-                                                       div(id = "form",
-                                                           tags$hr(),
-                                                           selectInput("i2_ho", "Ho", choices = m_Ho, bookmarkButton(id = "bookmark1")),
-                                                           selectInput("i2_tinh", "Tinh", choices = m_Tinh, bookmarkButton(id = "bookmark2")),
-                                                           selectInput("i2_huyen", "Huyen",choices = "", bookmarkButton(id = "bookmark3")),
-                                                           column(6,offset = 6,height = 100,style='padding100px;',
-                                                                  actionButton("reset_button", "Reset",icon = icon("repeat")))
-                                                       ))
-                                         )
-                        ),
-                        dashboardBody(
-
-                          tabItems(
-                            tabItem(tabName = "iaa",
-                                    fluidRow(column(10, offset = 0.5,h1("MAPDECK"))),
-                                    br(),
-                                    fluidRow(column(10, offset = 2.5,mapdeckOutput('map_value', width = 1400, height = 800))),
-                                    br()
-                            ),
-                            tabItem(tabName = "cso",
-                                    fluidRow(column(10, offset = 0.5, h1("VN DASHBOARD"))),
-                                    fluidRow(style="height:50px;",
-                                             valueBoxOutput("count1",width = 3),
-                                             valueBoxOutput("count2",width = 3),
-                                             valueBoxOutput("count3",width = 3),
-                                             valueBoxOutput("count4",width = 3)
+                                    shinydashboard::dashboardHeader(title = "Họ Việt",
+                                                                    tags$li(a(href = 'https://duhongduc.shinyapps.io/HoViet/',
+                                                                              img(src = 'vietnam.png', icon = icon("star"),
+                                                                                  title = "Vietnam", height='60',width='200'),
+                                                                              style = "padding-top:10px; padding-bottom:10px;"),
+                                                                            class = "dropdown")),
+                                    shinydashboard::dashboardSidebar(width=275,
+                                                                     
+                                                                     # The dynamically-generated user panel
+                                                                     uiOutput("userpanel"),
+                                                                     
+                                                                     # Side Bar Menu
+                                                                     sidebarMenu(style = "position: Scroll; overflow: visible;",id = "sidebarmenu",
+                                                                                 
+                                                                                 menuItem("Overview", tabName = "iaa", icon = icon("globe")),
+                                                                                 
+                                                                                 menuItem("VN Dashboard", tabName = "cso", icon = icon("desktop"),
+                                                                                          badgeLabel = "new",
+                                                                                          badgeColor = "green"),
+                                                                                 
+                                                                                 conditionalPanel(
+                                                                                   "input.sidebarmenu === 'cso'",
+                                                                                   # a. FILTERS
+                                                                                   useShinyjs(),
+                                                                                   div(id = "form",
+                                                                                       tags$hr(),
+                                                                                       selectInput("i2_ho", "Ho", choices = m_Ho, bookmarkButton(id = "bookmark1")),
+                                                                                       selectInput("i2_tinh", "Tinh", choices = m_Tinh, bookmarkButton(id = "bookmark2")),
+                                                                                       selectInput("i2_huyen", "Huyen",choices = "", bookmarkButton(id = "bookmark3")),
+                                                                                       column(6,offset = 6,height = 100,style='padding100px;',
+                                                                                              actionButton("reset_button", "Reset",icon = icon("repeat")))
+                                                                                   ))
+                                                                     )
                                     ),
-                                    br(),
-                                    br(),
-                                    fluidRow(column(10, offset = 2.5,leafletOutput('map1', width = 1400, height = 800)))
-                            )
-                          )
-                        )
+                                    dashboardBody(
+                                      
+                                      tabItems(
+                                        tabItem(tabName = "iaa",
+                                                fluidRow(column(10, offset = 0.5,h1("MAPDECK"))),
+                                                br(),
+                                                fluidRow(column(10, offset = 2.5,mapdeckOutput('map_value', width = 1400, height = 800))),
+                                                br()
+                                        ),
+                                        tabItem(tabName = "cso",
+                                                fluidRow(column(10, offset = 0.5, h1("VN DASHBOARD"))),
+                                                fluidRow(style="height:50px;",
+                                                         valueBoxOutput("count1",width = 3),
+                                                         valueBoxOutput("count2",width = 3),
+                                                         valueBoxOutput("count3",width = 3),
+                                                         valueBoxOutput("count4",width = 3)
+                                                ),
+                                                br(),
+                                                br(),
+                                                fluidRow(column(10, offset = 2.5,leafletOutput('map1', width = 1400, height = 800)))
+                                        )
+                                      )
+                                    )
 )
 
 # Define server logic required
 server <- function(input, output, session) {
-
+  
   addClass(selector = "body", class = "sidebar-collapse")
-
+  
   # Reset Button
-
+  
   # Need to exclude the buttons from themselves being bookmarked
   setBookmarkExclude(c("bookmark1", "bookmark2", "bookmark3"))
-
+  
   # Trigger bookmarking with either button
   observeEvent(input$bookmark1, {
     session$doBookmark()
@@ -160,7 +156,7 @@ server <- function(input, output, session) {
   observeEvent(input$bookmark3, {
     session$doBookmark()
   })
-
+  
   outVar <- reactive({
     if (input$i2_tinh != "Select All"){
       current_tinh <- input$i2_tinh
@@ -169,31 +165,31 @@ server <- function(input, output, session) {
       m_Huyen
     }
   })
-
+  
   observe({
     updateSelectInput(session, "i2_huyen",choices = outVar())
-    })
-
+  })
+  
   js_click_line <- JS("function(event) {Shiny.onInputChange('line_clicked', [event.point.category]);}")
-
+  
   observeEvent(input$reset_button, {
     reset("form")
   })
-
+  
   id <- NULL
-
+  
   observeEvent(input$reset_button, {
-
+    
     id <<- showNotification(
       paste("Filters are Reset"),
       duration = 5,
       type = "message"
     )
   })
-
+  
   # Data
-
-
+  
+  
   filt_mai1 <- reactive({
     dat %>%
       filter(
@@ -202,7 +198,7 @@ server <- function(input, output, session) {
         if (input$i2_huyen == "Select All") {NAME_2 %in% s2_Huyen} else {NAME_2 == input$i2_huyen}
       )
   })
-
+  
   # Value Box 1
   output$count1 <- renderValueBox({
     if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
@@ -215,7 +211,7 @@ server <- function(input, output, session) {
              color = "green"
     )
   })
-
+  
   # Value Box 2
   output$count2 <- renderValueBox({
     if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
@@ -228,8 +224,8 @@ server <- function(input, output, session) {
               color = "olive"
     )
   })
-
-
+  
+  
   # Value Box 3
   output$count3 <- renderValueBox({
     if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
@@ -242,7 +238,7 @@ server <- function(input, output, session) {
              color = "blue"
     )
   })
-
+  
   # Value Box 4
   output$count4 <- renderValueBox({
     if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
@@ -253,14 +249,14 @@ server <- function(input, output, session) {
     }
     valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
   })
-
-
+  
+  
   # Maps
-
+  
   mappalette <- reactive ({
     colorNumeric("Reds", filt_mai1()$songuoi_km)
   })
-
+  
   #Popup
   mappopup <- reactive ({
     paste(sep = "<br/>",
@@ -270,24 +266,24 @@ server <- function(input, output, session) {
           "<i>Mật độ</i>",filt_mai1()$songuoi_km,
           "<i>Tỉ lệ</i>", filt_mai1()$pro.pop)
   })
-
+  
   output$map1 <- renderLeaflet({
     leaflet(filt_mai1()) %>%
       addProviderTiles(provider = "Esri.WorldStreetMap") %>%
       setView(lng = "108.2772", lat="16.0583", zoom = 6)
-
-  # output$map1 <- renderLeaflet({
-  #   leaflet(filt_mai1()) %>%
-  #     addProviderTiles(providers$OpenStreetMap) %>%
-  #     setView(lng = "108.2772", lat="16.0583", zoom = 6) %>%
-  #     addProviderTiles("CartoDB.Positron")
-
+    
+    # output$map1 <- renderLeaflet({
+    #   leaflet(filt_mai1()) %>%
+    #     addProviderTiles(providers$OpenStreetMap) %>%
+    #     setView(lng = "108.2772", lat="16.0583", zoom = 6) %>%
+    #     addProviderTiles("CartoDB.Positron")
+    
   }) # render Leaflet
-
+  
   observe({
     # pal1 <- mappalette()
     pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
-
+    
     leafletProxy("map1", data = filt_mai1()) %>%
       addPolygons(stroke = FALSE,
                   smoothFactor = 0,
@@ -307,22 +303,22 @@ server <- function(input, output, session) {
                 title = "Mật độ người/km2",
                 opacity = 1)
   })
-
-output$map_value <- renderMapdeck({
-  mapdeck(token = key,
-          style = mapdeck_style("streets")
-          ,pitch = 60
-          ,zoom = 10
-  ) %>%
-    add_grid(
-      data = dat
-      , lat = "x"
-      , lon = "y"
-      , cell_size = 500
-      , elevation_scale = 15
-      , layer_id = "grid_layer"
-    )
-}) # render MapDeck
+  
+  output$map_value <- renderMapdeck({
+    mapdeck(token = key,
+            style = mapdeck_style("streets")
+            ,pitch = 60
+            ,zoom = 10
+    ) %>%
+      add_grid(
+        data = dat
+        , lat = "x"
+        , lon = "y"
+        , cell_size = 500
+        , elevation_scale = 15
+        , layer_id = "grid_layer"
+      )
+  }) # render MapDeck
 }
 
 # Run the application
