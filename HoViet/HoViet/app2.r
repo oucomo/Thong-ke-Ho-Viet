@@ -25,12 +25,9 @@ library(sf)
 library(data.table)
 
 # devtools::install_github("yonicd/covrpage", dependencies = T)
-# library(covrpage)
-# library(rhub)
-# library(whoami)
-strategy = if (.Platform$OS.type == 'unix') future::multicore else future::multisession
-future::plan(strategy = strategy, 
-                 workers = parallel::detectCores()) 
+library(covrpage)
+library(rhub)
+library(whoami)
 
 # devtools::install_version("MASS", "7.3-51.1")
 
@@ -283,33 +280,17 @@ server <- function(input, output, session) {
     
   }) # render Leaflet
   
-
   observe({
     # pal1 <- mappalette()
     pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
     
-    # single-threaded
-    # leafletProxy("map1", data = filt_mai1()) %>%
-    #   addPolygons(stroke = FALSE,
-    #               smoothFactor = 0,
-    #               fillOpacity = .4,
-    #               popup = mappopup(),
-    #               color = ~ pal(filt_mai1()$songuoi_km)
-    #   ) %>%
-    #   addMiniMap(position = "bottomleft", width = 150, height = 150,
-    #              collapsedWidth = 19, collapsedHeight = 19, zoomLevelOffset = -5,
-    #              zoomLevelFixed = FALSE, centerFixed = FALSE, zoomAnimation = TRUE,
-    #              toggleDisplay = TRUE, autoToggleDisplay = TRUE, minimized = TRUE,
-    #              aimingRectOptions = list(color = "#ff7800", weight = 1, clickable = TRUE),
-    #              shadowRectOptions = list(color = "#000000", weight = 1, clickable = TRUE,
-    #                                       opacity = 0, fillOpacity = 0), strings = list(hideText = "Hide MiniMap", showText = "Show MiniMap"),
-    #              tiles = (providers$OpenStreetMap), mapOptions = list()) %>%
-    #   addLegend("bottomright", pal = pal, values = ~filt_mai1()$songuoi_km,
-    #             title = "Mật độ người/km2",
-    #             opacity = 1)
-    
-    # multi-threaded
     leafletProxy("map1", data = filt_mai1()) %>%
+      addPolygons(stroke = FALSE,
+                  smoothFactor = 0,
+                  fillOpacity = .4,
+                  popup = mappopup(),
+                  color = ~ pal(filt_mai1()$songuoi_km)
+      ) %>%
       addMiniMap(position = "bottomleft", width = 150, height = 150,
                  collapsedWidth = 19, collapsedHeight = 19, zoomLevelOffset = -5,
                  zoomLevelFixed = FALSE, centerFixed = FALSE, zoomAnimation = TRUE,
@@ -321,22 +302,6 @@ server <- function(input, output, session) {
       addLegend("bottomright", pal = pal, values = ~filt_mai1()$songuoi_km,
                 title = "Mật độ người/km2",
                 opacity = 1)
-    
-    library(doFuture)
-    registerDoFuture()
-    imai1 <- isolate(filt_mai1())
-    
-    foreach(ho = filt_mai1()$Ho, .export = c('imai1', 'session')) %dopar% {
-      subset_imai1 <- subset(imai1, imai1$Ho == ho)
-      leafletProxy("map1", session = session) %>%
-        addPolygons(stroke = FALSE,
-                    smoothFactor = 0,
-                    fillOpacity = .4,
-                    popup = mappopup(),
-                    color = ~ pal(subset_imai1$songuoi_km)
-        ) 
-    }
-  
   })
   
   output$map_value <- renderMapdeck({
