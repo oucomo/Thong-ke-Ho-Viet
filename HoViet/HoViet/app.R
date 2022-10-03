@@ -34,7 +34,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat.rds")
+dat <- readRDS("dat1.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
