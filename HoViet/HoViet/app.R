@@ -79,7 +79,11 @@ s2_Ho <- as.character(sort(unique(dat$Ho)))
 ui <- shinydashboard::dashboardPage(skin='black',
                     shinydashboard::dashboardHeader(title = "Họ Việt",
                                                     tags$li(a(href = 'https://duhongduc.shinyapps.io/HoViet/',
+<<<<<<< HEAD
                                                               img(src = 'vietnam.png',
+=======
+                                                              img(src = 'vietnam.png', icon = icon("star"),
+>>>>>>> cf8689e671c114df488a8facfe7b35ea1e0cd30a
                                                                   title = "Vietnam", height='60',width='200'),
                                                               style = "padding-top:10px; padding-bottom:10px;"),
                                                             class = "dropdown")),
@@ -91,7 +95,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                          # Side Bar Menu
                                          sidebarMenu(style = "position: Scroll; overflow: visible;",id = "sidebarmenu",
 
-                                                     menuItem("Overview", tabName = "iaa", icon = icon("th")),
+                                                     menuItem("Overview", tabName = "iaa", icon = icon("globe")),
 
                                                      menuItem("VN Dashboard", tabName = "cso", icon = icon("desktop"),
                                                               badgeLabel = "new",
