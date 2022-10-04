@@ -34,7 +34,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat10.rds")
+dat <- readRDS("dat1.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -123,10 +123,11 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                         tabItem(tabName = "cso",
                                                 fluidRow(column(10, offset = 0.5, h1("VN DASHBOARD"))),
                                                 fluidRow(style="height:50px;",
-                                                         valueBoxOutput("count1",width = 3),
-                                                         valueBoxOutput("count2",width = 3),
-                                                         valueBoxOutput("count3",width = 3),
-                                                         valueBoxOutput("count4",width = 3)
+                                                         valueBoxOutput("count1",width = 2),
+                                                         valueBoxOutput("count2",width = 2),
+                                                         valueBoxOutput("count3",width = 2),
+                                                         valueBoxOutput("count4",width = 2),
+                                                         valueBoxOutput("count5",width = 2)
                                                 ),
                                                 br(),
                                                 br(),
@@ -235,7 +236,7 @@ server <- function(input, output, session) {
       hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 2)
     }
     valueBox(paste0(hc14), "Diện tích (km2)", icon = icon("users"),
-             color = "blue"
+             color = "olive"
     )
   })
   
@@ -247,7 +248,18 @@ server <- function(input, output, session) {
     else {
       hc15 <- round(sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$area_km)),digits = 0)
     }
-    valueBox(paste0(hc15), "Mật độ người/km2", icon = icon("circle-user"), color = "yellow")
+    valueBox(paste0(hc15), "Mật độ (người/km2)", icon = icon("circle-user"), color = "blue")
+  })
+  
+  # Value Box 5
+  output$count5 <- renderValueBox({
+    if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
+      hc16 <- "-"
+    }
+    else {
+      hc16 <- round((sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$danso)))*100,digits = 2)
+    }
+    valueBox(paste0(hc16), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
   })
   
   
@@ -262,9 +274,9 @@ server <- function(input, output, session) {
     paste(sep = "<br/>",
           "<b>Huyện: </b>",filt_mai1()$NAME_2,
           "<i>Số người</i>",filt_mai1()$songuoi,
-          "<i>Diện tích</i>",filt_mai1()$area_km,
-          "<i>Mật độ</i>",filt_mai1()$songuoi_km,
-          "<i>Tỉ lệ</i>", filt_mai1()$pro.pop)
+          "<i>Diện tích (km2)</i>",filt_mai1()$area_km,
+          "<i>Mật độ (người/km2)</i>",filt_mai1()$songuoi_km,
+          "<i>Tỉ lệ (%)</i>", filt_mai1()$pro.pop)
   })
   
   output$map1 <- renderLeaflet({
