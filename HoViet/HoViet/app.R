@@ -34,7 +34,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat1.rds")
+dat <- readRDS("dat10.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -80,7 +80,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                     shinydashboard::dashboardHeader(title = "Họ Việt",
                                                                     tags$li(a(href = 'https://duhongduc.shinyapps.io/HoViet/',
                                                                               img(src = 'vietnam.png', icon = icon("star"),
-                                                                                  title = "Vietnam", height='60',width='200'),
+                                                                                  title = "Vietnam", height='30',width='100'),
                                                                               style = "padding-top:10px; padding-bottom:10px;"),
                                                                             class = "dropdown")),
                                     shinydashboard::dashboardSidebar(width=275,
@@ -91,7 +91,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                                                      # Side Bar Menu
                                                                      sidebarMenu(style = "position: Scroll; overflow: visible;",id = "sidebarmenu",
                                                                                  
-                                                                                 menuItem("Overview", tabName = "iaa", icon = icon("globe")),
+                                                                                 # menuItem("Overview", tabName = "iaa", icon = icon("globe")),
                                                                                  
                                                                                  menuItem("VN Dashboard", tabName = "cso", icon = icon("desktop"),
                                                                                           badgeLabel = "new",
@@ -114,12 +114,12 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                     dashboardBody(
                                       
                                       tabItems(
-                                        tabItem(tabName = "iaa",
-                                                fluidRow(column(10, offset = 0.5,h1("MAPDECK"))),
-                                                br(),
-                                                fluidRow(column(10, offset = 2.5,mapdeckOutput('map_value', width = 1400, height = 800))),
-                                                br()
-                                        ),
+                                        # tabItem(tabName = "iaa",
+                                        #         fluidRow(column(10, offset = 0.5,h1("MAPDECK"))),
+                                        #         br(),
+                                        #         fluidRow(column(10, offset = 2.5,mapdeckOutput('map_value', width = 1400, height = 800))),
+                                        #         br()
+                                        # ),
                                         tabItem(tabName = "cso",
                                                 fluidRow(column(10, offset = 0.5, h1("VN DASHBOARD"))),
                                                 fluidRow(style="height:50px;",
@@ -245,9 +245,9 @@ server <- function(input, output, session) {
       hc15 <- "-"
     }
     else {
-      hc15 <- round((sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$danso)))*100,digits = 2)
+      hc15 <- round(sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$area_km)),digits = 0)
     }
-    valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
+    valueBox(paste0(hc15), "Mật độ người/km2", icon = icon("circle-user"), color = "yellow")
   })
   
   
@@ -282,14 +282,14 @@ server <- function(input, output, session) {
   
   observe({
     # pal1 <- mappalette()
-    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
+    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$pro.pop, alpha = TRUE)
     
     leafletProxy("map1", data = filt_mai1()) %>%
       addPolygons(stroke = FALSE,
                   smoothFactor = 0,
                   fillOpacity = .4,
                   popup = mappopup(),
-                  color = ~ pal(filt_mai1()$songuoi_km)
+                  color = ~ pal(filt_mai1()$pro.pop)
       ) %>%
       addMiniMap(position = "bottomleft", width = 150, height = 150,
                  collapsedWidth = 19, collapsedHeight = 19, zoomLevelOffset = -5,
@@ -299,26 +299,26 @@ server <- function(input, output, session) {
                  shadowRectOptions = list(color = "#000000", weight = 1, clickable = TRUE,
                                           opacity = 0, fillOpacity = 0), strings = list(hideText = "Hide MiniMap", showText = "Show MiniMap"),
                  tiles = (providers$OpenStreetMap), mapOptions = list()) %>%
-      addLegend("bottomright", pal = pal, values = ~filt_mai1()$songuoi_km,
-                title = "Mật độ người/km2",
+      addLegend("bottomright", pal = pal, values = ~filt_mai1()$pro.pop,
+                title = "Tỉ lệ (%) người trên dân số",
                 opacity = 1)
   })
-  
-  output$map_value <- renderMapdeck({
-    mapdeck(token = key,
-            style = mapdeck_style("streets")
-            ,pitch = 60
-            ,zoom = 10
-    ) %>%
-      add_grid(
-        data = dat
-        , lat = "x"
-        , lon = "y"
-        , cell_size = 500
-        , elevation_scale = 15
-        , layer_id = "grid_layer"
-      )
-  }) # render MapDeck
+  # 
+  # output$map_value <- renderMapdeck({
+  #   mapdeck(token = key,
+  #           style = mapdeck_style("streets")
+  #           ,pitch = 60
+  #           ,zoom = 10
+  #   ) %>%
+  #     add_grid(
+  #       data = dat
+  #       , lat = "x"
+  #       , lon = "y"
+  #       , cell_size = 500
+  #       , elevation_scale = 15
+  #       , layer_id = "grid_layer"
+  #     )
+  # }) # render MapDeck
 }
 
 # Run the application
