@@ -34,7 +34,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat1.rds")
+dat <- readRDS("dat10.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -233,7 +233,7 @@ server <- function(input, output, session) {
       hc14 <- "-"
     }
     else{
-      hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 2)
+      hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 1)
     }
     valueBox(paste0(hc14), "Diện tích (km2)", icon = icon("users"),
              color = "olive"
@@ -274,9 +274,9 @@ server <- function(input, output, session) {
     paste(sep = "<br/>",
           "<b>Huyện: </b>",filt_mai1()$NAME_2,
           "<i>Số người</i>",filt_mai1()$songuoi,
-          "<i>Diện tích (km2)</i>",filt_mai1()$area_km,
+          "<i>Diện tích (km2)</i>",round(as.numeric(filt_mai1()$area_km), digits = 1),
           "<i>Mật độ (người/km2)</i>",round(as.numeric(filt_mai1()$songuoi_km), digits = 0),
-          "<i>Tỉ lệ (%)</i>", round(as.numeric(filt_mai1()$pro.pop*100), digits = 2))
+          "<i>Tỉ lệ (%)</i>", round(as.numeric(filt_mai1()$pro.pop), digits = 2))
   })
   
   output$map1 <- renderLeaflet({
