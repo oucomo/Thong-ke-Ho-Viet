@@ -268,12 +268,24 @@ ho <- dat %>%
   arrange(desc(songuoi)) %>% 
   filter(row_number()<=100)
 
+ho10 <- dat %>% 
+  st_drop_geometry() %>% 
+  group_by(Ho) %>%
+  summarise(songuoi=sum(songuoi)) %>%
+  ungroup() %>% 
+  arrange(desc(songuoi)) %>% 
+  filter(row_number()<=10)
+
 dat <- dat %>% 
   filter(Ho %in% ho$Ho)
 
 dat1 <- dat %>% filter(Ho %in% c("Mai", "Phùng", "Ngô"))
 
+dat10 <- dat %>% 
+  filter(Ho %in% ho10$Ho)
+
 save(dat, file = "../../data/dat.RData")
 saveRDS(dat, file = "../../data/dat.rds")
 saveRDS(dat1, file = "../../data/dat1.rds")
+saveRDS(dat10, file = "../../data/dat10.rds")
 ```
