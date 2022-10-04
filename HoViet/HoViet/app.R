@@ -275,8 +275,8 @@ server <- function(input, output, session) {
           "<b>Huyện: </b>",filt_mai1()$NAME_2,
           "<i>Số người</i>",filt_mai1()$songuoi,
           "<i>Diện tích (km2)</i>",filt_mai1()$area_km,
-          "<i>Mật độ (người/km2)</i>",filt_mai1()$songuoi_km,
-          "<i>Tỉ lệ (%)</i>", filt_mai1()$pro.pop)
+          "<i>Mật độ (người/km2)</i>",round(as.numeric(filt_mai1()$songuoi_km), digits = 0),
+          "<i>Tỉ lệ (%)</i>", round(as.numeric(filt_mai1()$pro.pop*100), digits = 2))
   })
   
   output$map1 <- renderLeaflet({
