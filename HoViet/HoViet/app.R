@@ -34,7 +34,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat10.rds")
+dat <- readRDS("dat1.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -257,7 +257,7 @@ server <- function(input, output, session) {
       hc16 <- "-"
     }
     else {
-      hc16 <- round((sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$danso)))*100,digits = 2)
+      hc16 <- round((sum(as.numeric(filt_mai1()$songuoi)) / sum(as.numeric(filt_mai1()$danso)))*100, digits = 2)
     }
     valueBox(paste0(hc16), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
   })
@@ -312,7 +312,7 @@ server <- function(input, output, session) {
                                           opacity = 0, fillOpacity = 0), strings = list(hideText = "Hide MiniMap", showText = "Show MiniMap"),
                  tiles = (providers$OpenStreetMap), mapOptions = list()) %>%
       addLegend("bottomright", pal = pal, values = ~filt_mai1()$pro.pop,
-                title = "Tỉ lệ (%) người trên dân số",
+                title = "Tỉ lệ (% người/dân số)",
                 opacity = 1)
   })
   # 
