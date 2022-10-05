@@ -39,7 +39,7 @@ strategy = if (.Platform$OS.type == 'unix') future::multicore else future::multi
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat.rds")
+dat <- readRDS("dat1.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -85,7 +85,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                     shinydashboard::dashboardHeader(title = "Họ Việt",
                                                                     tags$li(a(href = 'https://duhongduc.shinyapps.io/HoViet/',
                                                                               img(src = 'vietnam.png', icon = icon("star"),
-                                                                                  title = "Vietnam", height='60',width='200'),
+                                                                                  title = "Vietnam", height='30',width='100'),
                                                                               style = "padding-top:10px; padding-bottom:10px;"),
                                                                             class = "dropdown")),
                                     shinydashboard::dashboardSidebar(width=275,
@@ -96,7 +96,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                                                      # Side Bar Menu
                                                                      sidebarMenu(style = "position: Scroll; overflow: visible;",id = "sidebarmenu",
                                                                                  
-                                                                                 menuItem("Overview", tabName = "iaa", icon = icon("globe")),
+                                                                                 # menuItem("Overview", tabName = "iaa", icon = icon("globe")),
                                                                                  
                                                                                  menuItem("VN Dashboard", tabName = "cso", icon = icon("desktop"),
                                                                                           badgeLabel = "new",
@@ -119,19 +119,20 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                     dashboardBody(
                                       
                                       tabItems(
-                                        tabItem(tabName = "iaa",
-                                                fluidRow(column(10, offset = 0.5,h1("MAPDECK"))),
-                                                br(),
-                                                fluidRow(column(10, offset = 2.5,mapdeckOutput('map_value', width = 1400, height = 800))),
-                                                br()
-                                        ),
+                                        # tabItem(tabName = "iaa",
+                                        #         fluidRow(column(10, offset = 0.5,h1("MAPDECK"))),
+                                        #         br(),
+                                        #         fluidRow(column(10, offset = 2.5,mapdeckOutput('map_value', width = 1400, height = 800))),
+                                        #         br()
+                                        # ),
                                         tabItem(tabName = "cso",
                                                 fluidRow(column(10, offset = 0.5, h1("VN DASHBOARD"))),
                                                 fluidRow(style="height:50px;",
-                                                         valueBoxOutput("count1",width = 3),
-                                                         valueBoxOutput("count2",width = 3),
-                                                         valueBoxOutput("count3",width = 3),
-                                                         valueBoxOutput("count4",width = 3)
+                                                         valueBoxOutput("count1",width = 2),
+                                                         valueBoxOutput("count2",width = 2),
+                                                         valueBoxOutput("count3",width = 2),
+                                                         valueBoxOutput("count4",width = 2),
+                                                         valueBoxOutput("count5",width = 2)
                                                 ),
                                                 br(),
                                                 br(),
@@ -143,7 +144,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
 
 # Define server logic required
 server <- function(input, output, session) {
-  plan(multicore, workers=10, gc = TRUE)
+  
   addClass(selector = "body", class = "sidebar-collapse")
   
   # Reset Button
@@ -237,10 +238,10 @@ server <- function(input, output, session) {
       hc14 <- "-"
     }
     else{
-      hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 2)
+      hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 1)
     }
     valueBox(paste0(hc14), "Diện tích (km2)", icon = icon("users"),
-             color = "blue"
+             color = "olive"
     )
   })
   
@@ -250,9 +251,20 @@ server <- function(input, output, session) {
       hc15 <- "-"
     }
     else {
-      hc15 <- round((sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$danso)))*100,digits = 2)
+      hc15 <- round(sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$area_km)),digits = 0)
     }
-    valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
+    valueBox(paste0(hc15), "Mật độ (người/km2)", icon = icon("circle-user"), color = "blue")
+  })
+  
+  # Value Box 5
+  output$count5 <- renderValueBox({
+    if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
+      hc16 <- "-"
+    }
+    else {
+      hc16 <- round((sum(as.numeric(filt_mai1()$songuoi)) / sum(as.numeric(filt_mai1()$danso)))*100, digits = 2)
+    }
+    valueBox(paste0(hc16), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
   })
   
   
@@ -267,9 +279,9 @@ server <- function(input, output, session) {
     paste(sep = "<br/>",
           "<b>Huyện: </b>",filt_mai1()$NAME_2,
           "<i>Số người</i>",filt_mai1()$songuoi,
-          "<i>Diện tích</i>",filt_mai1()$area_km,
-          "<i>Mật độ</i>",filt_mai1()$songuoi_km,
-          "<i>Tỉ lệ</i>", filt_mai1()$pro.pop)
+          "<i>Diện tích (km2)</i>",round(as.numeric(filt_mai1()$area_km), digits = 1),
+          "<i>Mật độ (người/km2)</i>",round(as.numeric(filt_mai1()$songuoi_km), digits = 0),
+          "<i>Tỉ lệ (%)</i>", round(as.numeric(filt_mai1()$pro.pop), digits = 2))
   })
   
   output$map1 <- renderLeaflet({
@@ -287,7 +299,7 @@ server <- function(input, output, session) {
   
   observeEvent(filt_mai1(),{
     # pal1 <- mappalette()
-    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
+    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$pro.pop, alpha = TRUE)
     
     # single-threaded
     # leafletProxy("map1", data = filt_mai1()) %>%
@@ -319,8 +331,8 @@ server <- function(input, output, session) {
                  shadowRectOptions = list(color = "#000000", weight = 1, clickable = TRUE,
                                           opacity = 0, fillOpacity = 0), strings = list(hideText = "Hide MiniMap", showText = "Show MiniMap"),
                  tiles = (providers$OpenStreetMap), mapOptions = list()) %>%
-      addLegend("bottomright", pal = pal, values = ~filt_mai1()$songuoi_km,
-                title = "Mật độ người/km2",
+      addLegend("bottomright", pal = pal, values = ~filt_mai1()$pro.pop,
+                title = "Tỉ lệ (% người/dân số)",
                 opacity = 1)
     
     # library(doFuture)
@@ -345,13 +357,13 @@ server <- function(input, output, session) {
       session <- session
       subset_imai1 <- subset(imai1, imai1$Ho == ho) 
       if (!nrow(subset_imai1)) return()
-      mapp |>
+      mapp %>%
         addPolygons(stroke = FALSE,
                     smoothFactor = 0,
                     fillOpacity = .4,
                     popup = mappopup2,
                     data = subset_imai1,
-                    color = ~ pal(subset_imai1$songuoi_km)
+                    color = ~ pal(subset_imai1$pro.pop)
         )
       NULL
     }, future.seed=T)
