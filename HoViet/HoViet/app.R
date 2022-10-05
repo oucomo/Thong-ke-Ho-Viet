@@ -193,7 +193,7 @@ server <- function(input, output, session) {
   
   filt_mai1 <- reactive({
     dat %>%
-      filter(
+      dplyr::filter(
         if (input$i2_ho == "Select All") {Ho %in% s2_Ho} else {Ho == input$i2_ho},
         if (input$i2_tinh == "Select All") {NAME_1 %in% s2_Tinh} else {NAME_1 == input$i2_tinh},
         if (input$i2_huyen == "Select All") {NAME_2 %in% s2_Huyen} else {NAME_2 == input$i2_huyen}
@@ -246,7 +246,7 @@ server <- function(input, output, session) {
       hc15 <- "-"
     }
     else {
-      hc15 <- round(sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$area_km)),digits = 0)
+      hc15 <- round(sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$area_km)),digits = 1)
     }
     valueBox(paste0(hc15), "Mật độ (người/km2)", icon = icon("circle-user"), color = "blue")
   })
@@ -275,7 +275,7 @@ server <- function(input, output, session) {
           "<b>Huyện: </b>",filt_mai1()$NAME_2,
           "<i>Số người</i>",filt_mai1()$songuoi,
           "<i>Diện tích (km2)</i>",round(as.numeric(filt_mai1()$area_km), digits = 1),
-          "<i>Mật độ (người/km2)</i>",round(as.numeric(filt_mai1()$songuoi_km), digits = 0),
+          "<i>Mật độ (người/km2)</i>",round(as.numeric(filt_mai1()$songuoi_km), digits = 1),
           "<i>Tỉ lệ (%)</i>", round(as.numeric(filt_mai1()$pro.pop), digits = 2))
   })
   
