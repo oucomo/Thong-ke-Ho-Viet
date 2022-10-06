@@ -198,7 +198,7 @@ server <- function(input, output, session) {
   
   filt_mai1 <- reactive({
     dat %>%
-      filter(
+      dplyr::filter(
         if (input$i2_ho == "Select All") {Ho %in% s2_Ho} else {Ho == input$i2_ho},
         if (input$i2_tinh == "Select All") {NAME_1 %in% s2_Tinh} else {NAME_1 == input$i2_tinh},
         if (input$i2_huyen == "Select All") {NAME_2 %in% s2_Huyen} else {NAME_2 == input$i2_huyen}

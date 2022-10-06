@@ -272,8 +272,11 @@ server <- function(input, output, session) {
   #Popup
   mappopup <- reactive ({
     paste(sep = "<br/>",
+          "<b>Tỉnh: </b>",filt_mai1()$NAME_1,
           "<b>Huyện: </b>",filt_mai1()$NAME_2,
+          "<b>Xã: </b>",filt_mai1()$NAME_3,
           "<i>Số người</i>",filt_mai1()$songuoi,
+          "<i>Dân số</i>",filt_mai1()$danso,
           "<i>Diện tích (km2)</i>",round(as.numeric(filt_mai1()$area_km), digits = 1),
           "<i>Mật độ (người/km2)</i>",round(as.numeric(filt_mai1()$songuoi_km), digits = 1),
           "<i>Tỉ lệ (%)</i>", round(as.numeric(filt_mai1()$pro.pop), digits = 2))
