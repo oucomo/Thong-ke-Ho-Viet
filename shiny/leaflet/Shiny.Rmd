@@ -246,7 +246,7 @@ library(leaflet)
 #   group_by(NAME_1, NAME_2, Ho) %>%
 #   mutate(pro.huyen=(sum(songuoi)/sum(danso))*100)
 
-dat <- dat_sff %>% st_as_sf(crs = 4326) %>% sf::st_transform('+proj=longlat +datum=WGS84')
+dat <- dat_sff %>% st_as_sf(crs = 4326)
 
 # dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>% 
 #   st_centroid() %>% 
@@ -280,7 +280,7 @@ ho10 <- dat %>%
 dat <- dat %>% 
   filter(Ho %in% ho$Ho)
 
-dat1 <- dat %>% filter(Ho %in% c("Dương", "Khúc", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
+dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
 
 dat10 <- dat %>% 
   filter(Ho %in% ho10$Ho)
