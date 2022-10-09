@@ -233,32 +233,32 @@ saveRDS(tran, file = "D:/Viet/Thong-ke-Ho-Viet/data/tran.rds")
 
 ```{r}
 library(leaflet)
-dat_sff <- dat_sff %>%
-  group_by(Ho) %>%
-  mutate(pro.ho=(sum(songuoi)/sum(danso))*100)
+# dat_sff <- dat_sff %>%
+#   group_by(Ho) %>%
+#   mutate(pro.ho=(sum(songuoi)/sum(danso))*100)
+# 
+# dat_sff <- dat_sff %>%
+#   group_by(NAME_1, Ho) %>%
+#   mutate(pro.tinh=(sum(songuoi)/sum(danso))*100)
+# 
+# dat_sff <- dat_sff %>%
+#   group_by(NAME_1, NAME_2, Ho) %>%
+#   mutate(pro.huyen=(sum(songuoi)/sum(danso))*100)
 
-dat_sff <- dat_sff %>%
-  group_by(NAME_1, Ho) %>%
-  mutate(pro.tinh=(sum(songuoi)/sum(danso))*100)
+dat <- dat_sff %>% st_as_sf(crs = 4326)
 
-dat_sff <- dat_sff %>%
-  group_by(NAME_1, NAME_2, Ho) %>%
-  mutate(pro.huyen=(sum(songuoi)/sum(danso))*100)
-
-dat_sff <- dat_sff %>% st_as_sf(crs = 4326)
-
-dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>% 
-  st_centroid() %>% 
-  # this is the crs from d, which has no EPSG code:
-  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
-  # since you want the centroids in a second geometry col:
-  st_geometry()
-
-dat <- dat_sff %>%
-  mutate(x = map(centroid,1),
-         y = map(centroid,2),
-         x = as.numeric(x),
-         y = as.numeric(y))
+# dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>% 
+#   st_centroid() %>% 
+#   # this is the crs from d, which has no EPSG code:
+#   st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+#   # since you want the centroids in a second geometry col:
+#   st_geometry()
+# 
+# dat <- dat_sff %>%
+#   mutate(x = map(centroid,1),
+#          y = map(centroid,2),
+#          x = as.numeric(x),
+#          y = as.numeric(y))
 
 ho <- dat %>% 
   st_drop_geometry() %>% 
@@ -279,7 +279,7 @@ ho10 <- dat %>%
 dat <- dat %>% 
   filter(Ho %in% ho$Ho)
 
-dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
+dat1 <- dat %>% filter(Ho %in% c("Dương", "Khúc", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
 
 dat10 <- dat %>% 
   filter(Ho %in% ho10$Ho)
