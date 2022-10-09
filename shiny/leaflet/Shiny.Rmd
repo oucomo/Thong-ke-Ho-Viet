@@ -279,7 +279,7 @@ ho10 <- dat %>%
 dat <- dat %>% 
   filter(Ho %in% ho$Ho)
 
-dat1 <- dat %>% filter(Ho %in% c("Dương", "Khúc", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
+dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
 
 dat10 <- dat %>% 
   filter(Ho %in% ho10$Ho)
