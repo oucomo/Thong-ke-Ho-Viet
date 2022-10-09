@@ -247,7 +247,7 @@ library(leaflet)
 #   mutate(pro.huyen=(sum(songuoi)/sum(danso))*100)
 
 dat <- dat_sff %>% st_as_sf(crs = 4326)
-dat <- sf::st_simplify(dat)
+# dat <- sf::st_simplify(dat)
 
 # dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>% 
 #   st_centroid() %>% 
