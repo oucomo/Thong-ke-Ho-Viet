@@ -297,14 +297,14 @@ server <- function(input, output, session) {
   
   observe({
     # pal1 <- mappalette()
-    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
+    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$pro.pop, alpha = TRUE)
     
     leafletProxy("map1", data = filt_mai1()) %>%
       addPolygons(stroke = FALSE,
                   smoothFactor = 0,
                   fillOpacity = .4,
                   popup = mappopup(),
-                  color = ~ pal(filt_mai1()$songuoi_km)
+                  color = ~ pal(filt_mai1()$pro.pop)
       ) %>%
       addMiniMap(position = "bottomleft", width = 150, height = 150,
                  collapsedWidth = 19, collapsedHeight = 19, zoomLevelOffset = -5,
@@ -314,8 +314,8 @@ server <- function(input, output, session) {
                  shadowRectOptions = list(color = "#000000", weight = 1, clickable = TRUE,
                                           opacity = 0, fillOpacity = 0), strings = list(hideText = "Hide MiniMap", showText = "Show MiniMap"),
                  tiles = (providers$OpenStreetMap), mapOptions = list()) %>%
-      addLegend("bottomright", pal = pal, values = ~filt_mai1()$songuoi_km,
-                title = "Mật độ (người/km2)",
+      addLegend("bottomright", pal = pal, values = ~filt_mai1()$pro.pop,
+                title = "Tỉ lệ (% người/dân số)",
                 opacity = 1)
   })
   # 
