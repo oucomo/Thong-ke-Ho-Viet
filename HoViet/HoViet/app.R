@@ -35,6 +35,7 @@ mapdeck(token = key)
 
 dat <- readRDS("dat1.rds")
 # dat <- sf::st_simplify(dat)
+dat <- rmapshaper::ms_simplify(dat, keep = 0.02)
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -301,8 +302,8 @@ server <- function(input, output, session) {
     
     leafletProxy("map1", data = filt_mai1()) %>%
       addPolygons(stroke = FALSE,
-                  smoothFactor = 0,
-                  fillOpacity = .4,
+                  smoothFactor = 0.2,
+                  fillOpacity = .75,
                   popup = mappopup(),
                   color = ~ pal(filt_mai1()$pro.pop)
       ) %>%
