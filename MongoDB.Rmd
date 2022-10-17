@@ -1,0 +1,60 @@
+---
+title: "MongoDB"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+#library(rmarkdown)
+#library(knitr)
+library(markdown)
+library(stringr)
+library(forcats)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+#library(flextable)
+library(huxtable)
+library(data.table)
+library(lubridate)
+library(stringi)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+#library(dlookr)
+#library(flextable)
+library(haven)
+library(raster)
+library(rgdal)
+library(viridis)
+library(sf)
+library(mongolite)
+library(jsonlite)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+getData<-raster::getData
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+# Load data
+
+```{r load data}
+#load("data/hoviet.RData")
+dat1 <- readRDS("data/dat1.rds")
+mng_conn <- mongo(collection = "duhongduc",db="dat")
+```
+
+
