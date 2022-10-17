@@ -120,7 +120,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Côn|Công|công|CÔNG") == TRUE, "
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Cu|CU|cu|Cú|Cú|Cù|CÙ|cù|Cù|CÙ|Cũ|cũ|CŨ") == TRUE, "Cù", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Cứ|cứ|Cứ|CỨ|cứ") == TRUE, "Cứ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Cụt|Cụt|cụt|CỤT") == TRUE, "Cụt", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đàm|Đàm|ĐÀM|Đàm|Đàm|đàm|Dam|DAM|dam|Dám|Dàm|dàm|Đam||đam|ĐAM|Đám|Đám|Đàm|ĐÀM|Ðàm|Đamg|") == TRUE, "Đàm", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "đàm|Đàm|ĐÀM|Đàm|Đàm|đàm|Dam|DAM|dam|Dám|Dàm|dàm|Đam|đam|ĐAM|Đám|Đám|Đàm|ĐÀM|Ðàm|Đam") == TRUE, "Đàm", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Đăng|đặng|Đặng|Đặng|ĐẶNG|dặng|Dặng|Đặnh|đặng|ĐặNg|ĐẶNG|Đạng|Đậng|Đặng|Ðặng|Đặnh|Đănhj|Đaặng|Đaặng|Đăặng|ĐĂẶNG|đăặng|Đăbg|Đặbg|Đăbgj|Đaengj|Đặg|Đăgj|Đămg|đămg|Đặmg|Đămgj|Đawng|Đawngi|Đawngj") == TRUE, "Đặng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "danh|Danh|DANH|Damh|damh") == TRUE, "Danh", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "đào" | data_ho$Ho == "Đào" | data_ho$Ho == "Đào" | data_ho$Ho == "ĐÀO" | data_ho$Ho == "Dào" | data_ho$Ho == "Đaò" | data_ho$Ho == "đào" | data_ho$Ho =="ĐàO" | data_ho$Ho == "ĐÀo" | data_ho$Ho == "ĐÀO" | data_ho$Ho == "Đoà" | data_ho$Ho == "Đòa"| data_ho$Ho=="Đaào"| data_ho$Ho=="Đaò"| data_ho$Ho=="đaò"| data_ho$Ho=="ĐAÒ"| data_ho$Ho=="Đào" | data_ho$Ho=="Đàơ" | data_ho$Ho=="Đâo" | data_ho$Ho=="Đâò" | data_ho$Ho=="Dđào" | data_ho$Ho=="DĐÀO" | data_ho$Ho=="DĐÀO"| data_ho$Ho=="DĐào"), "Đào", data_ho$Ho)
@@ -152,9 +152,9 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hâu|HÂU|Hâù|HâỪ|Hâừ|Hầu
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "hồ|Hồ̀|HỒ|hồ|Hồ|Hồ|HỒ|Hoồ|hoồ|HOỒ|HoỒ|Hoồ|Hôồ|Hôồ") == TRUE, "Hồ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hờ|hờ|HỜ|Hờ|hờ") == TRUE, "Hờ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hoang|hoàng|hoàng|Hoàng|Hoàng|HOÀNG|Hoàng|HOÀNG|Hòang|Hoáng|HOàng|hòang|HÒANG|HÒANG|Hoành|HOÀNH|Haòng|Haongf|Hoaàng|Hoaàng|hoaàng|HOAÀNG|Hoaangf|Hoabgf|Hoàg|Hòag|Hoamg|Hoàmg|Hoamgf|Hoàng|Hoāng|Hoầng|Hoằng|Hoằng|HOẰNG|hoằng|Hòang|Hòàng|Hôàng|Hoanhg|Hoànng|Hoanngf|Hoanvf|Honàg|Hooàng|Hoòng|Hpàng|Hpangf") == TRUE, "Hoàng", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "HUNG|Húng|Húng|Hùng|hùng|HÙNG|hùng|Hùng|Hủng|Hủng|Hunh|Hùnh|Hùnh|Hunhf") == TRUE, "Hùng", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "HUNG" | data_ho$Ho == "Húng" | data_ho$Ho == "Húng" | data_ho$Ho == "Hùng" | data_ho$Ho == "hùng" | data_ho$Ho == "HÙNG" | data_ho$Ho == "hùng" | data_ho$Ho == "Hùng" | data_ho$Ho == "Hủng" | data_ho$Ho == "Hủng" | data_ho$Ho == "Hunh" | data_ho$Ho == "Hùnh" | data_ho$Ho == "Hùnh" | data_ho$Ho == "Hunhf"), "Hùng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Huynh|huỳnh|Huỳnh|Huỳnh|HuỲNH|HUỲNH|Hùynh|huỳnh|Huỳnh|HUỲNH|Huuỳnh|Huuỳnh|Huỳn|Huỳng|huynh|HUYNH|Huýnh|Huỳnh|Huỹnh|Huỷnh|hùynh|Hùynh|HÙYNH|Huyỳnh|Huunh|Huùnh|Hùunh|Huunhf|HUUỲNH|huuỳnh|Hùuynh|Hùuỳnh|Huyh|Huỳh|Hùyh|huyhn|Huyinh|Huymh|Huỳmh|Hùymh|Huymhf|Huyn|HUỲN|huỳn|Huỳn|HUỲNG|huỳng|Huỳng|Hùyng|Huyngf|Huyǹh|HUYÑH|Huýnh|HUÝNH|huýnh|Huỳnh|HUỸNH|huỹnh|huỷnh|HUỶNH|Huỷnh|Huỵnh|HUỴNH|huỵnh|Húynh|HÙYNH|Hùỳnh|Hūynh|Hủynh|Huynnh|Huỳuh|Huyunh|Huỳunh|HUYỲNH|Huyỳnh|Hynh|Hỳnh|HỲNH|Hyun|Hyunh|Hyùnh|Hỳunh|Hyunhf") == TRUE, "Huỳnh", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hua|hua|HUA|Húa|HÚA|Hưá|hưá|Hưá|Hưâ|Hứa|hứa|HỨA|Hứa|HỨA|hứa|Hừa|Hữa|Hữa|HỮA|hữa|Hửa|hửa") == TRUE, "Hứa", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Húa|HÚA|Hưá|hưá|Hưá|Hưâ|Hứa|hứa|HỨA|Hứa|HỨA|hứa|Hừa|Hữa|Hữa|HỮA|hữa|Hửa|hửa") == TRUE, "Hứa", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Hỹ|hỹ|Hỷ|HỶ|hỷ|Hỷ|HỶ|hỷ") == TRUE, "Hỷ", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "K" | data_ho$Ho == "k"), "K", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "K'" | data_ho$Ho == "k'" | data_ho$Ho == "K''" | data_ho$Ho == "K‘" | data_ho$Ho == "K’" | data_ho$Ho == "k’"), "K'", data_ho$Ho)
@@ -170,15 +170,14 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Khổn|khổn|Khống|khống|Khỗ
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Khuấ|Khuat|Khuát|Khuât|Khuất|KHUẤT|khuất|Khuất|khuất|Khuẩt|Khuấy") == TRUE, "Khuất", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Khươmg|Khuong|KHUONG|khuong|Khuông|khuông|Khuơng|Khưong|Khương|KHƯƠNG|khương|KHương|Khượng") == TRUE, "Khương", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Khuu|khuu|KHUU|Khuư|Khủu|Khưu|khưu|KHƯU|Khứu|Khứu|KHỨU|khứu|Khữu|Khựu") == TRUE, "Khưu", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kiem|Kiêm|kiêm|KIÊM|Kiếm|Kiếm|Kiềm|Kiểm|Kien|kien|Kiên|kiên|KIÊN|Kiến|kiến|Kiến|KIẾN|kiến|Kiền|Kiện|") == TRUE, "Kiên", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kieu|kiêu|KIÊU|Kiêù|Kiều|KiềU|kiều|KIều|Kiễu|Kiểu|KIỂU|kiểu|Kiệu|") == TRUE, "Kiều", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kiem|Kiêm|kiêm|KIÊM|Kiếm|Kiếm|Kiềm|Kiểm|Kien|kien|Kiên|kiên|KIÊN|Kiến|kiến|Kiến|KIẾN|kiến|Kiền|Kiện") == TRUE, "Kiên", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kieu|kiêu|KIÊU|Kiêù|Kiều|KiềU|kiều|KIều|Kiễu|Kiểu|KIỂU|kiểu|Kiệu") == TRUE, "Kiều", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kim|KIM|kim|KiM|Kím|Kìm|Kìm|Kịm") == TRUE, "Kim", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ko|KO|Kô|KÔ|KƠ|Kơ|Kờ|KỜ") == TRUE, "Kơ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kpa|kpa|KPA|kPa|KPa|Kpa'|Kpá|KPá|KPÁ|Kpă|KPĂ|KPă|kpă|KpĂ|kPă|K'PĂ|K'pă|Kpã|KPã|KPÃ|KpÃ|Kpắ|KPắ|KPẮ|Kpắ|Kpả|Kpah|KPAH|Kpăh|KPĂH|Kpak|Kpan|Kpaw") == TRUE, "Kpă", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kpiih|Kpiuh|Kpuh|Kpui|kpui|Kpuih|KPUIH|kpuih|KPuih|Kpuil|Kpuoh|Kquih") == TRUE, "Kpuih", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kror|KROR|Kros|Ksir|Kso|KSO|KSo|Ksô|KSô|Ksơ|ksơ|K'Sơ|Ksoe|Ksoh|Ksok|KSOK|Ksol|Kson|kson|Ksor|KSOR|KSor|ksor|K'sor|K'SOR|K'Sor|Ksơr|KSƠR|KsƠr|ksơr|KSơr|Ksorh|KSORH|Ksorh'|Ksorr|Ksos|Ksot|Ksr|Ksro|Ksror") == TRUE, "Ksor", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "kiều|Kiều|Kiều|Kiều|KIỀU|Kieu|Kièu|Kiêu|Kiếu|KiỀU|KIỀU|Kiểu") == TRUE, "Kiều", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lac|Lạc|LẠC|Lạc|lạc|LẠc|Lach|") == TRUE, "Lạc", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lac|Lạc|LẠC|Lạc|lạc|LẠc|Lach") == TRUE, "Lạc", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lại|Lại|LẠI|Lại|Lại|Laị|LẠI|Lah|Laị|Ląi|Lại|lại|LẠi|Lạị|Laij|Lain") == TRUE, "Lại", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lam|lâm|Lâm|LÂM|LÂm|lam|LAM|Lâm|Lăm|LĂM|lăm|Lấm|Lầm|lầm|lầm|Lầm|LẦM|Laâm|laâm|LAÂM|Ĺâm") == TRUE, "Lâm", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lang|lang|LANG") == TRUE, "Lang", data_ho$Ho)
@@ -215,8 +214,8 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "NÈAL|Nean|Neang|NEANG|neang|Neáng
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ngan|Ngân|NGÂN|ngân") == TRUE, "Ngân", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nghiê|Nghiem|NGHIEM|Nghiêm|NGHIÊM|nghiêm|NGHIêM|Nghiễm|Nghiẻm|Nghiểm|Nghiệm|Nghiệm|nghiệm|Ngiem|Ngiêm|ngiêm") == TRUE, "Nghiêm", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ngo|ngô|Ngô|NGÔ|NGô|ngo|NGO|Ngó|Ngò|Ngô|Ngõ|ngõ|Ngố|Ngồ|Ngỗ|ngỗ|NGỖ|Ngỏ|Ngơ|Ngổ") == TRUE, "Ngô", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguễn|Nguyễ|Nhuyễn|nguyen|Nguyen|NGUYEN|Nguyên|Nguyến|Nguyền|nguyễn|nguyễn|Nguyễn|Nguyễn|NguyễN|NguyỄn|NGUYỄN|NGUYỄN|Nguyển|Nguỹen|Ngyễn|Nguyê|Nguyêễn|nguyên|NGUYÊN|Nguyêñ|Nguyễn|nguyển|NGUYỂN|Nguyện|Nguỹên|Nguyênc|Nguyễnthanh|NguyễnThị|Ncuyên|Nghuyen|Nghuyễn|Nghyễn|Ngiyeenx|Ngiyen|ngiyên|Ngiyên|Ngiyễn|Ngiyênx|Nguen|Nguên|nguễn|Nguễn|NGUỄN|Nguển|Nguễyn|Nguhên|Nguien|Ngutên|Nguueenx|Nguuen|Nguuên|Nguuễn|Nguuễn|Nguye|nguyễ|NGUYỄ|Nguyể|Nguyeễn|NGUYÊỄN|Nguyem|NguyEn|Nguyĕn|nguyến|NGUYẾN|NGUYẾN|nguyền|NGUYỀN|Nguyễn|NGUYỄn|Nguyën|Nguyẽn|Nguyẽn|Nguyēn|nguyện|NGUYỆN|nguỹen|NGUỸEN|Nguỷen|Ngũyên|Ngưyễn|Nguyi|Nguyn|Nguỹn|Nguyôn|Nguyyễn|Ngyen|Ngyên|ngyễn|NGYỄN|Ngyuen|Ngyuên|Ngyuễn|Nfuyeenx|Nfuyen|Nfuyên|Nfuyễn|Ngguyen|Ngguyên|Ngguyễn|Nghuyễ|Nghuyên|NGHUYỄN|nghuyễn|Nghuyển|Nghyen|NGHYỄN|Ngiễn|Ngiuen|Ngiuên|Ngiuễn|Ngiuyên|Ngiuyễn|Ngiyê|Ngiyễ|Ngiyeen|ngiyeenx|NGIYEENX|Ngiyeex|Ngiyeexn|Ngiyem|ngiyen|NGIYEN|NGIYÊN|Ngiyến|Ngiyễn|NGIYỄN|ngiyễn|ngiyễn|Ngiyển|NGIYÊNX|Ngiyêxn|Ngiyôn|Ngjuyên|Ngjyeenx|Ngjyên|ngjyên|Ngjyễn|Ngjyênx|Ngjyêxn|Nguễ|Nguêcn|Nguễm|nguen|nguên|NGUÊÑ|Nguẽn|Nguến|Nguền|Nguẻn|nguển|Ngueyẽn|NGUEYẼN|Ngueyenx|ngueyexn|Nguêyn|Ngugeenx|Ngugen|Ngugễn|Ngugễn|ngugênx|Nguheenx|nguhên|Nguiễn|Nguiyễn|NGUIYỄN|Nguueen|Nguueexn|nguuen|nguuên|NGUUÊN|nguuễn|NGUUỄN|Nguuêxn|Nguuyen|Nguuyên|Nguuyễn|Nguuyễn|NGUUYỄN|nguye|NGUYE|nguyê|NGUYÊ|Nguyế|Nguyề|NGUYÊ|Nguỹe|nguyêbx|NGUYÊCN|NGUYEỄN|nguyeễn|nguyêễn|NGUYEENX|NGUYEEXÑ|NGUYÊÑ|Nguyěn|nguyēn|NGUYẼN|nguyẽn|Nguyễn|Nguyẻn|nguyển|NGUYỂN|NGUYỆN|Nguýen|Nguỳen|nguỹên|NGUỸÊN|Nguỹên|nguỹên|Nguỹễn|nguỷen|Nguỷên|Nguỵen|Nguỵễn|Ngùyễn|Ngūyên|Ngũyen|ngũyên|NGŨYÊN|Ngủyen|Ngủyên|Ngủyẽn|Ngủyễn|Ngưyen|Ngưyên|ngưyên|Ngưyễn|Ngưỹen|Ngụyễn|Ngữyen|Ñguyên|nguyeu|nguyexn|NGUYEXN|nguỹn|Nguỷn|NGUYNỄN|Nguỳnh|Nguyo|nguyôn|Nguyren|Nguyrễn|Nguyrn|Nguyrnx|Nguytễn|Nguyuễn|Nguywenx|Nguywn|Nguywwnx|Nguyyen|Nguyyên|Nguyyẽn|NGUYYỄN|Nguyyenx|Ngyễ|Ngyêm|Ngyễm|ngyen|NGYÊN|ngyên|ngyêñ|Ngyẽn|Ngyến|Ngyền|Ngyễn|Ngyển|Ngyueenx|Ngyueexn|ngyuên|NGYUÊN|Ngyuễn|NGYUỄN|ngyuễn|Ngyuển|Ngyuyen|Ngyuyên|Ngyuyễn|Ngyyeenx|Ngyyen|Ngyyên|ngyyên|Ngyyễn|Ngyyễn|Nhuễn|Nhuyễ|Nhuyen|NHUYEN|Nhuyên|Nhuyến|NHUYỄN|Nhuyễn|nhuyễn|Nhuyển|Nhuyện|Nhuỹen|Nhuyênc|Nhyễn|Njguyễn|Nnguyeenx|Nquyễn|Nugyễn|Nuyễ|Nuyen|Nuyên|NUYÊN|Nuyến|Nuyền|Nuyễn|nuyễn|NUYỄN|Nuyễn|Nuyển|NUYỂN|Nuỹen|Nvguyễn|Nvuyeen|Nvuyeenx|Nvuyeexn|Nvuyen|Nvuyên|nvuyên|Nvuyễn|Nvuyễn|Nvuyênx|nvuyênx|Nyuen|Nyuên|Nyuễn|Nyuyen|Nyuyên|Nyuyễn") == TRUE, "Nguyễn", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguy|NGUY|nguy|Nguỵ|NGUỴ|nguỵ|Nguỵ|Ngùy|Ngũy|Ngụy|NGỤY|Ngụy|ngụy|NGỤY") == TRUE, "Ngụy", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguễn|Nguyễ|Nhuyễn|nguyen|Nguyen|NGUYEN|Nguyên|Nguyến|Nguyền|nguyễn|nguyễn|Nguyễn|Nguyễn|NguyễN|NguyỄn|NGUYỄN|NGUYỄN|Nguyển|Nguỹen|Ngyễn|Nguyê|Nguyêễn|nguyên|NGUYÊN|Nguyêñ|Nguyễn|nguyển|NGUYỂN|Nguyện|Nguỹên|Nguyênc|Nguyễnthanh|NguyễnThị|Ncuyên|Nghuyen|Nghuyễn|Nghyễn|Ngiyeenx|Ngiyen|ngiyên|Ngiyên|Ngiyễn|Ngiyênx|Nguen|Nguên|nguễn|Nguễn|NGUỄN|Nguển|Nguễyn|Nguhên|Nguien|Ngutên|Nguueenx|Nguuen|Nguuên|Nguuễn|Nguuễn|Nguye|nguyễ|NGUYỄ|Nguyể|Nguyeễn|NGUYÊỄN|Nguyem|NguyEn|Nguyĕn|nguyến|NGUYẾN|NGUYẾN|nguyền|NGUYỀN|Nguyễn|NGUYỄn|Nguyën|Nguyẽn|Nguyẽn|Nguyēn|nguyện|NGUYỆN|nguỹen|NGUỸEN|Nguỷen|Ngũyên|Ngưyễn|Nguyi|Nguyn|Nguỹn|Nguyôn|Nguyyễn|Ngyen|Ngyên|ngyễn|NGYỄN|Ngyuen|Ngyuên|Ngyuễn|Nfuyeenx|Nfuyen|Nfuyên|Nfuyễn|Ngguyen|Ngguyên|Ngguyễn|Nghuyễ|Nghuyên|NGHUYỄN|nghuyễn|Nghuyển|Nghyen|NGHYỄN|Ngiễn|Ngiuen|Ngiuên|Ngiuễn|Ngiuyên|Ngiuyễn|Ngiyê|Ngiyễ|Ngiyeen|ngiyeenx|NGIYEENX|Ngiyeex|Ngiyeexn|Ngiyem|ngiyen|NGIYEN|NGIYÊN|Ngiyến|Ngiyễn|NGIYỄN|ngiyễn|ngiyễn|Ngiyển|NGIYÊNX|Ngiyêxn|Ngiyôn|Ngjuyên|Ngjyeenx|Ngjyên|ngjyên|Ngjyễn|Ngjyênx|Ngjyêxn|Nguễ|Nguêcn|Nguễm|nguen|nguên|NGUÊÑ|Nguẽn|Nguến|Nguền|Nguẻn|nguển|Ngueyẽn|NGUEYẼN|Ngueyenx|ngueyexn|Nguêyn|Ngugeenx|Ngugen|Ngugễn|Ngugễn|ngugênx|Nguheenx|nguhên|Nguiễn|Nguiyễn|NGUIYỄN|Nguueen|Nguueexn|nguuen|nguuên|NGUUÊN|nguuễn|NGUUỄN|Nguuêxn|Nguuyen|Nguuyên|Nguuyễn|Nguuyễn|NGUUYỄN|nguye|NGUYE|nguyê|NGUYÊ|Nguyế|Nguyề|NGUYÊ|Nguỹe|nguyêbx|NGUYÊCN|NGUYEỄN|nguyeễn|nguyêễn|NGUYEENX|NGUYEEXÑ|NGUYÊÑ|Nguyěn|nguyēn|NGUYẼN|nguyẽn|Nguyễn|Nguyẻn|nguyển|NGUYỂN|NGUYỆN|Nguýen|Nguỳen|nguỹên|NGUỸÊN|Nguỹên|nguỹên|Nguỹễn|nguỷen|Nguỷên|Nguỵen|Nguỵễn|Ngùyễn|Ngūyên|Ngũyen|ngũyên|NGŨYÊN|Ngủyen|Ngủyên|Ngủyẽn|Ngủyễn|Ngưyen|Ngưyên|ngưyên|Ngưyễn|Ngưỹen|Ngữyen|Ñguyên|nguyeu|nguyexn|NGUYEXN|nguỹn|Nguỷn|NGUYNỄN|Nguỳnh|Nguyo|nguyôn|Nguyren|Nguyrễn|Nguyrn|Nguyrnx|Nguytễn|Nguyuễn|Nguywenx|Nguywn|Nguywwnx|Nguyyen|Nguyyên|Nguyyẽn|NGUYYỄN|Nguyyenx|Ngyễ|Ngyêm|Ngyễm|ngyen|NGYÊN|ngyên|ngyêñ|Ngyẽn|Ngyến|Ngyền|Ngyễn|Ngyển|Ngyueenx|Ngyueexn|ngyuên|NGYUÊN|Ngyuễn|NGYUỄN|ngyuễn|Ngyuển|Ngyuyen|Ngyuyên|Ngyuyễn|Ngyyeenx|Ngyyen|Ngyyên|ngyyên|Ngyyễn|Ngyyễn|Nhuễn|Nhuyễ|Nhuyen|NHUYEN|Nhuyên|Nhuyến|NHUYỄN|Nhuyễn|nhuyễn|Nhuyển|Nhuyện|Nhuỹen|Nhuyênc|Nhyễn|Njguyễn|Nnguyeenx|Nquyễn|Nugyễn|Nuyễ|Nuyen|Nuyên|NUYÊN|Nuyến|Nuyền|Nuyễn|nuyễn|NUYỄN|Nuyễn|Nuyển|NUYỂN|Nuỹen|Nvguyễn|Nvuyeen|Nvuyeenx|Nvuyeexn|Nvuyen|Nvuyên|nvuyên|Nvuyễn|Nvuyễn|Nvuyênx|nvuyênx|Nyuen|Nyuên|Nyuễn|Nyuyen|Nyuyên|Nyuyễn") == TRUE, "Nguyễn", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nguỵ|NGUỴ|nguỵ|Nguỵ|Ngụy|NGỤY|Ngụy|ngụy|NGỤY") == TRUE, "Ngụy", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nham|Nhâm|NHÂM|nhâm|Nhăm|Nhầm|NHẦM|Nhằm|Nhằm|Nhạm|Nhậm") == TRUE, "Nhâm", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "Nhan" | data_ho$Ho == "NHAN" | data_ho$Ho == "nhan"), "Nhan", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Nhũ|NHŨ|nhũ|Nhủ|Nhứ|Nhừ|Nhữ|NHỮ|Nhữ|nhữ|nhữ|NHỮ|Nhử|NHỬ|Nhự") == TRUE, "Nhữ", data_ho$Ho)
@@ -229,7 +228,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Phi|PHI|phi") == TRUE, "Phi", data_
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Phí|PHÍ|phí|Phí|PHÍ|phí|Phì|Phỉ|Phị") == TRUE, "Phí", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Pho|Phó|phó|PHÓ|Phó|Phò") == TRUE, "Phó", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "Phù" | data_ho$Ho == "PHÙ" | data_ho$Ho == "phù" | data_ho$Ho == "Phù"), "Phù", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phùng|Phùng|Phùng|PHÙNG|Phùn|Phung|Phùng|Phủng|Phúng|phùng|Phùng|PHÙNG|Phừng|Phùmg|Phumgf|Phùng|PhùNg|PHùng|Phūng|Phũng|Phủng|phừng||Phừng|Phunh|Phunhf|Phuùng") == TRUE, "Phùng", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "phùng|Phùng|Phùng|PHÙNG|Phùn|Phung|Phùng|Phủng|Phúng|phùng|Phùng|PHÙNG|Phừng|Phùmg|Phumgf|Phùng|PhùNg|PHùng|Phūng|Phũng|Phủng|phừng|Phừng|Phunh|Phunhf|Phuùng") == TRUE, "Phùng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Phươn|Phuong|phuong|Phuông|Phưong|Phương|PHƯƠNG|phương|Phường|Phưởng|Phượng|phượng|Phượng|Phươngthanh") == TRUE, "Phương", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Pinang|Pinăng") == TRUE, "Pinăng", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "Quan" | data_ho$Ho == "quan" | data_ho$Ho == "QUAN"), "Quan", data_ho$Ho)
@@ -277,8 +276,8 @@ data_ho$Ho <- ifelse((data_ho$Ho == "Tô" | data_ho$Ho == "TÔ" | data_ho$Ho == 
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tôn|Tôn|TÔN|Ton") == TRUE, "Tôn", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tòng|Tòng|tòng|Tòng|TÒNG") == TRUE, "Tòng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "tống|Tống|TỐNG|Tống|Tống|TỐNG|tống|Tôống") == TRUE, "Tống", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Trà|TRÀ|trà|Trà|TRÀ|TRà") == TRUE, "Trà", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Tran|Tràn|trần|trần|Trần|Trần|TRẦN|Trầ|Trằn|trân|Trân|TRÂN|Trần|TrầN|TrẦn|TRần|TRầN|TRẦN|tran|TRan|TRAN|Trán|Trán|tràn|Tràn|TRÀN|Trăn|trấn|Trấn|TRẤN|Trần|trẫn|Trẫn|trẩn|Trẩn|Trận|TRẦ|Trầ|Traafn|Traan|Traàn|Traần|TRAẦN|traần|Traần|Tràần|Trâần|TRÂẦN|Trâần|trâần|Traanf|Trầm|TRẦM|trầm|TRẦm|TRẦM|Trâǹ|Trầ̀n") == TRUE, "Trần", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "Trà" | data_ho$Ho == "TRÀ" | data_ho$Ho == "trà" | data_ho$Ho == "Trà" | data_ho$Ho == "TRA" | data_ho$Ho == "TRà"), "Trà", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Trâ|trâ|trầ|TRẦ|Trầ|Traafn|Tran|Tràn|trần|trần|Trần|Trần|TRẦN|Trầ|Trằn|trân|Trân|TRÂN|Trần|TrầN|TrẦn|TRần|TRầN|TRẦN|tran|TRan|TRAN|tràn|Tràn|TRÀN|trấn|Trấn|TRẤN|Trần|trẫn|Trẫn|trẩn|Trẩn|Trận|TRẦ|Trầ|Traafn|Traan|Traàn|Traần|TRAẦN|traần|Traần|Tràần|Trâần|TRÂẦN|Trâần|trâần|Traanf|Trầm|TRẦM|trầm|TRẦm|TRẦM|Trâǹ|Trầ̀n") == TRUE, "Trần", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "triệu|Triệu|Triệu|TRIỆU|Trieu|Triêu|Triệu|Triêụ|triệu|TRIỆU|Triẹu|Triệu|TRiệu|Triệ|TRIỆ|TRIÊK|Triêk|triẹu|TRIẸU|Triệu|Trịêu|Trịệu") == TRUE, "Triệu", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Trinh|trinh|TRINH|TRINh|TRinh") == TRUE, "Trinh", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Trình|TRÌNH|trình|Trình|TRÌNH|TRìNH") == TRUE, "Trình", data_ho$Ho)
@@ -295,7 +294,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vi|Vi|VI|ViThị|ViVăn|vy|Vy|VY|Vy
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vì|Vì|VÌ") == TRUE, "Vì", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vòng|vòng|VÒNG|Vòng|VòNg|Voòng|VOÒNG|voòng|VoÒng|Voòng|Vòong|vòong|VÒONG|Vòong") == TRUE, "Vòng", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "Vu" | data_ho$Ho == "vu" | data_ho$Ho == "VU"), "Vu", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "võ|Võ|Võ|VÕ|Vỏ|Vỗ|võ|Võ|VÕ|vỏ|Vỏ|VỎ|Vỡ") == TRUE, "Võ", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vo|vo|VO|võ|Võ|Võ|VÕ|Vỏ|Vỗ|võ|Võ|VÕ|vỏ|Vỏ|VỎ|Vỡ") == TRUE, "Võ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vũ|Vũ|Vũ|VŨ|vũ|Vũ|Vủ|VŨ|Vū|vủ|VỦ|Vữ|VuThi|Vuthi|Vuu|VUU|vuu|Vuũ|Vuũ") == TRUE, "Vũ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vừ|Vừ|Vừ|Vừ|VỪ") == TRUE, "Vừ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vuong|Vương|VƯƠNG|vương|Vương|Vươn|vuong|Vuông|Vuơng|Vưong|Vương|Vươg|Vươmg|VUONG|Vuỏng|vuơng|Vương|Vuương") == TRUE, "Vương", data_ho$Ho)
@@ -332,13 +331,13 @@ data_ho_top10000 <- data_ho_overall %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
 data_ho_top10000 <- head(data_ho_top10000, n=10000)
 library(writexl)
-#write_xlsx(data_ho_top10000, "output/Top 10000 ho.xlsx")
+# write_xlsx(data_ho_top10000, "output/Top 10000 ho.xlsx")
 
 data_ho_top3000 <- data_ho_overall %>%
   arrange(desc(songuoi)) %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
 data_ho_top3000 <- head(data_ho_top3000, n=3000)
-#write_xlsx(data_ho_top3000, "output/Top 3000 ho.xlsx")
+# write_xlsx(data_ho_top3000, "output/Top 3000 ho.xlsx")
 
 data_ho_top1000 <- data_ho_overall %>%
   arrange(desc(songuoi))
@@ -387,7 +386,7 @@ ggplot(data = data_ho_top50, aes(x = reorder(Ho, songuoi, decreasing=F), y =song
   theme(axis.text.y = element_text(size = 7),
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 50 họ có số người cao nhất")
-#ggsave(filename = file.path("figures", "General", "top50_ho.png"), width = 7, height = 5)
+# ggsave(filename = file.path("figures", "General", "top50_ho.png"), width = 7, height = 5)
 ```
 
 ```{r}
@@ -400,7 +399,7 @@ ggplot(data = data_ho_top100, aes(x = reorder(Ho, songuoi, decreasing=F), y =son
   theme(axis.text.y = element_text(size = 7),
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 50-100 họ có số người cao nhất")
-#ggsave(filename = file.path("figures", "General", "top100_ho.png"), width = 7, height = 5)
+# ggsave(filename = file.path("figures", "General", "top100_ho.png"), width = 7, height = 5)
 ```
 
 ```{r}
@@ -413,7 +412,7 @@ ggplot(data = data_ho_top150, aes(x = reorder(Ho, songuoi, decreasing=F), y =son
   theme(axis.text.y = element_text(size = 7),
         panel.grid.major = element_blank()) + coord_flip() +
   ggtitle("Top 100-150 họ có số người cao nhất")
-#ggsave(filename = file.path("figures", "General", "top150_ho.png"), width = 7, height = 5)
+# ggsave(filename = file.path("figures", "General", "top150_ho.png"), width = 7, height = 5)
 ```
 
 ```{r}
