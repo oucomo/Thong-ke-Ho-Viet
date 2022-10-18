@@ -39,7 +39,7 @@ strategy = if (.Platform$OS.type == 'unix') future::multicore else future::multi
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat1.rds")
+dat <- readRDS("dat.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -359,8 +359,8 @@ server <- function(input, output, session) {
       if (!nrow(subset_imai1)) return()
       mapp %>%
         addPolygons(stroke = FALSE,
-                    smoothFactor = 0,
-                    fillOpacity = .4,
+                    smoothFactor = 0.2,
+                    fillOpacity = .5,
                     popup = mappopup2,
                     data = subset_imai1,
                     color = ~ pal(subset_imai1$pro.pop)
