@@ -28,16 +28,18 @@ library(data.table)
 # library(covrpage)
 # library(rhub)
 # library(whoami)
+library(future)
+library(promises)
 strategy = if (.Platform$OS.type == 'unix') future::multicore else future::multisession
-future::plan(strategy = strategy, 
-             workers = parallel::detectCores()) 
+# print(future::availableCores())
+# plan(multisession) 
 
 # devtools::install_version("MASS", "7.3-51.1")
 
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat1.rds")
+dat <- readRDS("dat.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -126,10 +128,11 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                         tabItem(tabName = "cso",
                                                 fluidRow(column(10, offset = 0.5, h1("VN DASHBOARD"))),
                                                 fluidRow(style="height:50px;",
-                                                         valueBoxOutput("count1",width = 3),
-                                                         valueBoxOutput("count2",width = 3),
-                                                         valueBoxOutput("count3",width = 3),
-                                                         valueBoxOutput("count4",width = 3)
+                                                         valueBoxOutput("count1",width = 2),
+                                                         valueBoxOutput("count2",width = 2),
+                                                         valueBoxOutput("count3",width = 2),
+                                                         valueBoxOutput("count4",width = 2),
+                                                         valueBoxOutput("count5",width = 2)
                                                 ),
                                                 br(),
                                                 br(),
@@ -141,7 +144,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
 
 # Define server logic required
 server <- function(input, output, session) {
-  
+  plan(multicore, workers=2, gc = TRUE)
   addClass(selector = "body", class = "sidebar-collapse")
   
   # Reset Button
@@ -235,10 +238,10 @@ server <- function(input, output, session) {
       hc14 <- "-"
     }
     else{
-      hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 2)
+      hc14 <- round(sum(as.numeric(filt_mai1()$area_km)),digits = 1)
     }
     valueBox(paste0(hc14), "Diện tích (km2)", icon = icon("users"),
-             color = "blue"
+             color = "olive"
     )
   })
   
@@ -248,9 +251,20 @@ server <- function(input, output, session) {
       hc15 <- "-"
     }
     else {
-      hc15 <- round((sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$danso)))*100,digits = 2)
+      hc15 <- round(sum(as.numeric(filt_mai1()$songuoi))/sum(as.numeric(filt_mai1()$area_km)),digits = 0)
     }
-    valueBox(paste0(hc15), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
+    valueBox(paste0(hc15), "Mật độ (người/km2)", icon = icon("circle-user"), color = "blue")
+  })
+  
+  # Value Box 5
+  output$count5 <- renderValueBox({
+    if (input$i2_ho == "Select All" & input$i2_tinh == "Select All" & input$i2_huyen == "Select All"){
+      hc16 <- "-"
+    }
+    else {
+      hc16 <- round((sum(as.numeric(filt_mai1()$songuoi)) / sum(as.numeric(filt_mai1()$danso)))*100, digits = 2)
+    }
+    valueBox(paste0(hc16), "Tỉ lệ (%)", icon = icon("circle-user"), color = "yellow")
   })
   
   
@@ -265,9 +279,9 @@ server <- function(input, output, session) {
     paste(sep = "<br/>",
           "<b>Huyện: </b>",filt_mai1()$NAME_2,
           "<i>Số người</i>",filt_mai1()$songuoi,
-          "<i>Diện tích</i>",filt_mai1()$area_km,
-          "<i>Mật độ</i>",filt_mai1()$songuoi_km,
-          "<i>Tỉ lệ</i>", filt_mai1()$pro.pop)
+          "<i>Diện tích (km2)</i>",round(as.numeric(filt_mai1()$area_km), digits = 1),
+          "<i>Mật độ (người/km2)</i>",round(as.numeric(filt_mai1()$songuoi_km), digits = 0),
+          "<i>Tỉ lệ (%)</i>", round(as.numeric(filt_mai1()$pro.pop), digits = 2))
   })
   
   output$map1 <- renderLeaflet({
@@ -283,10 +297,9 @@ server <- function(input, output, session) {
     
   }) # render Leaflet
   
-  
-  observe({
+  observeEvent(filt_mai1(),{
     # pal1 <- mappalette()
-    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$songuoi_km, alpha = TRUE)
+    pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$pro.pop, alpha = TRUE)
     
     # single-threaded
     # leafletProxy("map1", data = filt_mai1()) %>%
@@ -318,27 +331,48 @@ server <- function(input, output, session) {
                  shadowRectOptions = list(color = "#000000", weight = 1, clickable = TRUE,
                                           opacity = 0, fillOpacity = 0), strings = list(hideText = "Hide MiniMap", showText = "Show MiniMap"),
                  tiles = (providers$OpenStreetMap), mapOptions = list()) %>%
-      addLegend("bottomright", pal = pal, values = ~filt_mai1()$songuoi_km,
-                title = "Mật độ người/km2",
+      addLegend("bottomright", pal = pal, values = ~filt_mai1()$pro.pop,
+                title = "Tỉ lệ (% người/dân số)",
                 opacity = 1)
     
-    library(doFuture)
-    registerDoFuture()
-    imai1 <- isolate(filt_mai1())
+    # library(doFuture)
+    # registerDoFuture()
+    # library(future.apply)
+    imai1 <- isolate(filt_mai1()) 
     
-    foreach(ho = filt_mai1()$Ho, .export = c('imai1', 'session')) %dopar% {
-      subset_imai1 <- subset(imai1, imai1$Ho == ho)
-      leafletProxy("map1", session = session) %>%
+    # foreach(ho = filt_mai1()$Ho, .export = c('imai1', 'session')) %dopar% {
+    # for (ho in filt_mai1()$Ho){
+    cat('enter future\n')
+    ._ <- vector('list', length=length(unique(filt_mai1()$Ho)))
+    i <- 1
+    
+    # print(unique(filt_mai1()$Ho)[1:2])
+    # for (ho in unique(filt_mai1()$Ho)){
+    #   # future_lapply(filt_mai1()$Ho, function(ho){
+    #   print(ho)
+    #   . <- future({
+    mapp <- force(leafletProxy("map1", session = session))
+    mappopup2 <- force(mappopup())
+    future.apply::future_lapply(unique(imai1$Ho), function(ho){
+      session <- session
+      subset_imai1 <- subset(imai1, imai1$Ho == ho) 
+      if (!nrow(subset_imai1)) return()
+      mapp %>%
         addPolygons(stroke = FALSE,
-                    smoothFactor = 0,
-                    fillOpacity = .4,
-                    popup = mappopup(),
-                    color = ~ pal(subset_imai1$songuoi_km)
-        ) 
-    }
-    
+                    smoothFactor = 0.2,
+                    fillOpacity = .5,
+                    popup = mappopup2,
+                    data = subset_imai1,
+                    color = ~ pal(subset_imai1$pro.pop)
+        )
+      NULL
+    }, future.seed=T)
+    # i <- i+1
+    # }
+    # browser()
+    cat('Done!\n')
   })
-  # 
+  
   # output$map_value <- renderMapdeck({
   #   mapdeck(token = key,
   #           style = mapdeck_style("streets")
@@ -346,7 +380,7 @@ server <- function(input, output, session) {
   #           ,zoom = 10
   #   ) %>%
   #     add_grid(
-  #       data = dat
+  #       data = dat[1:10^4,]
   #       , lat = "x"
   #       , lon = "y"
   #       , cell_size = 500
