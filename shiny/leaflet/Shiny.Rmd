@@ -255,13 +255,13 @@ dat_tr <- sf::st_transform(dat, 2154)
 dat_sp <- as(dat_tr, Class = "Spatial")
 # dat <- sf::st_simplify(dat)
 
-dat_sff <- dat_sff %>% st_as_sf(crs = 4326)
-dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>%
-  st_centroid() %>%
-  # this is the crs from d, which has no EPSG code:
-  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
-  # since you want the centroids in a second geometry col:
-  st_geometry()
+# dat_sff <- dat_sff %>% st_as_sf(crs = 4326)
+# dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>%
+#   st_centroid() %>%
+#   # this is the crs from d, which has no EPSG code:
+#   st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+#   # since you want the centroids in a second geometry col:
+#   st_geometry()
 # 
 # dat <- dat_sff %>%
 #   mutate(x = map(centroid,1),
