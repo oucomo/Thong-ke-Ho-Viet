@@ -33,8 +33,9 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat.rds")
+dat <- readRDS("dat_spl.rds")
 # dat <- sf::st_simplify(dat)
+# dat_spl <- rmapshaper::ms_simplify(dat, keep = 0.02)
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
