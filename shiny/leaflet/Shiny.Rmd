@@ -281,6 +281,12 @@ dat <- dat %>%
 dat$area = as.numeric(dat$area)
 dat$area_km = as.numeric(dat$area_km)
 
+dat_st <- st_centroid(dat) %>% 
+  st_geometry() %>% 
+  do.call(rbind, .) %>% 
+  as_tibble() %>% 
+  setNames(c("lng","lat"))
+
 # works                  
 dat_spl <- sf::st_simplify(dat)
 # dat_spl_sp <- rmapshaper::ms_simplify(dat_sp, keep = 0.02)
@@ -292,6 +298,7 @@ dat10 <- dat %>%
   filter(Ho %in% ho10$Ho)
 
 saveRDS(dat, file = "../../data/dat.rds")
+saveRDS(dat_st, file = "../../data/dat_st.rds")
 saveRDS(dat_spl, file = "../../data/dat_spl.rds")
 saveRDS(dat1, file = "../../data/dat1.rds")
 saveRDS(dat10, file = "../../data/dat10.rds")
