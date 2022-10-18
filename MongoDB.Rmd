@@ -39,6 +39,7 @@ library(viridis)
 library(sf)
 library(mongolite)
 library(jsonlite)
+library(RJSONIO)
 
 select<-dplyr::select
 filter<-dplyr::filter
@@ -54,7 +55,11 @@ options(max.print=1000000)
 ```{r load data}
 #load("data/hoviet.RData")
 dat1 <- readRDS("data/dat1.rds")
-mng_conn <- mongo(collection = "duhongduc",db="dat")
+dat1_js <- toJSON(dat1)
+write(dat1_js, "data/dat1.json")
+
+library("rjson")
+json_dat1 <- fromJSON("data/dat1.json")
 ```
 
 
