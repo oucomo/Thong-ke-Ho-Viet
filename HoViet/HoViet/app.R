@@ -33,7 +33,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat.rds")
+dat <- readRDS("dat1.rds")
 # dat <- sf::st_simplify(dat)
 
 dat2 = as.data.table(dat)
@@ -302,7 +302,7 @@ server <- function(input, output, session) {
     leafletProxy("map1", data = filt_mai1()) %>%
       addPolygons(stroke = FALSE,
                   smoothFactor = 0.2,
-                  fillOpacity = .75,
+                  fillOpacity = .5,
                   popup = mappopup(),
                   color = ~ pal(filt_mai1()$pro.pop)
       ) %>%
