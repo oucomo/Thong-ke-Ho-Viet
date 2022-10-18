@@ -60,6 +60,9 @@ write(dat1_js, "data/dat1.json")
 
 library("rjson")
 json_dat1 <- fromJSON("data/dat1.json")
+
+connection_string = 'mongodb+srv://duhongduc:Dp010219@cluster0.fwx90bi.mongodb.net/test'
+hoviet_collection = mongo(collection="HoViet", db="hoviet_test", url=connection_string)
 ```
 
 
