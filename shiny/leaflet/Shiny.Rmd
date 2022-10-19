@@ -249,8 +249,19 @@ library(rmapshaper)
 #   group_by(NAME_1, NAME_2, Ho) %>%
 #   mutate(pro.huyen=(sum(songuoi)/sum(danso))*100)
 
+ho <- data_ho_overall %>%
+  arrange(desc(songuoi)) %>%
+  mutate(pro.pop=(songuoi/sum(songuoi)*100))
+ho <- head(ho, n=150)
+
+ho10 <- head(ho, n=10)
 
 dat <- dat_sff %>% st_as_sf(crs = 4326)
+dat$Ho[!(dat$Ho %in% ho$Ho)] <- "Khác"
+
+dat$area = as.numeric(dat$area)
+dat$area_km = as.numeric(dat$area_km)
+
 dat_tr <- sf::st_transform(dat, 2154)
 dat_sp <- as(dat_tr, Class = "Spatial")
 # dat <- sf::st_simplify(dat)
@@ -269,17 +280,11 @@ dat_sp <- as(dat_tr, Class = "Spatial")
 #          x = as.numeric(x),
 #          y = as.numeric(y))
 
-ho <- data_ho_overall %>%
-  arrange(desc(songuoi)) %>%
-  mutate(pro.pop=(songuoi/sum(songuoi)*100))
-ho <- head(ho, n=150)
 
-ho10 <- head(ho, n=10)
 
-dat <- dat %>% 
-  filter(Ho %in% ho$Ho)
-dat$area = as.numeric(dat$area)
-dat$area_km = as.numeric(dat$area_km)
+
+
+
 
 dat_st <- st_centroid(dat) %>% 
   st_geometry() %>% 

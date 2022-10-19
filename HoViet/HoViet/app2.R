@@ -39,7 +39,7 @@ strategy = if (.Platform$OS.type == 'unix') future::multicore else future::multi
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat.rds")
+dat <- readRDS("dat1.rds")
 
 dat2 = as.data.table(dat)
 dict = unique(dat2, by = c('NAME_1', 'NAME_2'))
@@ -357,7 +357,9 @@ server <- function(input, output, session) {
       session <- session
       subset_imai1 <- subset(imai1, imai1$Ho == ho) 
       if (!nrow(subset_imai1)) return()
-      mapp %>%
+      # print(head(subset_imai1))
+      #mapp %>%
+      leafletProxy("map1", session = session) %>%
         addPolygons(stroke = FALSE,
                     smoothFactor = 0.2,
                     fillOpacity = .5,
@@ -365,7 +367,6 @@ server <- function(input, output, session) {
                     data = subset_imai1,
                     color = ~ pal(subset_imai1$pro.pop)
         )
-      NULL
     }, future.seed=T)
     # i <- i+1
     # }
