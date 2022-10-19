@@ -144,7 +144,7 @@ ui <- shinydashboard::dashboardPage(skin='black',
 
 # Define server logic required
 server <- function(input, output, session) {
-  plan(multicore, workers=2, gc = TRUE)
+  plan(multicore, workers=10, gc = TRUE)
   addClass(selector = "body", class = "sidebar-collapse")
   
   # Reset Button
