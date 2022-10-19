@@ -947,6 +947,34 @@ ggplot() + geom_sf() + geom_sf(data=la_plot, aes(fill=pro.pop), lwd=0) +
 ggsave(filename = file.path("figures", "General", "Ho La-PerPop.jpeg"), width = 49, height = 33)
 ```
 
+## Họ Lưu
+
+```{r}
+luu_sf <- dat_sf %>% mutate(prop.luu=(sum(subset(., Ho=="Lưu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lưu")
+luu_plot <- luu_sf %>% select(pro.pop, prop.luu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luu_plot, aes(fill=pro.pop), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luu_plot$prop.luu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lưu")
+#ggsave(filename = file.path("Ho Luu-PerPop.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Luu-PerPop.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lương
+
+```{r}
+luong_sf <- dat_sf %>% mutate(prop.luong=(sum(subset(., Ho=="Lương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lương")
+luong_plot <- luong_sf %>% select(pro.pop, prop.luong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luong_plot, aes(fill=pro.pop), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luong_plot$prop.luong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lương")
+#ggsave(filename = file.path("Ho Luong-PerPop.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Luong-PerPop.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Lê
 
 ```{r}
@@ -1419,6 +1447,34 @@ ggplot() + geom_sf() + geom_sf(data=le_plotf, aes(fill=songuoi_km), lwd=0) +
 ggsave(filename = file.path("figures", "General", "Ho Le-PerArea.jpeg"), width = 49, height = 33)
 ```
 
+## Họ Lưu
+
+```{r}
+luu_sff <- dat_sff %>% mutate(prop.luu=(sum(subset(., Ho=="Lưu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lưu")
+luu_plotf <- luu_sff %>% select(songuoi_km, prop.luu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luu_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luu_plot$prop.luu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lưu")
+#ggsave(filename = file.path("Ho Luu-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Luu-PerArea.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lương
+
+```{r}
+luong_sff <- dat_sff %>% mutate(prop.luong=(sum(subset(., Ho=="Lương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lương")
+luong_plotf <- luong_sff %>% select(songuoi_km, prop.luong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luong_plotf, aes(fill=songuoi_km), lwd=0) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luong_plot$prop.luong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lương")
+#ggsave(filename = file.path("Ho Luong-PerArea.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Luong-PerArea.jpeg"), width = 49, height = 33)
+```
+
 ## Họ Dư
 
 ```{r}
@@ -1846,6 +1902,36 @@ ggplot() + geom_sf() + geom_sf(data=le_plot, aes(fill=pro.pop), lwd=0) +
   ggtitle("Họ Lê")
 #ggsave(filename = file.path("figures", "Le-PerPop-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerPop-River", "Le-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lưu
+
+```{r}
+luu_sf <- dat_sf %>% mutate(prop.luu=(sum(subset(., Ho=="Lưu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lưu")
+luu_plot <- luu_sf %>% select(pro.pop, prop.luu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luu_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luu_plot$prop.luu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lưu")
+#ggsave(filename = file.path("figures", "Luu-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Luu-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lương
+
+```{r}
+luong_sf <- dat_sf %>% mutate(prop.luong=(sum(subset(., Ho=="Lương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lương")
+luong_plot <- luong_sf %>% select(pro.pop, prop.luong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luong_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luong_plot$prop.luong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lương")
+#ggsave(filename = file.path("figures", "Luong-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Luong-PerPop-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -2307,6 +2393,36 @@ ggplot() + geom_sf() + geom_sf(data=la_plotf, aes(fill=songuoi_km), lwd=0) +
   ggtitle("Họ Lã")
 #ggsave(filename = file.path("figures", "La-PerArea-River.png"), width = 49, height = 33)
 ggsave(filename = file.path("figures", "PerArea-River", "La-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lưu
+
+```{r}
+luu_sff <- dat_sff %>% mutate(prop.luu=(sum(subset(., Ho=="Lưu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lưu")
+luu_plotf <- luu_sff %>% select(songuoi_km, prop.luu, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luu_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luu_plot$prop.luu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lưu")
+#ggsave(filename = file.path("figures", "Luu-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Luu-PerArea-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lương
+
+```{r}
+luong_sff <- dat_sff %>% mutate(prop.luong=(sum(subset(., Ho=="Lương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lương")
+luong_plotf <- luong_sff %>% select(songuoi_km, prop.luong, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=luong_plotf, aes(fill=songuoi_km), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luong_plot$prop.luong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Số người trên 1 km2 tại địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Lương")
+#ggsave(filename = file.path("figures", "Luong-PerArea-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerArea-River", "Luong-PerArea-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Dư
@@ -3578,6 +3694,214 @@ ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
   ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Lã") +
   coord_sf(crs = 4326)
 ggsave(filename = file.path("figures", "Contour-River", "La-Contour-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lưu
+
+```{r, message=FALSE, warning=FALSE}
+luu_sf <- dat_sf %>% mutate(prop.luu=(sum(subset(., Ho=="Lưu")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lưu")
+luu_f <- luu_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+luu_f <- sf::st_transform(luu_f, 2154)
+luu_plot <- luu_sf %>% select(pro.pop, prop.luu, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+luu_sf2 <- luu_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+luu_sf2 <- sf::st_transform(luu_sf2, 2154)
+luu_sp <- as(luu_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = luu_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = luu_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = luu_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = luu_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(luu_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = luu_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+luu_rot <- luu_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+luu_rot <- as(luu_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+# png(filename = "Luu_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(luu_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Lưu", paste(round(luu_plot$prop.luu[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(par)
+}
+# dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luu_plot$prop.luu[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Lưu") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Contour-River", "Luu-Contour-River.jpeg"), width = 49, height = 33)
+```
+
+## Họ Lương
+
+```{r, message=FALSE, warning=FALSE}
+luong_sf <- dat_sf %>% mutate(prop.luong=(sum(subset(., Ho=="Lương")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Lương")
+luong_f <- luong_sf %>% select(MAXA, MATINH, songuoi, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+luong_f <- sf::st_transform(luong_f, 2154)
+luong_plot <- luong_sf %>% select(pro.pop, prop.luong, geometry) %>% st_as_sf(crs = 4326)
+# Convert to Spatial class
+luong_sf2 <- luong_sf %>% select(MAXA, MATINH, songuoi, danso, pro.pop, geometry) %>% st_as_sf(crs = 4326)
+luong_sf2 <- sf::st_transform(luong_sf2, 2154)
+luong_sp <- as(luong_sf2, Class = "Spatial")
+
+# Compute the potentials of population on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+poppot <- stewart(knownpts = luong_sp, 
+                  varname = "danso", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = luong_sp, 
+                  returnclass = "sf")
+
+# Compute the potentials of family name on a regular grid (50km span)
+# function = exponential, beta = 2, span = 75 km
+namepot <- stewart(knownpts = luong_sp, 
+                  varname = "songuoi", 
+                  typefct = "exponential", 
+                  span = 20000, 
+                  beta = 10, 
+                  resolution = 50000, 
+                  mask = luong_sp, 
+                  returnclass = "sf")
+
+# Create the ratio variable
+# Handle NaN
+"/" <- function(x,y) ifelse(y==0,0,base:::"/"(x,y))
+poppot$OUTPUT2 <- namepot$OUTPUT * 100 / poppot$OUTPUT
+
+# Discretize the variable
+bv <- quantile(luong_sf$pro.pop, seq(from = 0, to = 1, length.out = 9))
+
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = luong_sp, 
+               returnclass = "sf")
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+# make a new geometry that is rotated 90 degrees (but retain original geom)
+luong_rot <- luong_f %>% 
+  mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+  st_drop_geometry() %>%
+  rename(geometry = geom_rot) %>%
+  st_set_geometry("geometry")
+luong_rot <- as(luong_rot, Class = "Spatial")
+
+pot_rot <- pot %>% 
+   mutate(geom_rot = st_geometry(.)*rot(pi/2.5)) %>%
+   st_drop_geometry() %>%
+   rename(geometry = geom_rot) %>%
+   st_set_geometry("geometry")
+#pot_rot <- st_as_sfc(pot_rot)
+ 
+# Draw the basemap
+# png(filename = "Luu_contourpoly.jpeg", width=2400, height=3200, res=300, bg = NA)
+plot(luong_rot, add = F, border = NA, bg = "white")
+# Map the potential family name per Pop
+plot(st_geometry(pot_rot), add=T, lwd = 0.5, border = "grey30")
+if(require(cartography)){
+# Get breaks values
+bks <-  sort(unique(c(pot$min, pot$max)))
+# Set a color palette
+pal <- carto.pal(pal1 = "wine.pal", n1 = 8)
+# Draw the map
+par <- par(mar = c(0,0,1.2,0))
+# Display the map
+choroLayer(x = pot_rot, var = "center", 
+          legend.pos = "left",
+          breaks = bks, col = pal, add=T, 
+          border = NA, lwd = 0.2,
+          legend.title.txt = "Tỉ lệ (%) trên dân số địa phương",
+          legend.title.cex = 1,
+          legend.values.cex = 0.6,
+          legend.values.rnd = 1)
+# Set a layout
+layoutLayer(title = paste("Đường đồng mức tỉ lệ (%) trên dân số họ Lương", paste(round(luong_plot$prop.luong[1],1), "% dân số", sep = ""), sep=" - "),
+sources = "Data source: Vietnam GSO", author = "Duc Du, 2022", theme = "wine.pal")
+par(par)
+}
+# dev.off()
+
+ggplot() + geom_sf() + geom_sf(data=pot, aes(fill=min), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  scale_fill_viridis("Tỉ lệ (%) tối thiểu\n trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(luong_plot$prop.luong[1],1), "% dân số", sep = "")) +
+  ggtitle("Đường đồng mức tỉ lệ (%) trên dân số họ Lương") +
+  coord_sf(crs = 4326)
+ggsave(filename = file.path("figures", "Contour-River", "Luong-Contour-River.jpeg"), width = 49, height = 33)
 ```
 
 ## Họ Trần
@@ -9668,6 +9992,76 @@ render_snapshot(filename = "figures/3D2/Le-PerArea.png", clear=T)
 rgl::rgl.close()
 ```
 
+## Họ Lưu
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#luu_bacbo_sf <- data_bacbo %>% filter(Ho=="Lưu")
+luu_sff <- dat_sff %>% 
+  mutate(prop.luu=(sum(subset(., Ho=="Lưu")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Lưu") %>% 
+  st_as_sf(crs = 4326)
+
+gg_luu = ggplot(luu_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(luu_sff$prop.luu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Lưu") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.key.height = unit(10, "mm"),
+        legend.key.width = unit(1, "mm"))
+
+plot_gg(gg_luu, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/luu(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Luu.png")
+#render_movie("figures/3D/luu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D2/Luu-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
+```
+
+## Họ Lương
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#luong_bacbo_sf <- data_bacbo %>% filter(Ho=="Lương")
+luong_sff <- dat_sff %>% 
+  mutate(prop.luong=(sum(subset(., Ho=="Lương")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Lương") %>% 
+  st_as_sf(crs = 4326)
+
+gg_luong = ggplot(luong_sff) +
+  geom_sf(aes(fill = songuoi_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(luong_sff$prop.luong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Mật độ người/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Lương") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.key.height = unit(10, "mm"),
+        legend.key.width = unit(1, "mm"))
+
+plot_gg(gg_luong, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+render_movie("figures/3D2/luong(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Luong.png")
+#render_movie("figures/3D/luong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D2/Luong-PerArea.png", clear=T)
+# Close the window when you're done
+rgl::rgl.close()
+```
+
 ## Họ Lý
 
 ```{r, message=FALSE, warning=FALSE}
@@ -10676,6 +11070,70 @@ plot_gg(gg_le, multicore = TRUE, raytrace = T, width = 10, height = 15,
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Le.png")
 #render_movie("figures/3D/le.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Le-PerPop.png", clear=T)
+```
+
+## Họ Lưu
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#luu_bacbo_sf <- data_bacbo %>% filter(Ho=="Lưu")
+luu_sff <- dat_sff %>% 
+  mutate(prop.luu=(sum(subset(., Ho=="Lưu")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Lưu") %>% 
+  st_as_sf(crs = 4326)
+
+gg_luu = ggplot(luu_sff) +
+  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(luu_sff$prop.luu[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Lưu") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.key.height = unit(10, "mm"),
+        legend.key.width = unit(1, "mm"))
+
+plot_gg(gg_luu, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Luu.png")
+#render_movie("figures/3D/luu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D2/Luu-PerPop.png", clear=T)
+```
+
+## Họ Lương
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#luu_bacbo_sf <- data_bacbo %>% filter(Ho=="Lưu")
+luong_sff <- dat_sff %>% 
+  mutate(prop.luong=(sum(subset(., Ho=="Lương")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Lương") %>% 
+  st_as_sf(crs = 4326)
+
+gg_luong = ggplot(luong_sff) +
+  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(luong_sff$prop.luong[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  ggtitle("Họ Lương") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.key.height = unit(10, "mm"),
+        legend.key.width = unit(1, "mm"))
+
+plot_gg(gg_luong, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Luong.png")
+#render_movie("figures/3D/luong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+render_snapshot(filename = "figures/3D2/Luong-PerPop.png", clear=T)
 ```
 
 ## Họ Lý
