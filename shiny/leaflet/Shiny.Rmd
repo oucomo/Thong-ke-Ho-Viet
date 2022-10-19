@@ -259,6 +259,7 @@ ho10 <- head(ho, n=10)
 dat <- dat_sff %>% st_as_sf(crs = 4326)
 dat$Ho[!(dat$Ho %in% ho$Ho)] <- "Khác"
 
+dat <- dat %>% filter(Ho %in% ho$Ho)
 dat$area = as.numeric(dat$area)
 dat$area_km = as.numeric(dat$area_km)
 
