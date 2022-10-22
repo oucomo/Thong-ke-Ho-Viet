@@ -22,6 +22,7 @@ library(leaflet)
 library(mapdeck)
 library(sf)
 library(data.table)
+library(htmlwidgets)
 
 # devtools::install_github("yonicd/covrpage", dependencies = T)
 library(covrpage)
@@ -283,9 +284,18 @@ server <- function(input, output, session) {
   })
   
   output$map1 <- renderLeaflet({
-    leaflet(filt_mai1()) %>%
-      addProviderTiles(provider = "Esri.WorldStreetMap") %>%
-      setView(lng = "108.2772", lat="16.0583", zoom = 6)
+    leaflet(filt_mai1(), options = leafletOptions(zoomSnap = 0.5, zoomDelta=0.5)) %>%
+      addProviderTiles(provider = "Esri.WorldStreetMap", options = providerTileOptions(minZoom = 4, maxZoom = 12)) %>%
+      setView(lng = "108.2772", lat="16.0583", zoom = 6) %>%
+      addControl(html="<h1 id='zoom'>Zoom</h1>") %>%
+      onRender("function(el,x,data){
+       var map=this;
+       var evt = function(e){
+         $('#zoom').html(map.getZoom())
+       };
+       map.on('zoom', evt);
+       }
+")
     
     # output$map1 <- renderLeaflet({
     #   leaflet(filt_mai1()) %>%

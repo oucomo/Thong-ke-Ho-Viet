@@ -5,10 +5,10 @@ account: duhongduc
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7181604
-bundleId: 6421697
+bundleId: 6430153
 url: https://duhongduc.shinyapps.io/HoViet/
-when: 1666240863.95049
-lastSyncTime: 1666240863.9505
+when: 1666455722.43175
+lastSyncTime: 1666455722.43176
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .app2.R.swp|app_spl.R|app_st.R|app_trinh.R|app-old.R|app-para.R|app1.R|app2.R|dat_spl.rds|dat_st.rds|dat1.rds|dat10.rds|mai.rds|nguyen.rds|tran.rds
+ignoredFiles: .app2.R.swp|app_spl.R|app_st.R|app_trinh.R|app-old.R|app-para.R|app1.R|app10.R|app2.R|dat_spl.rds|dat_st.rds|dat.rds|dat1.rds|mai.rds|nguyen.rds|tran.rds
