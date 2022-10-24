@@ -1,0 +1,17 @@
+#Thuc hien viec cai dat cong cu cau hinh mang| Install network utility tool
+sudo apt install net-tools
+#Thuc hien cai dat proxy nginx | Install nginx proxy
+sudo apt install nginx
+#config for nginx proxy
+sudo nano /etc/nginx/site-avaiable/testR.com
+#check nginx config
+sudo nginx -t
+#enable nginx for default
+sudo systemctl enable nginx
+#start nginx
+sudo systemctl start nginx
+#allow firewall to open port 80,443 (http,https)
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw reload
+
