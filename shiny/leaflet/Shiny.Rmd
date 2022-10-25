@@ -298,7 +298,7 @@ dat_st <- st_centroid(dat) %>%
   setNames(c("lng","lat"))
 
 # works                  
-dat_spl <- sf::st_simplify(dat)
+dat_spl <- sf::st_simplify(dat_full)
 # dat_spl_sp <- rmapshaper::ms_simplify(dat_sp, keep = 0.02)
 dat_spl2 <- gSimplify(dat_sp, tol = 0.02, topologyPreserve = TRUE)
 
