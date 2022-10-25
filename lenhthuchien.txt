@@ -1,17 +1,46 @@
-#Thuc hien viec cai dat cong cu cau hinh mang| Install network utility tool
+#Thuc hien viec cai dat cong cu cau hinh mang | Install network utility tool
 sudo apt install net-tools
+
 #Thuc hien cai dat proxy nginx | Install nginx proxy
 sudo apt install nginx
+
 #config for nginx proxy
 sudo nano /etc/nginx/site-avaiable/testR.com
+
 #check nginx config
 sudo nginx -t
+
 #enable nginx for default
 sudo systemctl enable nginx
+
 #start nginx
 sudo systemctl start nginx
-#allow firewall to open port 80,443 (http,https)
+
+#allow firewall to open port 80, 443 (http, https)
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw reload
 
+#Set Up Shiny Server
+#Installing Shiny Server
+#Download a pre-built binary for 64-bit architectures
+wget https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.18.987-amd64.deb
+
+#verify the integrity of the downloaded file with the Sha256 checksum listed
+sha256sum shiny-server-1.5.18.987-amd64.deb
+
+#Update package list and then install the gdebi-core package
+sudo apt update
+sudo apt install gdebi-core
+
+#Install Shiny Server
+sudo gdebi shiny-server-1.5.18.987-amd64.deb
+
+#verify that shiny-server is listening on port 3838
+sudo ss -plut | grep -i shiny
+
+#modify the firewall to allow traffic through to Shiny Server
+sudo ufw allow 3838
+
+#copy app to Shiny server
+sudo cp -R /home/ubuntu/HoViet/ /srv/shiny-server/
