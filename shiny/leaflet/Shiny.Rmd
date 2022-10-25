@@ -256,9 +256,13 @@ ho <- head(ho, n=150)
 
 ho10 <- head(ho, n=10)
 
-dat <- dat_sff %>% st_as_sf(crs = 4326)
-# dat$Ho[!(dat$Ho %in% ho$Ho)] <- "Khác"
+dat_full <- dat_sff %>% st_as_sf(crs = 4326)
+dat_full$Ho[!(dat_full$Ho %in% ho$Ho)] <- "Khác"
+dat_full$area = as.numeric(dat_full$area)
+dat_full$area_km = as.numeric(dat_full$area_km)
 
+
+dat <- dat_sff %>% st_as_sf(crs = 4326)
 dat <- dat %>% filter(Ho %in% ho$Ho)
 dat$area = as.numeric(dat$area)
 dat$area_km = as.numeric(dat$area_km)
@@ -305,6 +309,7 @@ dat10 <- dat %>% filter(Ho %in% c("Mai", "Khúc", "Phùng", "Dương", "Ngô", "
 # dat10 <- dat %>% 
 #   filter(Ho %in% ho10$Ho)
 
+saveRDS(dat_full, file = "../../data/dat_full.rds")
 saveRDS(dat, file = "../../data/dat.rds")
 saveRDS(dat_st, file = "../../data/dat_st.rds")
 saveRDS(dat_spl, file = "../../data/dat_spl.rds")
