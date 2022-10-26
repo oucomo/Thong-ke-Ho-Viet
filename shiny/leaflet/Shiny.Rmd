@@ -252,7 +252,7 @@ library(rmapshaper)
 ho <- data_ho_overall %>%
   arrange(desc(songuoi)) %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
-ho <- head(ho, n=150)
+ho <- head(ho, n=50)
 
 ho10 <- head(ho, n=10)
 
