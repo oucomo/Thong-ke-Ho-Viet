@@ -252,9 +252,10 @@ library(rmapshaper)
 ho <- data_ho_overall %>%
   arrange(desc(songuoi)) %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
-ho <- head(ho, n=50)
+ho <- head(ho, n=120)
 
 ho10 <- head(ho, n=10)
+ho20 <- head(ho, n=20)
 
 dat_full <- dat_sff %>% st_as_sf(crs = 4326)
 dat_full$Ho[!(dat_full$Ho %in% ho$Ho)] <- "Khác"
@@ -306,6 +307,8 @@ dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "P
 
 dat10 <- dat %>% filter(Ho %in% c("Mai", "Khúc", "Phùng", "Dương", "Ngô", "Lương", "Lý", "Hoàng", "Trần", "Lê"))
 
+dat20 <- dat %>% filter(Ho %in% c("Bùi", "Dương", "Đặng", "Đỗ", "Hoàng", "Huỳnh", "Khúc", "Lê", "Lương", "Lý", "Mai", "Ngô", "Nguyễn", "Phan", "Phạm", "Phùng", "Trần", "Trương", "Võ", "Vũ"))
+
 # dat10 <- dat %>% 
 #   filter(Ho %in% ho10$Ho)
 
@@ -315,4 +318,5 @@ saveRDS(dat_st, file = "../../data/dat_st.rds")
 saveRDS(dat_spl, file = "../../data/dat_spl.rds")
 saveRDS(dat1, file = "../../data/dat1.rds")
 saveRDS(dat10, file = "../../data/dat10.rds")
+saveRDS(dat20, file = "../../data/dat20.rds")
 ```
