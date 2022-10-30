@@ -35,6 +35,10 @@ library(rstatix)
 library(haven)
 library(raster)
 library(rgdal)
+
+library(rworldmap)
+library(plotKML)
+
 library(viridis)
 library(sf)
 library(mongolite)

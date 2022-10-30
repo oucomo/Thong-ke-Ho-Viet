@@ -34,7 +34,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat10.rds")
+dat <- readRDS("dat_st.rds")
 # dat <- sf::st_simplify(dat)
 
 dat2 = as.data.table(dat)
@@ -310,11 +310,10 @@ server <- function(input, output, session) {
     pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$pro.pop, alpha = TRUE)
     
     leafletProxy("map1", data = filt_mai1()) %>%
-      addPolygons(stroke = FALSE,
-                  smoothFactor = 0.2,
-                  fillOpacity = .5,
-                  popup = mappopup(),
-                  color = ~ pal(filt_mai1()$pro.pop)
+      addCircleMarkers(radius = ~ sqrt(filt_mai1()$pro.pop),
+                       fillOpacity = 1.5,
+                       popup = mappopup(),
+                       color = ~ pal(filt_mai1()$pro.pop)
       ) %>%
       addMiniMap(position = "bottomleft", width = 150, height = 150,
                  collapsedWidth = 19, collapsedHeight = 19, zoomLevelOffset = -5,

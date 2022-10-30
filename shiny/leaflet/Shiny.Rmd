@@ -252,7 +252,7 @@ library(rmapshaper)
 ho <- data_ho_overall %>%
   arrange(desc(songuoi)) %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
-ho <- head(ho, n=120)
+ho <- head(ho, n=150)
 
 ho10 <- head(ho, n=10)
 ho20 <- head(ho, n=20)
@@ -272,21 +272,24 @@ dat_tr <- sf::st_transform(dat, 2154)
 dat_sp <- as(dat_tr, Class = "Spatial")
 # dat <- sf::st_simplify(dat)
 
-# dat_sff <- dat_sff %>% st_as_sf(crs = 4326)
-# dat_sff$centroid <- sf::st_transform(dat_sff, 2154) %>%
-#   st_centroid() %>%
-#   # this is the crs from d, which has no EPSG code:
-#   st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
-#   # since you want the centroids in a second geometry col:
-#   st_geometry()
-# 
-# dat <- dat_sff %>%
-#   mutate(x = map(centroid,1),
-#          y = map(centroid,2),
-#          x = as.numeric(x),
-#          y = as.numeric(y))
+dat_sff_st <- dat_sff %>% st_as_sf(crs = 4326)
+dat_sff_st$centroid <- sf::st_transform(dat_sff_st, 2154) %>%
+  st_centroid() %>%
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
 
+dat_st <- dat_sff_st %>%
+  mutate(lng = map(centroid,1),
+         lat = map(centroid,2),
+         lng = as.numeric(lng),
+         lat = as.numeric(lat)) %>%
+  st_drop_geometry() %>%
+  select(-c("MAXA", "MAHUYEN", "MATINH", "TYPE_3", "area", "centroid"))
 
+dat_st <- dat_st %>% filter(Ho %in% ho$Ho)
+dat_st$area_km = as.numeric(dat_st$area_km)
 
 
 
@@ -298,8 +301,10 @@ dat_st <- st_centroid(dat) %>%
   as_tibble() %>% 
   setNames(c("lng","lat"))
 
-# works                  
-dat_spl <- sf::st_simplify(dat_full)
+# works 
+library(rmapshaper)
+# dat_spl <- sf::st_simplify(dat_full)
+dat_spl <- ms_simplify(dat, keep = 0.01, keep_shapes = TRUE)
 # dat_spl_sp <- rmapshaper::ms_simplify(dat_sp, keep = 0.02)
 dat_spl2 <- gSimplify(dat_sp, tol = 0.02, topologyPreserve = TRUE)
 
