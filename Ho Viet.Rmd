@@ -76,7 +76,7 @@ load("data/vnm3_map.Rdata")
 ```
 
 ```{r load data2}
-#load("data/hoviet.RData")
+# load("data/hoviet.RData")
 ```
 
 ## Inspecting data
@@ -184,7 +184,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lang|lang|LANG") == TRUE, "Lang", d
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lăng|LĂNG|lăng") == TRUE, "Lăng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lành|LÀNH|Lành|lành") == TRUE, "Lành", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lau|LAU|Làu|LÀU|làu|Làu|Lâu|lâu|LÂU|Lâù|Lấu|Lầu|Lầu|lầu|LẦU|lầu|Lẩu|Lậu|Lâug") == TRUE, "Lầu", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lã|Lã|Lã|LÃ|Lả|Lã|lã|LÃ|Lã|Lẫ|Lẵ|Lả|Lả|lả|Laã") == TRUE, "Lã", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "lã" | data_ho$Ho == "Lã" | data_ho$Ho == "LÃ" | data_ho$Ho == "Lả" | data_ho$Ho == "Lã" | data_ho$Ho == "lã" | data_ho$Ho == "LÃ" | data_ho$Ho == "Lẫ" | data_ho$Ho == "Lẵ" | data_ho$Ho == "Lả" | data_ho$Ho == "Lả" | data_ho$Ho == "lả" | data_ho$Ho == "Laã"), "Lã", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Le|lê|Lê|LÊ|le|LE|Lê|Lế|Lê|Lë|Lẽ|LẼ|lẽ|LẾ|Lề|lề|LỀ|Lễ|LỄ|lễ|Lẻ|lẻ|LẺ|Lể|LỂ|lể|Lệ|LỆ|lệ|Ĺê") == TRUE, "Lê", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Liênc|Lieng|LIENG|Liêng|LIÊNG|liêng|Liếng|Liềng|Liềng|liềng|LIỀNG|Liệng|LIÊNGHÓT") == TRUE, "Liêng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lieou|Lieu|lieu|LIEU|Liêu|LIÊU|liêu") == TRUE, "Liêu", data_ho$Ho)
@@ -11706,4 +11706,101 @@ ggplot(df, aes(x=rank_com, y=pred)) +
   geom_smooth(colour="black",size=0.5) +
   theme_bw() + 
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
+```{r}
+library(sf)
+library(leaflet)
+library(rgeos)
+library(rgdal)
+library(rmapshaper)
+# dat_sff <- dat_sff %>%
+#   group_by(Ho) %>%
+#   mutate(pro.ho=(sum(songuoi)/sum(danso))*100)
+# 
+# dat_sff <- dat_sff %>%
+#   group_by(NAME_1, Ho) %>%
+#   mutate(pro.tinh=(sum(songuoi)/sum(danso))*100)
+# 
+# dat_sff <- dat_sff %>%
+#   group_by(NAME_1, NAME_2, Ho) %>%
+#   mutate(pro.huyen=(sum(songuoi)/sum(danso))*100)
+
+ho <- data_ho_overall %>%
+  arrange(desc(songuoi)) %>%
+  mutate(pro.pop=(songuoi/sum(songuoi)*100))
+ho <- head(ho, n=150)
+
+ho10 <- head(ho, n=10)
+ho20 <- head(ho, n=20)
+
+dat_full <- dat_sff %>% st_as_sf(crs = 4326)
+dat_full$Ho[!(dat_full$Ho %in% ho$Ho)] <- "Khác"
+dat_full$area = as.numeric(dat_full$area)
+dat_full$area_km = as.numeric(dat_full$area_km)
+
+
+dat <- dat_sff %>% st_as_sf(crs = 4326)
+dat <- dat %>% filter(Ho %in% ho$Ho)
+dat$area = as.numeric(dat$area)
+dat$area_km = as.numeric(dat$area_km)
+
+dat_tr <- sf::st_transform(dat, 2154)
+dat_sp <- as(dat_tr, Class = "Spatial")
+# dat <- sf::st_simplify(dat)
+
+dat_sff_st <- dat_sff %>% st_as_sf(crs = 4326)
+dat_sff_st$centroid <- sf::st_transform(dat_sff_st, 2154) %>%
+  st_centroid() %>%
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+dat_st <- dat_sff_st %>%
+  mutate(lng = map(centroid,1),
+         lat = map(centroid,2),
+         lng = as.numeric(lng),
+         lat = as.numeric(lat)) %>%
+  st_drop_geometry() %>%
+  select(-c("MAXA", "MAHUYEN", "MATINH", "TYPE_3", "area", "centroid"))
+
+dat_st <- dat_st %>% filter(Ho %in% ho$Ho)
+dat_st$area_km = as.numeric(dat_st$area_km)
+
+
+
+
+
+dat_st <- st_centroid(dat) %>% 
+  st_geometry() %>% 
+  do.call(rbind, .) %>% 
+  as_tibble() %>% 
+  setNames(c("lng","lat"))
+
+# works 
+library(rmapshaper)
+# dat_spl <- sf::st_simplify(dat_full)
+dat_spl <- ms_simplify(dat, keep = 0.01, keep_shapes = TRUE)
+# dat_spl_sp <- rmapshaper::ms_simplify(dat_sp, keep = 0.02)
+dat_spl2 <- gSimplify(dat_sp, tol = 0.02, topologyPreserve = TRUE)
+
+dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
+
+dat10 <- dat %>% filter(Ho %in% c("Mai", "Khúc", "Phùng", "Dương", "Ngô", "Lương", "Lý", "Hoàng", "Trần", "Lê"))
+
+dat20 <- dat %>% filter(Ho %in% c("Bùi", "Dương", "Đặng", "Đỗ", "Hoàng", "Huỳnh", "Khúc", "Lê", "Lương", "Lý", "Mai", "Ngô", "Nguyễn", "Phan", "Phạm", "Phùng", "Trần", "Trương", "Võ", "Vũ"))
+
+# dat10 <- dat %>% 
+#   filter(Ho %in% ho10$Ho)
+
+saveRDS(dat_full, file = "data/dat_full.rds")
+saveRDS(dat, file = "data/dat.rds")
+saveRDS(dat_st, file = "data/dat_st.rds")
+fwrite(x = dat_st, file = "../../data/dat_st.csv")
+
+saveRDS(dat_spl, file = "../../data/dat_spl.rds")
+saveRDS(dat1, file = "../../data/dat1.rds")
+saveRDS(dat10, file = "../../data/dat10.rds")
+saveRDS(dat20, file = "../../data/dat20.rds")
 ```
