@@ -176,7 +176,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kim|KIM|kim|KiM|Kím|Kìm|Kìm|K�
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ko|KO|Kô|KÔ|KƠ|Kơ|Kờ|KỜ") == TRUE, "Kơ", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kpa|kpa|KPA|kPa|KPa|Kpa'|Kpá|KPá|KPÁ|Kpă|KPĂ|KPă|kpă|KpĂ|kPă|K'PĂ|K'pă|Kpã|KPã|KPÃ|KpÃ|Kpắ|KPắ|KPẮ|Kpắ|Kpả|Kpah|KPAH|Kpăh|KPĂH|Kpak|Kpan|Kpaw") == TRUE, "Kpă", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kpiih|Kpiuh|Kpuh|Kpui|kpui|Kpuih|KPUIH|kpuih|KPuih|Kpuil|Kpuoh|Kquih") == TRUE, "Kpuih", data_ho$Ho)
-data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kror|KROR|Kros|Ksir|Kso|KSO|KSo|Ksô|KSô|Ksơ|ksơ|K'Sơ|Ksoe|Ksoh|Ksok|KSOK|Ksol|Kson|kson|Ksor|KSOR|KSor|ksor|K'sor|K'SOR|K'Sor|Ksơr|KSƠR|KsƠr|ksơr|KSơr|Ksorh|KSORH|Ksorh'|Ksorr|Ksos|Ksot|Ksr|Ksro|Ksror") == TRUE, "Ksor", data_ho$Ho)
+data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Kror|KROR|Kros|Ksir|Kso|KSO|KSo|Ksô|KSô|Ksơ|ksơ|K'Sơ|Ksoe|Ksoh|Ksok|KSOK|Ksol|Kson|kson|Ksor|KSOR|KSor|ksor|K'sor|K'SOR|K'Sor|Ksơr|KSƠR|KsƠr|ksơr|KSơr|Ksorh|KSORH|Ksorh'|Ksorr|Ksos|Ksot|Ksr|Ksro|Ksror|KSOR") == TRUE, "Ksor", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lac|Lạc|LẠC|Lạc|lạc|LẠc|Lach") == TRUE, "Lạc", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lại|Lại|LẠI|Lại|Lại|Laị|LẠI|Lah|Laị|Ląi|Lại|lại|LẠi|Lạị|Laij|Lain") == TRUE, "Lại", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lam|lâm|Lâm|LÂM|LÂm|lam|LAM|Lâm|Lăm|LĂM|lăm|Lấm|Lầm|lầm|lầm|Lầm|LẦM|Laâm|laâm|LAÂM|Ĺâm") == TRUE, "Lâm", data_ho$Ho)
@@ -184,12 +184,15 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lang|lang|LANG") == TRUE, "Lang", d
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lăng|LĂNG|lăng") == TRUE, "Lăng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lành|LÀNH|Lành|lành") == TRUE, "Lành", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lau|LAU|Làu|LÀU|làu|Làu|Lâu|lâu|LÂU|Lâù|Lấu|Lầu|Lầu|lầu|LẦU|lầu|Lẩu|Lậu|Lâug") == TRUE, "Lầu", data_ho$Ho)
-data_ho$Ho <- ifelse((data_ho$Ho == "lã" | data_ho$Ho == "Lã" | data_ho$Ho == "LÃ" | data_ho$Ho == "Lả" | data_ho$Ho == "Lã" | data_ho$Ho == "lã" | data_ho$Ho == "LÃ" | data_ho$Ho == "Lẫ" | data_ho$Ho == "Lẵ" | data_ho$Ho == "Lả" | data_ho$Ho == "Lả" | data_ho$Ho == "lả" | data_ho$Ho == "Laã"), "Lã", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "la" | data_ho$Ho == "La" | data_ho$Ho == "LA"), "La", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "lã" | data_ho$Ho == "Lã" | data_ho$Ho == "LÃ" | data_ho$Ho == "Lả" | data_ho$Ho == "Lã" | data_ho$Ho == "lã" | data_ho$Ho == "LÃ" | data_ho$Ho == "Lẫ" | data_ho$Ho == "Lẵ" | data_ho$Ho == "Lả" | data_ho$Ho == "Lả" | data_ho$Ho == "lả" | data_ho$Ho == "Laã" | data_ho$Ho == "Lâ" | data_ho$Ho == "Lã" | data_ho$Ho == "Lã"), "Lã", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Le|lê|Lê|LÊ|le|LE|Lê|Lế|Lê|Lë|Lẽ|LẼ|lẽ|LẾ|Lề|lề|LỀ|Lễ|LỄ|lễ|Lẻ|lẻ|LẺ|Lể|LỂ|lể|Lệ|LỆ|lệ|Ĺê") == TRUE, "Lê", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Liênc|Lieng|LIENG|Liêng|LIÊNG|liêng|Liếng|Liềng|Liềng|liềng|LIỀNG|Liệng|LIÊNGHÓT") == TRUE, "Liêng", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lieou|Lieu|lieu|LIEU|Liêu|LIÊU|liêu") == TRUE, "Liêu", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Liẽu|Liếu|Liều|LIỀU|liều|Liều|Liễu|Liễu|liễu|LIỄU|LiỄU|LIỄU|liễu|Liẻu|Liểu|liểu|LIỂU|Liểu|Liệu|liệu|Liệu|LIỆU|Liew") == TRUE, "Liễu", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Ling|Linh|LINH|linh") == TRUE, "Linh", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "lợi" | data_ho$Ho == "Lợi" | data_ho$Ho == "Lợi" | data_ho$Ho == "LỢI"), "Lợi", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "long" | data_ho$Ho == "Long" | data_ho$Ho == "LONG"), "Long", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Léo|Lèo|lèo|LÈO|Lẻo|Lẹo|LẸO") == TRUE, "Lèo", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "lò|lò|Lò|Lò|LÒ|LÒ") == TRUE, "Lò", data_ho$Ho)
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Lô|lô|LÔ") == TRUE, "Lô", data_ho$Ho)
@@ -331,13 +334,13 @@ data_ho_top10000 <- data_ho_overall %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
 data_ho_top10000 <- head(data_ho_top10000, n=10000)
 library(writexl)
-# write_xlsx(data_ho_top10000, "output/Top 10000 ho.xlsx")
+write_xlsx(data_ho_top10000, "output/Top 10000 ho.xlsx")
 
 data_ho_top3000 <- data_ho_overall %>%
   arrange(desc(songuoi)) %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
 data_ho_top3000 <- head(data_ho_top3000, n=3000)
-# write_xlsx(data_ho_top3000, "output/Top 3000 ho.xlsx")
+write_xlsx(data_ho_top3000, "output/Top 3000 ho.xlsx")
 
 data_ho_top1000 <- data_ho_overall %>%
   arrange(desc(songuoi))
