@@ -28,6 +28,7 @@ library(htmlwidgets)
 library(covrpage)
 library(rhub)
 library(whoami)
+library(arrow)
 
 # devtools::install_version("MASS", "7.3-51.1")
 
@@ -35,6 +36,10 @@ key <- ''    ## put your own token here
 mapdeck(token = key)
 
 dat <- readRDS("dat_st.rds")
+# dat <- read_csv_arrow(
+#   "HoViet/dat_st.csv",
+#   as_data_frame = FALSE
+# )
 # dat <- sf::st_simplify(dat)
 
 dat2 = as.data.table(dat)
