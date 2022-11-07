@@ -11868,7 +11868,7 @@ dat20 <- dat %>% filter(Ho %in% c("Bùi", "Dương", "Đặng", "Đỗ", "Hoàng
 saveRDS(dat_full, file = "data/dat_full.rds")
 saveRDS(dat, file = "data/dat.rds")
 saveRDS(dat_st, file = "data/dat_st.rds")
-# fwrite(x = dat_st, file = "../../data/dat_st.csv")
+fwrite(x = dat_st, file = "data/dat_st.csv")
 
 saveRDS(dat_spl, file = "../../data/dat_spl.rds")
 saveRDS(dat1, file = "../../data/dat1.rds")
