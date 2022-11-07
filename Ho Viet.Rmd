@@ -368,6 +368,7 @@ data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "vừ|Vừ|Vừ|Vừ|VỪ|Vừ|VƯ�
 data_ho$Ho <- ifelse(str_detect(data_ho$Ho, "Vuong|Vương|VƯƠNG|vương|Vương|Vươn|vuong|Vuông|Vuơng|Vưong|Vương|Vươg|Vươmg|VUONG|Vuỏng|vuơng|Vương|Vuương|Vưoang|Vưoeng|vươmg|V­ươmg|Vuomgw|Vươmh|Vűőng|VƯONG|Vưông|Vưöng|Vưỏng|Vương|V­ương|vươnh|V­ươnh|VƯƠNH|VƯƠNNG|Vươơng|Vuoqng|Vưoqng|Vưowmg|Vưowng|Vưôwng|Vưowngthij|Vưownh|Vưpng|Vưpwng|vuương|Vưuơng|Vưương|Vuwowngthij") == TRUE, "Vương", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "Xa" | data_ho$Ho == "XA" | data_ho$Ho == "xa"), "Xa", data_ho$Ho)
 data_ho$Ho <- ifelse((data_ho$Ho == "Y" | data_ho$Ho == "y" | data_ho$Ho == "Y'" | data_ho$Ho == "y'" | data_ho$Ho == "Y’" | data_ho$Ho == "Y_"), "Y", data_ho$Ho)
+data_ho$Ho <- ifelse((data_ho$Ho == "ya" | data_ho$Ho == "Ya" | data_ho$Ho == "YA"), "Ya", data_ho$Ho)
 ```
 
 # Tổng họ
