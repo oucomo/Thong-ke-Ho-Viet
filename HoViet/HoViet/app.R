@@ -28,7 +28,6 @@ library(htmlwidgets)
 library(covrpage)
 library(rhub)
 library(whoami)
-library(arrow)
 
 # devtools::install_version("MASS", "7.3-51.1")
 
@@ -36,10 +35,6 @@ key <- ''    ## put your own token here
 mapdeck(token = key)
 
 dat <- readRDS("dat_st.rds")
-# dat <- read_csv_arrow(
-#   "HoViet/dat_st.csv",
-#   as_data_frame = FALSE
-# )
 # dat <- sf::st_simplify(dat)
 
 dat2 = as.data.table(dat)
@@ -112,8 +107,8 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                                                                        selectInput("i2_ho", "Ho", choices = m_Ho, bookmarkButton(id = "bookmark1")),
                                                                                        selectInput("i2_tinh", "Tinh", choices = m_Tinh, bookmarkButton(id = "bookmark2")),
                                                                                        selectInput("i2_huyen", "Huyen",choices = "", bookmarkButton(id = "bookmark3")),
-                                                                                       column(6,offset = 6,height = 100,style='padding100px;',
-                                                                                              actionButton("reset_button", "Reset",icon = icon("repeat")))
+                                                                                       # column(6,offset = 6,height = 100,style='padding100px;',
+                                                                                       #        actionButton("reset_button", "Reset",icon = icon("repeat")))
                                                                                    ))
                                                                      )
                                     ),
