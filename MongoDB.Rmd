@@ -62,6 +62,12 @@ dat1 <- readRDS("data/dat1.rds")
 dat1_js <- toJSON(dat1)
 write(dat1_js, "data/dat1.json")
 
+dat <- readRDS("data/dat_st.rds")
+dat_js <- toJSON(dat)
+
+st_write(dat, "dat.kml")
+dat_kml <- st_read("dat.kml")
+
 library("rjson")
 json_dat1 <- fromJSON("data/dat1.json")
 

@@ -19,6 +19,8 @@ library(shinyjs)
 library(tmap)
 library(tmaptools)
 library(leaflet)
+library(leafem)
+library(leafgl)
 library(mapdeck)
 library(sf)
 library(data.table)
@@ -34,7 +36,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat_st.rds")
+dat <- readRDS("dat.rds")
 # dat <- sf::st_simplify(dat)
 
 dat2 = as.data.table(dat)
@@ -107,8 +109,8 @@ ui <- shinydashboard::dashboardPage(skin='black',
                                                                                        selectInput("i2_ho", "Ho", choices = m_Ho, bookmarkButton(id = "bookmark1")),
                                                                                        selectInput("i2_tinh", "Tinh", choices = m_Tinh, bookmarkButton(id = "bookmark2")),
                                                                                        selectInput("i2_huyen", "Huyen",choices = "", bookmarkButton(id = "bookmark3")),
-                                                                                       # column(6,offset = 6,height = 100,style='padding100px;',
-                                                                                       #        actionButton("reset_button", "Reset",icon = icon("repeat")))
+                                                                                       column(6,offset = 6,height = 100,style='padding100px;',
+                                                                                              actionButton("reset_button", "Reset",icon = icon("repeat")))
                                                                                    ))
                                                                      )
                                     ),
@@ -285,7 +287,7 @@ server <- function(input, output, session) {
   
   output$map1 <- renderLeaflet({
     leaflet(filt_mai1(), options = leafletOptions(zoomSnap = 0.5, zoomDelta=0.5)) %>%
-      addProviderTiles(provider = "Esri.WorldStreetMap", options = providerTileOptions(minZoom = 4, maxZoom = 12)) %>%
+      addProviderTiles(provider = "Esri.WorldStreetMap", options = providerTileOptions(minZoom = 6, maxZoom = 10)) %>%
       setView(lng = "108.2772", lat="16.0583", zoom = 6) %>%
       addControl(html="<h1 id='zoom'>Zoom</h1>") %>%
       onRender("function(el,x,data){
@@ -310,10 +312,11 @@ server <- function(input, output, session) {
     pal <- colorNumeric(palette = "viridis", reverse = TRUE, domain = filt_mai1()$pro.pop, alpha = TRUE)
     
     leafletProxy("map1", data = filt_mai1()) %>%
-      addCircleMarkers(radius = ~ sqrt(filt_mai1()$pro.pop),
-                       fillOpacity = 1.5,
-                       popup = mappopup(),
-                       color = ~ pal(filt_mai1()$pro.pop)
+      addPolygons(stroke = FALSE,
+                  smoothFactor = 1,
+                  fillOpacity = 0.5,
+                  popup = mappopup(),
+                  color = ~ pal(filt_mai1()$pro.pop)
       ) %>%
       addMiniMap(position = "bottomleft", width = 150, height = 150,
                  collapsedWidth = 19, collapsedHeight = 19, zoomLevelOffset = -5,
