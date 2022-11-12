@@ -953,6 +953,19 @@ xa2$NAME_1 <- trimws(gsub("\\s+", " ", xa2$NAME_1))
 xa2$NAME_2 <- trimws(gsub("\\s+", " ", xa2$NAME_2))
 xa2$NAME_3 <- trimws(gsub("\\s+", " ", xa2$NAME_3))
 
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "1"), "Quan 1", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "2"), "Quan 2", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "3"), "Quan 3", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "4"), "Quan 4", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "5"), "Quan 5", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "6"), "Quan 6", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "7"), "Quan 7", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "8"), "Quan 8", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "9"), "Quan 9", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "10"), "Quan 10", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "11"), "Quan 11", xa2$NAME_2)
+xa2$NAME_2 <- ifelse((xa2$NAME_2 == "12"), "Quan 12", xa2$NAME_2)
+
 gadm_sf <- gadm36_VNM3_sf[,c("NAME_1", "NAME_2", "NAME_3", "TYPE_3", "geometry")]
 gadm_sf <- data.frame(gadm_sf)
 
@@ -11800,7 +11813,7 @@ library(rmapshaper)
 ho <- data_ho_overall %>%
   arrange(desc(songuoi)) %>%
   mutate(pro.pop=(songuoi/sum(songuoi)*100))
-ho <- head(ho, n=50)
+ho <- head(ho, n=200)
 
 ho10 <- head(ho, n=10)
 ho20 <- head(ho, n=20)
@@ -11870,8 +11883,8 @@ saveRDS(dat, file = "data/dat.rds")
 saveRDS(dat_st, file = "data/dat_st.rds")
 fwrite(x = dat_st, file = "data/dat_st.csv")
 
-saveRDS(dat_spl, file = "../../data/dat_spl.rds")
-saveRDS(dat1, file = "../../data/dat1.rds")
-saveRDS(dat10, file = "../../data/dat10.rds")
-saveRDS(dat20, file = "../../data/dat20.rds")
+saveRDS(dat_spl, file = "data/dat_spl.rds")
+saveRDS(dat1, file = "data/dat1.rds")
+saveRDS(dat10, file = "data/dat10.rds")
+saveRDS(dat20, file = "data/dat20.rds")
 ```
