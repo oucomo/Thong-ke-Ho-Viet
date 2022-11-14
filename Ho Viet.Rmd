@@ -377,8 +377,8 @@ data_ho$Ho <- ifelse((data_ho$Ho == "ya" | data_ho$Ho == "Ya" | data_ho$Ho == "Y
 data_ho_overall <- data_ho %>%
   group_by(Ho) %>%
   summarise(songuoi=sum(songuoi))
-# library(writexl)
-# write_xlsx(data_ho_overall, "output/tongho.xlsx")
+library(writexl)
+write_xlsx(data_ho_overall, "output/tongho.xlsx")
 
 data_ho_tinh <- data_ho %>%
   group_by(MATINH, Ho) %>%
@@ -1988,7 +1988,7 @@ ggsave(filename = file.path("figures", "General", "Ho Vo-PerArea.jpeg"), width =
 #rivers <- st_read(file.path("GloRiC_v10_shapefile", "GloRiC_v10.shp"))
 #river1 <- st_read(file.path("data", "ThuyHeVN2000.shp")) #https://data.opendevelopmentmekong.net/dataset/mng-li-thy-vn
 #river2 <- st_read(file.path("data", "river.shp")) #https://www.greatermekong.org/gms-main-rivers
-river3 <- st_read(file.path("data", "fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
+#river3 <- st_read(file.path("data", "fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
 ```
 
 ## Họ Nguyễn
@@ -11840,6 +11840,7 @@ plot_df <- df %>%
 plot_df
 ggsave(filename = file.path("figures", "General", "Mai-Density-2(2).jpeg"), width = 25, height = 16)
 ```
+
 ```{r}
 library(gam)
 gam = gam(songuoi_km ~ s(as.numeric(reorder(factor(rank), distm_km)), 20), data = df)
@@ -11895,8 +11896,8 @@ dat <- dat %>% filter(Ho %in% ho$Ho)
 dat$area = as.numeric(dat$area)
 dat$area_km = as.numeric(dat$area_km)
 
-dat_tr <- sf::st_transform(dat, 2154)
-dat_sp <- as(dat_tr, Class = "Spatial")
+# dat_tr <- sf::st_transform(dat, 2154)
+# dat_sp <- as(dat_tr, Class = "Spatial")
 # dat <- sf::st_simplify(dat)
 
 dat_sff_st <- dat_sff %>% st_as_sf(crs = 4326)
@@ -11919,21 +11920,18 @@ dat_st <- dat_st %>% filter(Ho %in% ho$Ho)
 dat_st$area_km = as.numeric(dat_st$area_km)
 
 
-
-
-
-dat_st <- st_centroid(dat) %>% 
-  st_geometry() %>% 
-  do.call(rbind, .) %>% 
-  as_tibble() %>% 
-  setNames(c("lng","lat"))
+# dat_st <- st_centroid(dat) %>% 
+#   st_geometry() %>% 
+#   do.call(rbind, .) %>% 
+#   as_tibble() %>% 
+#   setNames(c("lng","lat"))
 
 # works 
 library(rmapshaper)
 # dat_spl <- sf::st_simplify(dat_full)
-dat_spl <- ms_simplify(dat, keep = 0.01, keep_shapes = TRUE)
+# dat_spl <- ms_simplify(dat, keep = 0.01, keep_shapes = TRUE)
 # dat_spl_sp <- rmapshaper::ms_simplify(dat_sp, keep = 0.02)
-dat_spl2 <- gSimplify(dat_sp, tol = 0.02, topologyPreserve = TRUE)
+# dat_spl2 <- gSimplify(dat_sp, tol = 0.02, topologyPreserve = TRUE)
 
 dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
 
@@ -11944,13 +11942,13 @@ dat20 <- dat %>% filter(Ho %in% c("Bùi", "Dương", "Đặng", "Đỗ", "Hoàng
 # dat10 <- dat %>% 
 #   filter(Ho %in% ho10$Ho)
 
-saveRDS(dat_full, file = "data/dat_full.rds")
-saveRDS(dat, file = "data/dat.rds")
-saveRDS(dat_st, file = "data/dat_st.rds")
-# fwrite(x = dat_st, file = "data/dat_st.csv")
+# saveRDS(dat_full, file = "data/dat_full.rds")
+# saveRDS(dat, file = "data/dat.rds")
+# saveRDS(dat_st, file = "data/dat_st.rds")
+# # fwrite(x = dat_st, file = "data/dat_st.csv")
 # 
-# saveRDS(dat_spl, file = "data/dat_spl.rds")
-saveRDS(dat1, file = "data/dat1.rds")
-saveRDS(dat10, file = "data/dat10.rds")
-saveRDS(dat20, file = "data/dat20.rds")
+# # saveRDS(dat_spl, file = "data/dat_spl.rds")
+# saveRDS(dat1, file = "data/dat1.rds")
+# saveRDS(dat10, file = "data/dat10.rds")
+# saveRDS(dat20, file = "data/dat20.rds")
 ```
