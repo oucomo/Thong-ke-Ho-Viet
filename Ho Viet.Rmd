@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       tidy=TRUE)
 #library(rmarkdown)
 #library(knitr)
+library(workflowr)
 library(markdown)
 library(stringr)
 library(forcats)

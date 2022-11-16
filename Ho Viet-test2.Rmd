@@ -1,0 +1,64 @@
+---
+title: "Họ Việt"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+rm(list = ls(all.names = TRUE))
+library(rmarkdown)
+library(knitr)
+library(markdown)
+
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE,
+                      fig.width = 20,
+                      fig.height = 30)
+
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(data.table)
+library(lubridate)
+library(viridis)
+library(sf)
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+```{r load data, message=FALSE, warning=FALSE}
+load("data/hoviet.RData")
+```
+
+## Bùi
+
+```{r, fig.width=20, fig.height=30}
+# library(plotly)
+
+bui_sf <- dat_sf %>% mutate(prop.bui=(sum(subset(., Ho=="Bùi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Bùi")
+bui_plot <- bui_sf %>% select(NAME_1, NAME_2, NAME_3, pro.pop, prop.bui, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=bui_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=15, label= paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Bùi")
+
+# fig <- ggplotly(
+#   ggplot(bui_plot) +
+#     geom_sf(aes(fill = pro.pop), lwd=0) +
+#     # geom_sf(data=river3, col="white") +
+#     scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+#     annotate(geom="text", x=108, y=23, color="red", label= paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = "")) +
+#     theme_bw()
+# )
+# 
+# fig
+```
+

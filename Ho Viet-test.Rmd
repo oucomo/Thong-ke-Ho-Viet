@@ -1,0 +1,275 @@
+---
+title: "Ho Viet"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+#library(rmarkdown)
+#library(knitr)
+library(markdown)
+library(stringr)
+library(forcats)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+#library(flextable)
+library(huxtable)
+library(data.table)
+library(lubridate)
+library(stringi)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+#library(dlookr)
+#library(flextable)
+library(haven)
+library(raster)
+library(rgdal)
+
+library(rworldmap)
+library(plotKML)
+
+library(viridis)
+library(sf)
+library(mongolite)
+library(jsonlite)
+library(RJSONIO)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+getData<-raster::getData
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+```{r load data2}
+load("data/hoviet.RData")
+```
+
+# Top Họ cả nước
+
+```{r, results='hide', message=FALSE, warning=FALSE}
+data_ho_top1000 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top1000 <- head(data_ho_top1000, n=1000)
+
+data_ho_top500 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top500 <- head(data_ho_top500, n=500)
+
+data_ho_top200 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top200 <- head(data_ho_top200, n=200) %>%
+  mutate(rank = dense_rank(desc(songuoi)),
+         group=NA,
+         group=ifelse(rank %in% c(1:50), 1, ifelse(rank %in% c(51:100), 2, ifelse(rank %in% c(101:150), 3, ifelse(rank %in% c(151:200), 4, group)))),
+         group=factor(group, levels = c(1,2,3,4), labels = c("1-50","51-100","101-150","151-200")))
+
+data_ho_top150 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top150 <- data_ho_top150 %>% slice(101:150)
+
+data_ho_top100 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top100 <- data_ho_top100 %>% slice(51:100)
+
+data_ho_top50 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top50 <- head(data_ho_top50, n=50)
+
+data_ho_top20 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top20 <- head(data_ho_top20, n=20)
+
+data_ho_top10 <- data_ho_overall %>%
+  arrange(desc(songuoi))
+data_ho_top10 <- head(data_ho_top10, n=10)
+```
+
+```{r}
+ggplot(data = data_ho_top50, aes(x = reorder(Ho, songuoi, decreasing=F), y =songuoi)) +
+  geom_bar(stat = "identity", fill="red", width = 0.75) +
+  #geom_text(aes(label = songuoi, y = songuoi + 50), size = 3) +
+  scale_x_discrete(name = NULL) +
+  scale_y_continuous(name = NULL, breaks = seq(from = 0, to = 30000000, by = 5000000)) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 7),
+        panel.grid.major = element_blank()) + coord_flip() +
+  ggtitle("Top 50 họ có số người cao nhất")
+```
+
+# Bản đồ tỉ lệ % họ tính đến xã
+
+## Bùi
+
+```{r}
+bui_sf <- dat_sf %>% mutate(prop.bui=(sum(subset(., Ho=="Bùi")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Bùi")
+bui_plot <- bui_sf %>% select(pro.pop, prop.bui, geometry) %>% st_as_sf(crs = 4326)
+ggplot() + geom_sf() + geom_sf(data=bui_plot, aes(fill=pro.pop), lwd=0) +
+  geom_sf(data=river3) +
+  annotate(geom="text", x=108, y=23, color="red", size=18, label= paste(round(bui_plot$prop.bui[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
+  ggtitle("Họ Bùi")
+#ggsave(filename = file.path("figures", "Bui-PerPop-River.png"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "PerPop-River", "Bui-PerPop-River.jpeg"), width = 49, height = 33)
+```
+
+```{r}
+library(plotly)
+library(rjson)
+library(jsonlite)
+library(RJSONIO)
+
+url <- 'https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'
+
+counties <- rjson::fromJSON(file=url)
+
+library("rjson")
+data <- rjson::fromJSON("data/dat1.json")
+
+url2<- "https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv"
+
+df <- read.csv(url2, colClasses=c(fips="character"))
+
+g <- list(
+
+  scope = 'usa',
+
+  projection = list(type = 'albers usa'),
+
+  showlakes = TRUE,
+
+  lakecolor = toRGB('white')
+
+)
+
+fig <- plot_ly()
+
+fig <- fig %>% add_trace(
+
+    type="choropleth",
+
+    geojson=counties,
+
+    locations=df$fips,
+
+    z=df$unemp,
+
+    colorscale="Viridis",
+
+    zmin=0,
+
+    zmax=12,
+
+    marker=list(line=list(
+
+      width=0)
+
+    )
+
+  )
+
+fig <- fig %>% colorbar(title = "Unemployment Rate (%)")
+
+fig <- fig %>% layout(
+
+    title = "2016 US Unemployment by County"
+
+)
+
+
+fig <- fig %>% layout(
+
+    geo = g
+
+  )
+
+
+fig
+```
+
+```{r}
+library(plotly)
+
+library(rjson)
+
+
+url <- 'https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'
+
+counties <- rjson::fromJSON(file=url)
+
+url2<- "https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv"
+
+df <- read.csv(url2, colClasses=c(fips="character"))
+
+g <- list(
+
+  scope = 'usa',
+
+  projection = list(type = 'albers usa'),
+
+  showlakes = TRUE,
+
+  lakecolor = toRGB('white')
+
+)
+
+fig <- plot_ly()
+
+fig <- fig %>% add_trace(
+
+    type="choropleth",
+
+    geojson=counties,
+
+    locations=df$fips,
+
+    z=df$unemp,
+
+    colorscale="Viridis",
+
+    zmin=0,
+
+    zmax=12,
+
+    marker=list(line=list(
+
+      width=0)
+
+    )
+
+  )
+
+fig <- fig %>% colorbar(title = "Unemployment Rate (%)")
+
+fig <- fig %>% layout(
+
+    title = "2016 US Unemployment by County"
+
+)
+
+
+fig <- fig %>% layout(
+
+    geo = g
+
+  )
+
+
+fig
+```
+
+
