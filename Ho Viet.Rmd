@@ -11937,7 +11937,7 @@ dat_spl2 <- gSimplify(dat_sp, tol = 0.02, topologyPreserve = TRUE)
 
 dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
 
-dat10 <- dat %>% filter(Ho %in% c("Mai", "Khúc", "Phùng", "Dương", "Ngô", "Lương", "Lý", "Hoàng", "Trần", "Lê"))
+dat10 <- dat %>% filter(Ho %in% c("Mai", "Chu", "Phùng", "Dương", "Ngô", "Lương", "Lý", "Hoàng", "Trần", "Lê"))
 
 dat20 <- dat %>% filter(Ho %in% c("Bùi", "Dương", "Đặng", "Đỗ", "Hoàng", "Huỳnh", "Khúc", "Lê", "Lương", "Lý", "Mai", "Ngô", "Nguyễn", "Phan", "Phạm", "Phùng", "Trần", "Trương", "Võ", "Vũ"))
 
