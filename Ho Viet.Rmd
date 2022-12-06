@@ -11950,6 +11950,6 @@ dat20 <- dat %>% filter(Ho %in% c("Bùi", "Dương", "Đặng", "Đỗ", "Hoàng
 # 
 # # saveRDS(dat_spl, file = "data/dat_spl.rds")
 # saveRDS(dat1, file = "data/dat1.rds")
-# saveRDS(dat10, file = "data/dat10.rds")
+saveRDS(dat10, file = "data/dat10.rds")
 # saveRDS(dat20, file = "data/dat20.rds")
 ```
