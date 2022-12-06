@@ -5,10 +5,10 @@ account: duhongduc
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7181604
-bundleId: 6505328
+bundleId: 6598135
 url: https://duhongduc.shinyapps.io/HoViet/
-when: 1668232655.42369
-lastSyncTime: 1668232655.4237
+when: 1670314511.53414
+lastSyncTime: 1670314511.53416
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .app2.R.swp|app-final.R|app-point.R|cache/__packages|cache/example-leaflet-setView-7_e12ff30e4a9c0c4357ea550dfd15cf65.RData|cache/example-leaflet-setView-7_e12ff30e4a9c0c4357ea550dfd15cf65.rdb|cache/example-leaflet-setView-7_e12ff30e4a9c0c4357ea550dfd15cf65.rdx|dat_full.rds|dat.rds|dat1.rds|dat10.rds|dat20.rds
+ignoredFiles: .app2.R.swp|app-final.R|app-point.R|cache/__packages|cache/example-leaflet-setView-7_e12ff30e4a9c0c4357ea550dfd15cf65.RData|cache/example-leaflet-setView-7_e12ff30e4a9c0c4357ea550dfd15cf65.rdb|cache/example-leaflet-setView-7_e12ff30e4a9c0c4357ea550dfd15cf65.rdx|dat_full.rds|dat_st.rds|dat.rds|dat1.rds|dat20.rds
