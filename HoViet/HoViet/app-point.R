@@ -285,7 +285,7 @@ server <- function(input, output, session) {
   
   output$map1 <- renderLeaflet({
     leaflet(filt_mai1(), options = leafletOptions(zoomSnap = 0.5, zoomDelta=0.5)) %>%
-      addProviderTiles(provider = "Esri.WorldStreetMap", options = providerTileOptions(minZoom = 4, maxZoom = 12)) %>%
+      addProviderTiles(provider = "Esri.WorldStreetMap", options = providerTileOptions(minZoom = 6, maxZoom = 11)) %>%
       setView(lng = "108.2772", lat="16.0583", zoom = 6) %>%
       addControl(html="<h1 id='zoom'>Zoom</h1>") %>%
       onRender("function(el,x,data){
