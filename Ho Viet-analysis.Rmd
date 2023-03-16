@@ -320,8 +320,23 @@ ggplot() + geom_sf() + geom_sf(data=mai_plot, aes(fill=pro.pop), lwd=0) +
   scale_fill_viridis("Tỉ lệ (%) trên dân số địa phương", direction = -1, option = "viridis") +
   theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm")) +
   ggtitle("Họ Mai")
+
+mai_sf <- dat_sf %>% mutate(prop.mai=(sum(subset(., Ho=="Mai")[, "songuoi"])/sum(songuoi))*100) %>% filter(Ho=="Mai")
+mai_plot <- mai_sf %>% select(NAME_1, NAME_2, NAME_3, pro.pop, prop.mai, geometry) %>% st_as_sf(crs = 4326)
+mai_peak <- mai_plot %>% filter(NAME_3=="Thi tran Nga Son")
+
+ggplot() + geom_sf() + geom_sf(data=mai_plot, aes(fill=pro.pop), color=NA) +
+  geom_sf(data=river3, col="white") +
+  geom_sf_text(data=river3, mapping=aes(label = nam), stat = "sf_coordinates", position = "identity", check_overlap = T) +
+  geom_sf_label(data=mai_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  annotate(geom="text", x=108, y=23, color="red", size=15, label= paste(round(mai_plot$prop.mai[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Mai")
 #ggsave(filename = file.path("Ho Mai-PerPop.png"), width = 49, height = 33)
-ggsave(filename = file.path("figures", "General", "Ho Mai-PerPop.jpeg"), width = 49, height = 33)
+ggsave(filename = file.path("figures", "General", "Ho Mai-PerPop.png"), width = 33, height = 49)
+ggsave(filename = file.path("figures", "General", "Ho Mai-PerPop.jpeg"), width = 33, height = 49)
 ```
 
 ## Họ Phùng
@@ -1027,7 +1042,7 @@ dat_st$area_km = as.numeric(dat_st$area_km)
 
 ## Họ Mai
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 mai <- dat_sff %>% filter(Ho=="Mai") %>% st_as_sf(crs = 4326)
 mai$centroid <- sf::st_transform(mai, 2154) %>% 
   st_centroid() %>% 
@@ -1046,54 +1061,45 @@ mai <- mai %>%
          var=sum_distm_km2/(n()-1),
          sd=sqrt(var))
 
-mai_st <- mai %>%
-  mutate(lng = map(centroid,1),
-         lat = map(centroid,2),
-         lng = as.numeric(lng),
-         lat = as.numeric(lat)) %>%
-  st_drop_geometry() %>%
-  select(-c("MAXA", "MAHUYEN", "MATINH", "TYPE_3", "area", "centroid"))
-
-mai_st$area_km = as.numeric(mai_st$area_km)
-
-mai_radius <- mai_st %>%
+mai_radius <- mai %>%
   arrange(distm_km) %>%
   mutate(rank=row_number())
 
 distm_km<-mai_radius$distm_km
-songuoi_km<-mai_radius$songuoi_km
+pro.pop<-mai_radius$pro.pop
 rank<-mai_radius$rank
 commune<-mai_radius$NAME_3
 rank<-factor(rank, labels = commune)
-long<-mai_radius$lng
-lat<-mai_radius$lat
-estimate<-1200*exp(-(distm_km^2)/(2*100))
+estimate<-35*exp(-(distm_km^2)/(2*100))
 
 library(dplyr)
-df <- data.frame(distm_km, rank, commune, estimate, songuoi_km, long, lat) %>%
-  mutate(num=sum((songuoi_km-estimate)^2),
+
+df <- data.frame(distm_km, rank, commune, estimate, pro.pop)
+
+df <- df %>%
+  mutate(num=sum((pro.pop-estimate)^2),
          den=nrow(df)-1,
          var=num/den,
          sd=sqrt(var),
-         rank_com=as.numeric(reorder(factor(rank), distm_km)))
+         rank_com=as.numeric(rank))
   
-breaks <- c(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000)
+breaks <- c(0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200)
 
 plot_df <- df %>%
-  #filter(row_number()<=100) %>%
-  ggplot(aes(x=reorder(factor(rank), distm_km), y=songuoi_km, fill=distm_km)) +
-  geom_bar(aes(x=reorder(factor(rank), distm_km), y=songuoi_km), stat = "identity", width = 0.5) + 
+  filter(row_number()<=1000) %>%
+  ggplot(aes(x=reorder(factor(rank), distm_km), y=pro.pop, fill=distm_km)) +
+  geom_bar(aes(x=reorder(factor(rank), distm_km), y=pro.pop), stat = "identity", width = 0.5) + 
   #stat_smooth(method = 'lm', aes(colour = 'linear'), se = FALSE) +
   #geom_line(aes(x=as.numeric(reorder(factor(rank), distm_km)), y=estimate)) +
-  stat_smooth(aes(y=songuoi_km, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=20)) +
+  stat_smooth(aes(y=pro.pop, x=as.numeric(reorder(factor(rank), distm_km))),method="gam",se=TRUE,formula=y~s(x,k=20)) +
   scale_x_discrete(name = "Xã/Phường", 
                      breaks = reorder(factor(rank), distm_km), 
                      labels = reorder(factor(rank), distm_km)) +
   scale_fill_gradientn("Khoảng cách tới tâm (km)", colours = terrain.colors(10), breaks=breaks) +
-  scale_y_continuous(name="Mật độ người/km2") +
+  scale_y_continuous(name="Tỉ lệ (%)") +
   theme_bw() + 
-  theme(text = element_text(size=20), axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.text.y = element_text(size=20),
-        legend.text=element_text(size=20), legend.key.size = unit(5, "cm"), legend.key.height = unit(2, "cm"), legend.key.width = unit(4, "cm"), legend.position = "bottom") +
+  theme(text = element_text(size=45), axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.text.y = element_text(size=30),
+        legend.text=element_text(size=30), legend.key.size = unit(6, "cm"), legend.key.height = unit(3, "cm"), legend.key.width = unit(5, "cm"), legend.position = "bottom") +
   theme(panel.grid.major = element_blank()) + 
   #annotate(geom='text', x=30, y=200, label="y == 55*e^-{(x^{2}+y^{2})/2*(160)}", parse = TRUE,size=10) +
   #annotate(geom='text', x=30, y=180, label="s.e. = 130 người/xã",parse=F,size=8) +
@@ -1101,18 +1107,19 @@ plot_df <- df %>%
   ggtitle("Mai")
 
 plot_df
-ggsave(filename = file.path("figures", "General", "Mai-Density-2(2).jpeg"), width = 25, height = 16)
+# ggsave(filename = file.path("figures", "General", "Mai-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
 ```{r}
 library(gam)
-gam = gam(songuoi_km ~ s(as.numeric(reorder(factor(rank), distm_km)), 20), data = df)
+df<-df %>% filter(row_number()<=1000)
+gam = gam(pro.pop ~ s(as.numeric(reorder(factor(rank), distm_km)), 20), data = df)
 plot(gam, se = TRUE, col = "green")
 summary(gam)
 ```
 
 ```{r}
-mod=lm(songuoi_km ~ rank_com + poly(rank_com, 20), data=df)
+mod=lm(pro.pop ~ rank_com + poly(rank_com, 20), data=df)
 summary(mod)
 df <- df %>% mutate(pred=predict(mod))
 ggplot(df, aes(x=rank_com, y=pred)) +
@@ -1294,16 +1301,17 @@ library(geoR)
 library(ggplot2)
 
 # Plot the histogram of the lead concentration
-hist(df$songuoi_km)
+df <- df %>% mutate(pro.pop=as.numeric(pro.pop))
+hist(df$pro.pop)
 
 ## map the songuoi_km
-tm_shape(mai) + tm_symbols(col="songuoi_km", midpoint = NA)  
+tm_shape(mai) + tm_symbols(col="pro.pop", midpoint = NA)  
 
 ## scatter plot of the log of the lead concentration and pm10
-ggplot(df, aes(x = rank, y = songuoi_km)) + geom_point()
+ggplot(df, aes(x = rank, y = pro.pop)) + geom_point()
 
 # put a smooth line on it 
-ggplot(df, aes(x =rank, y = songuoi_km)) + geom_point() + geom_smooth()
+ggplot(df, aes(x =rank, y = pro.pop)) + geom_point() + geom_smooth()
 
 ## scatter plot of the log of the lead concentration and all the other variables
 ggplot( df %>% gather(key, value, -loglead, -lead), 
@@ -1317,7 +1325,7 @@ ggplot( df %>% gather(key, value, -loglead, -lead),
 # First thing to note is that the variogram is constructed on the residual. 
 # So fit a linear model to the loglead and extract the residual
 
-fit <- lm(formula = songuoi_km ~ rank, data = df)
+fit <- lm(formula = pro.pop~ rank, data = df)
 resi <- residuals(fit)
 
 ggvario(coords = df[, c("long", "lat")], data = resi, bins = 15, 
