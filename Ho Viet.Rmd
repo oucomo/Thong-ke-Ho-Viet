@@ -1019,6 +1019,13 @@ dat_sf <- merge(xa2, gadm_sf, by=c("NAME_1", "NAME_2", "NAME_3"))
 
 table(xa2$NAME_1 %in% gadm_sf$NAME_1)
 head(xa2$NAME_1)
+
+ho <- data_ho_overall %>%
+  arrange(desc(songuoi)) %>%
+  mutate(pro.pop=(songuoi/sum(songuoi)*100))
+ho <- head(ho, n=200)
+
+dat_sf$Ho[!(dat_sf$Ho %in% ho$Ho)] <- "Khác"
 ```
 ## Họ Nguyễn
 
@@ -1538,6 +1545,8 @@ head(dat_sff)
 table(xa2$NAME_1 %in% dat_f$NAME_1)
 head(xa2$NAME_1)
 head(dat_f$NAME_1)
+
+dat_sff$Ho[!(dat_sff$Ho %in% ho$Ho)] <- "Khác"
 ```
 
 ## Họ Nguyễn
@@ -1989,7 +1998,7 @@ ggsave(filename = file.path("figures", "General", "Ho Vo-PerArea.jpeg"), width =
 #rivers <- st_read(file.path("GloRiC_v10_shapefile", "GloRiC_v10.shp"))
 #river1 <- st_read(file.path("data", "ThuyHeVN2000.shp")) #https://data.opendevelopmentmekong.net/dataset/mng-li-thy-vn
 #river2 <- st_read(file.path("data", "river.shp")) #https://www.greatermekong.org/gms-main-rivers
-#river3 <- st_read(file.path("data", "fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
+river3 <- st_read(file.path("data", "fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
 ```
 
 ## Họ Nguyễn
@@ -8871,6 +8880,7 @@ ggsave(filename = file.path("figures", "General", "Trieu-Density-xa(2).jpeg"), w
 
 ```{r}
 # save(dat_f, dat_sf, dat_sff, data_ho, data_ho_overall, data_ho_tinh, data_ho_xa, data_huyen, data_tinh, data_xa, river3, file = "data/hoviet.RData")
+save(dat_f, dat_sf, dat_sff, data_ho, data_ho_overall, data_ho_tinh, data_ho_xa, data_huyen, data_tinh, data_xa, river3, file = "data/hoviet_full.RData")
 ```
 
 ```{r}
