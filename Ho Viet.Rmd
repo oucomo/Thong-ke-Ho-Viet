@@ -378,6 +378,8 @@ data_ho$Ho <- ifelse((data_ho$Ho == "ya" | data_ho$Ho == "Ya" | data_ho$Ho == "Y
 data_ho_overall <- data_ho %>%
   group_by(Ho) %>%
   summarise(songuoi=sum(songuoi))
+
+data_ho_overall$songuoi <- na_if(data_ho_overall$songuoi, 0)
 library(writexl)
 write_xlsx(data_ho_overall, "output/tongho.xlsx")
 
@@ -385,14 +387,16 @@ data_ho_tinh <- data_ho %>%
   group_by(MATINH, Ho) %>%
   summarise(songuoi=sum(songuoi)) %>% filter(MATINH!="") %>%
   group_by(MATINH) %>%
-  mutate(danso=sum(songuoi)) %>% ungroup() %>%
+  mutate(songuoi=na_if(songuoi, 0),
+         danso=sum(songuoi)) %>% ungroup() %>%
   mutate(pro.pop=(songuoi/danso)*100)
 
 data_ho_xa <- data_ho %>%
   group_by(MATINH, MAHUYEN, MAXA, Ho) %>%
   summarise(songuoi=sum(songuoi)) %>% filter(MATINH!="") %>%
   group_by(MAXA) %>%
-  mutate(danso=sum(songuoi)) %>% ungroup() %>%
+  mutate(songuoi=na_if(songuoi, 0),
+         danso=sum(songuoi)) %>% ungroup() %>%
   mutate(pro.pop=(songuoi/danso)*100)
 ```
 ## Top Họ cả nước
@@ -1016,6 +1020,7 @@ xa2 <- xa2 %>% distinct(., NAME_1, NAME_2, NAME_3, Ho, .keep_all = T)
 gadm_sf <- gadm_sf %>% distinct(., NAME_1, NAME_2, NAME_3, .keep_all = T)
 
 dat_sf <- merge(xa2, gadm_sf, by=c("NAME_1", "NAME_2", "NAME_3"))
+dat_sf$songuoi <- na_if(dat_sf$songuoi, 0)
 
 table(xa2$NAME_1 %in% gadm_sf$NAME_1)
 head(xa2$NAME_1)
@@ -1535,18 +1540,19 @@ dat_f$NAME_3 <- ifelse((dat_f$NAME_3 == "Phuong Phuong 32"), "Phuong 32", dat_f$
 dat_f <- dat_f %>% distinct(., NAME_1, NAME_2, NAME_3, .keep_all = T)
 
 dat_sff <- merge(xa2, dat_f, by=c("NAME_1", "NAME_2", "NAME_3")) %>%
-  mutate(area_km=area/1000000,
+  mutate(songuoi=na_if(songuoi, 0),
+         area_km=area/1000000,
          songuoi_km=songuoi/area_km,
          songuoi_km=as.numeric(songuoi_km),
          pro.pop_km=pro.pop/area_km,
          pro.pop_km=as.numeric(pro.pop_km))
-head(dat_sff)
 
 table(xa2$NAME_1 %in% dat_f$NAME_1)
 head(xa2$NAME_1)
 head(dat_f$NAME_1)
 
 dat_sff$Ho[!(dat_sff$Ho %in% ho$Ho)] <- "Khác"
+head(dat_sff)
 ```
 
 ## Họ Nguyễn
