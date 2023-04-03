@@ -11944,7 +11944,7 @@ library(rmapshaper)
 # dat_spl_sp <- rmapshaper::ms_simplify(dat_sp, keep = 0.02)
 # dat_spl2 <- gSimplify(dat_sp, tol = 0.02, topologyPreserve = TRUE)
 
-dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần"))
+dat1 <- dat %>% filter(Ho %in% c("Dương", "Lê", "Mai", "Ngô", "Nguyễn", "Phùng", "Trần", "Chử"))
 
 dat10 <- dat %>% filter(Ho %in% c("Mai", "Chu", "Phùng", "Dương", "Ngô", "Lương", "Lý", "Hoàng", "Trần", "Lê"))
 
@@ -11959,7 +11959,7 @@ dat20 <- dat %>% filter(Ho %in% c("Bùi", "Dương", "Đặng", "Đỗ", "Hoàng
 # # fwrite(x = dat_st, file = "data/dat_st.csv")
 # 
 # # saveRDS(dat_spl, file = "data/dat_spl.rds")
-# saveRDS(dat1, file = "data/dat1.rds")
+saveRDS(dat1, file = "data/dat1.rds")
 saveRDS(dat10, file = "data/dat10.rds")
 # saveRDS(dat20, file = "data/dat20.rds")
 ```
