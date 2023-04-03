@@ -34,7 +34,7 @@ library(whoami)
 key <- ''    ## put your own token here
 mapdeck(token = key)
 
-dat <- readRDS("dat10.rds")
+dat <- readRDS("dat1.rds")
 # dat <- sf::st_simplify(dat)
 
 dat2 = as.data.table(dat)
