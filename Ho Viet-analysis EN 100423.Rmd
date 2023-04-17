@@ -1021,7 +1021,6 @@ a_hisf <- a_sff %>%
   ggtitle("A")
 ```
 
-
 ```{r, message=FALSE, warning=FALSE, lazy=TRUE}
 ggarrange(nguyen_hisf, tran_hisf, le_hisf, pham_hisf, hoang_hisf,
           bui_hisf, vu_hisf, vo_hisf, phan_hisf, do_hisf,
