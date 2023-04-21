@@ -1,0 +1,223 @@
+---
+title: "Ho Viet"
+author: "Duc Du"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls(all.names = TRUE))
+knitr::opts_chunk$set(echo = FALSE, 
+                      cache=TRUE,
+                      tidy.opts=list(width.cutoff=60),
+                      tidy=TRUE)
+library(rmarkdown)
+library(knitr)
+library(workflowr)
+library(markdown)
+library(stringr)
+library(forcats)
+library(RColorBrewer)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(Hmisc)
+library(gtsummary)
+library(flextable)
+library(huxtable)
+library(data.table)
+library(lubridate)
+library(stringi)
+library(forcats)
+library(ggpubr)
+library(rstatix)
+library(dlookr)
+library(flextable)
+library(haven)
+# library(raster)
+library(rgdal)
+library(viridis)
+library(sf)
+
+select<-dplyr::select
+filter<-dplyr::filter
+recode<-dplyr::recode
+# getData<-raster::getData
+
+# rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+
+options(scipen=999, digits = 3)
+options(max.print=1000000)
+```
+
+# Bản đồ tính đến huyện
+
+```{r}
+library(sf)
+gadm36_VNM2_sf <- readRDS("data/gadm36_VNM_2_sf.rds")
+gadm_sf <- gadm36_VNM2_sf[,c("NAME_1", "NAME_2", "TYPE_2", "geometry")]
+gadm_sf <- data.frame(gadm_sf)
+
+gadm_sf$NAME_2 <- paste(gadm_sf$TYPE_2, gadm_sf$NAME_2)
+gadm_sf$NAME_1 <- trimws(gsub("\\s+", " ", gadm_sf$NAME_1))
+gadm_sf$NAME_2 <- trimws(gsub("\\s+", " ", gadm_sf$NAME_2))
+gadm_sf$NAME_1 <- stri_trans_general(gadm_sf$NAME_1, "Latin-ASCII")
+gadm_sf$NAME_2 <- stri_trans_general(gadm_sf$NAME_2, "Latin-ASCII")
+
+gadm_sf <- gadm_sf %>% distinct(., NAME_1, NAME_2, .keep_all = T)
+gadm_sf <- gadm_sf[,c("NAME_1", "NAME_2", "geometry")]
+```
+
+# Bản đồ mật độ họ trên diện tích tính đến huyện
+
+```{r}
+library(sf)
+f <- st_read("data/gadm36_VNM_2.shp")
+f$area <- st_area(f) #Take care of units
+
+dat_f <- f[,c("NAME_1", "NAME_2", "TYPE_2", "area")]
+dat_f <- data.frame(dat_f)
+
+dat_f$NAME_2 <- paste(dat_f$TYPE_2, dat_f$NAME_2)
+dat_f$NAME_1 <- trimws(gsub("\\s+", " ", dat_f$NAME_1))
+dat_f$NAME_2 <- trimws(gsub("\\s+", " ", dat_f$NAME_2))
+
+dat_f$NAME_1 <- stri_trans_general(dat_f$NAME_1, "Latin-ASCII")
+dat_f$NAME_2 <- stri_trans_general(dat_f$NAME_2, "Latin-ASCII")
+
+dat_f <- dat_f %>% distinct(., NAME_1, NAME_2, .keep_all = T)
+dat_f <- dat_f[,c("NAME_1", "NAME_2", "area")]
+
+dat_sff <- merge(gadm_sf, dat_f, by=c("NAME_1", "NAME_2")) %>%
+  mutate(area_km=area/1000000)
+
+area_km<-dat_sff$area_km
+NAME_1<-dat_sff$NAME_1
+NAME_2<-dat_sff$NAME_2
+dat_huyen_area <- aggregate(area_km, data.frame(NAME_1), sum) %>% setDT() %>%
+  rename(area_km_sum=x)
+
+dat_sff <- merge(dat_sff, dat_huyen_area, by=c("NAME_1"))
+
+dat_sff <- dat_sff %>%
+  mutate(prop.area=as.numeric(round((area_km/area_km_sum)*100,2)))
+
+river3 <- st_read(file.path("data", "fk621pf5900.shp")) #https://maps.princeton.edu/catalog/stanford-fk621pf5900
+```
+
+# Dan toc
+
+```{r}
+dt <- read.csv("data/Dan toc.csv", header = TRUE)
+
+bana_tong <- dt %>% select(NAME_1, bana) %>% mutate(tong=colSums(across(where(is.numeric))))
+bru_tong <- dt %>% select(NAME_1, bru) %>% mutate(tong=colSums(across(where(is.numeric))))
+coho_tong <- dt %>% select(NAME_1, coho) %>% mutate(tong=colSums(across(where(is.numeric))))
+hre_tong <- dt %>% select(NAME_1, hre) %>% mutate(tong=colSums(across(where(is.numeric))))
+```
+
+## Ba Na
+
+```{r}
+library(ggplot2)
+
+bana_sff <- merge(dat_sff, bana_tong %>% select(bana, tong, NAME_1), by=c("NAME_1"))
+
+bana <- bana_sff %>%
+  mutate(danso=bana,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+bana_plotf <- bana %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=bana_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(bana_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  ggtitle("Ba Na (Bahnar) Bơ Nâm, Roh, Kon Kde, Gơlar, Kriem, Jơlơng, Rơ Ngao, Tơlô")
+ggsave(filename = file.path("figures", "Dan toc", "Ba Na-PerArea.png"), width = 16, height = 25)
+```
+
+## Bru - Vân Kiều
+
+```{r}
+library(ggplot2)
+
+bru_sff <- merge(dat_sff, bru_tong %>% select(bru, tong, NAME_1), by=c("NAME_1"))
+
+bru <- bru_sff %>%
+  mutate(danso=bru,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+bru_plotf <- bru %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=bru_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(bru_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  ggtitle("Bru - Vân Kiều (Bru) Bru, Vân Kiều, Ma Coong, Khùa, Trì")
+ggsave(filename = file.path("figures", "Dan toc", "Bru-PerArea.png"), width = 16, height = 25)
+```
+
+## Cơ Ho
+
+```{r}
+library(ggplot2)
+
+coho_sff <- merge(dat_sff, coho_tong %>% select(coho, tong, NAME_1), by=c("NAME_1"))
+
+coho <- coho_sff %>%
+  mutate(danso=coho,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+coho_plotf <- coho %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=coho_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(coho_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  ggtitle("Cơ Ho (Koho)")
+ggsave(filename = file.path("figures", "Dan toc", "Coho-PerArea.png"), width = 16, height = 25)
+```
+
+## Hrê
+
+```{r}
+library(ggplot2)
+
+hre_sff <- merge(dat_sff, hre_tong %>% select(hre, tong, NAME_1), by=c("NAME_1"))
+
+hre <- hre_sff %>%
+  mutate(danso=hre,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+hre_plotf <- hre %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=hre_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(hre_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  ggtitle("Hrê (H're) Chăm Rê, Thạch Bích")
+ggsave(filename = file.path("figures", "Dan toc", "Hre-PerArea.png"), width = 16, height = 25)
+```
+
