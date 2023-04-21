@@ -1,5 +1,5 @@
 ---
-title: "Ho Viet"
+title: "Dan toc Viet"
 author: "Duc Du"
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output: html_document
@@ -115,6 +115,9 @@ bana_tong <- dt %>% select(NAME_1, bana) %>% mutate(tong=colSums(across(where(is
 bru_tong <- dt %>% select(NAME_1, bru) %>% mutate(tong=colSums(across(where(is.numeric))))
 coho_tong <- dt %>% select(NAME_1, coho) %>% mutate(tong=colSums(across(where(is.numeric))))
 hre_tong <- dt %>% select(NAME_1, hre) %>% mutate(tong=colSums(across(where(is.numeric))))
+khmer_tong <- dt %>% select(NAME_1, khmer) %>% mutate(tong=colSums(across(where(is.numeric))))
+mnong_tong <- dt %>% select(NAME_1, mnong) %>% mutate(tong=colSums(across(where(is.numeric))))
+xodang_tong <- dt %>% select(NAME_1, xodang) %>% mutate(tong=colSums(across(where(is.numeric))))
 ```
 
 ## Ba Na
