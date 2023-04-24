@@ -10,7 +10,7 @@ editor_options:
 ```{r setup, include=FALSE}
 rm(list = ls(all.names = TRUE))
 knitr::opts_chunk$set(echo = FALSE, 
-                      cache=TRUE,
+                      cache=FALSE,
                       tidy.opts=list(width.cutoff=60),
                       tidy=TRUE)
 library(rmarkdown)
@@ -20,10 +20,8 @@ library(markdown)
 library(stringr)
 library(forcats)
 library(RColorBrewer)
-library(tidyverse)
 library(dplyr)
 library(ggplot2)
-library(Unicode)
 library(Hmisc)
 library(gtsummary)
 library(flextable)
@@ -34,7 +32,6 @@ library(stringi)
 library(forcats)
 library(ggpubr)
 library(rstatix)
-library(dlookr)
 library(flextable)
 library(haven)
 # library(raster)
@@ -42,16 +39,16 @@ library(rgdal)
 library(viridis)
 library(sf)
 
-select<-dplyr::select
-filter<-dplyr::filter
-recode<-dplyr::recode
+select <- dplyr::select
+filter <- dplyr::filter
+recode <- dplyr::recode
 # getData<-raster::getData
 
 # rotate function (see here: https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
 rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
 
-options(scipen=999, digits = 3)
-options(max.print=1000000)
+options(scipen = 999, digits = 3)
+options(max.print = 1000000)
 ```
 
 # Bản đồ tính đến huyện
@@ -238,10 +235,10 @@ vietic_plotf <- vietic %>%
 
 ggplot() + geom_sf() + geom_sf(data=vietic_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(vietic_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(vietic_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ Việt - Mường (Nam Á) (Vietic)")
 ggsave(filename = file.path("figures", "Dan toc", "1-Vietic.png"), width = 16, height = 25)
 ```
@@ -263,10 +260,10 @@ kinh_plotf <- kinh %>%
 
 ggplot() + geom_sf() + geom_sf(data=kinh_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(kinh_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(kinh_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Kinh Việt")
 ggsave(filename = file.path("figures", "Dan toc", "1-Kinh.png"), width = 16, height = 25)
 ```
@@ -289,10 +286,10 @@ chut_plotf <- chut %>%
 
 ggplot() + geom_sf() + geom_sf(data=chut_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(chut_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(chut_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Chứt Xá La Vàng, Chà Củi, Tắc Củi, Mày, Sách, Mã Liềng, Rục")
 ggsave(filename = file.path("figures", "Dan toc", "1-Chut.png"), width = 16, height = 25)
 ```
@@ -315,10 +312,10 @@ muong_plotf <- muong %>%
 
 ggplot() + geom_sf() + geom_sf(data=muong_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(muong_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(muong_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Mường Mol, Mual")
 ggsave(filename = file.path("figures", "Dan toc", "1-Muong.png"), width = 16, height = 25)
 ```
@@ -341,10 +338,10 @@ tho_plotf <- tho %>%
 
 ggplot() + geom_sf() + geom_sf(data=tho_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(tho_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(tho_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Thổ Kẹo, Mọn, Họ, Cuối, Đan Lai, Ly Hà, Tày Poọng")
 ggsave(filename = file.path("figures", "Dan toc", "1-Tho.png"), width = 16, height = 25)
 ```
@@ -367,10 +364,10 @@ taikadai_plotf <- taikadai %>%
 
 ggplot() + geom_sf() + geom_sf(data=taikadai_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(taikadai_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(taikadai_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ Tày - Thái (Tai–Kadai)")
 ggsave(filename = file.path("figures", "Dan toc", "2-Tai–Kadai.png"), width = 16, height = 25)
 ```
@@ -393,10 +390,10 @@ boy_plotf <- boy %>%
 
 ggplot() + geom_sf() + geom_sf(data=boy_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(boy_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(boy_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Bố Y (Bouyei) Chủng Chá, Trung Gia, Pầu Y, Pủ Dí")
 ggsave(filename = file.path("figures", "Dan toc", "2-Bo Y.png"), width = 16, height = 25)
 ```
@@ -419,10 +416,10 @@ giay_plotf <- giay %>%
 
 ggplot() + geom_sf() + geom_sf(data=giay_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(giay_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(giay_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Giáy (Bouyei) Nhắng, Giắng, Sa Nhân, Pấu Thỉn, Chủng Chá, Pu Năm")
 ggsave(filename = file.path("figures", "Dan toc", "2-Giay.png"), width = 16, height = 25)
 ```
@@ -445,10 +442,10 @@ lao_plotf <- lao %>%
 
 ggplot() + geom_sf() + geom_sf(data=lao_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(lao_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(lao_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Lào Lào Bốc, Lào Nọi")
 ggsave(filename = file.path("figures", "Dan toc", "2-Lao.png"), width = 16, height = 25)
 ```
@@ -471,10 +468,10 @@ lu_plotf <- lu %>%
 
 ggplot() + geom_sf() + geom_sf(data=lu_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(lu_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(lu_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Lự Lừ, Duôn, Nhuồn")
 ggsave(filename = file.path("figures", "Dan toc", "2-Lu.png"), width = 16, height = 25)
 ```
@@ -497,10 +494,10 @@ nung_plotf <- nung %>%
 
 ggplot() + geom_sf() + geom_sf(data=nung_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(nung_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(nung_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Nùng")
 ggsave(filename = file.path("figures", "Dan toc", "2-Nung.png"), width = 16, height = 25)
 ```
@@ -523,10 +520,10 @@ sanchay_plotf <- sanchay %>%
 
 ggplot() + geom_sf() + geom_sf(data=sanchay_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(sanchay_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(sanchay_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Sán Chay Mán, Cao Lan - Sán Chỉ, Hờn Bạn, Hờn Chùng, Sơn Tử")
 ggsave(filename = file.path("figures", "Dan toc", "2-San Chay.png"), width = 16, height = 25)
 ```
@@ -549,10 +546,10 @@ tay_plotf <- tay %>%
 
 ggplot() + geom_sf() + geom_sf(data=tay_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(tay_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(tay_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Tày Thổ")
 ggsave(filename = file.path("figures", "Dan toc", "2-Tay.png"), width = 16, height = 25)
 ```
@@ -575,10 +572,10 @@ thai_plotf <- thai %>%
 
 ggplot() + geom_sf() + geom_sf(data=thai_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(thai_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(thai_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Thái Táy, các nhóm: Thái Trắng, Thái Đen, Thái Đỏ")
 ggsave(filename = file.path("figures", "Dan toc", "2-Thai.png"), width = 16, height = 25)
 ```
@@ -601,10 +598,10 @@ kra_plotf <- kra %>%
 
 ggplot() + geom_sf() + geom_sf(data=kra_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(kra_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(kra_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ Kadai (Kra)")
 ggsave(filename = file.path("figures", "Dan toc", "3-Kra.png"), width = 16, height = 25)
 ```
@@ -627,10 +624,10 @@ colao_plotf <- colao %>%
 
 ggplot() + geom_sf() + geom_sf(data=colao_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(colao_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(colao_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Cờ Lao (Gelao)")
 ggsave(filename = file.path("figures", "Dan toc", "3-Co Lao.png"), width = 16, height = 25)
 ```
@@ -653,10 +650,10 @@ lachi_plotf <- lachi %>%
 
 ggplot() + geom_sf() + geom_sf(data=lachi_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(lachi_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(lachi_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("La Chí (Lachi) Thổ Đen, Cù Tê, Xá, La Ti, Mán Chí")
 ggsave(filename = file.path("figures", "Dan toc", "3-La Chi.png"), width = 16, height = 25)
 ```
@@ -679,10 +676,10 @@ laha_plotf <- laha %>%
 
 ggplot() + geom_sf() + geom_sf(data=laha_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(laha_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(laha_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("La Ha Xá Khao, Xá Cha, Xá La Nga")
 ggsave(filename = file.path("figures", "Dan toc", "3-La Ha.png"), width = 16, height = 25)
 ```
@@ -705,10 +702,10 @@ pupeo_plotf <- pupeo %>%
 
 ggplot() + geom_sf() + geom_sf(data=pupeo_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(pupeo_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(pupeo_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Pu Péo (Qabiao, Pubiao) Ka Bẻo, Pen Ti Lô Lô, La Quả, Mán")
 ggsave(filename = file.path("figures", "Dan toc", "3-Pu Peo.png"), width = 16, height = 25)
 ```
@@ -731,10 +728,10 @@ austroasiatic_plotf <- austroasiatic %>%
 
 ggplot() + geom_sf() + geom_sf(data=austroasiatic_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(austroasiatic_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(austroasiatic_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ Môn – Khmer (Nam Á) (Austroasiatic non-Vietic)")
 ggsave(filename = file.path("figures", "Dan toc", "4-Austroasiatic.png"), width = 16, height = 25)
 ```
@@ -757,10 +754,10 @@ bana_plotf <- bana %>%
 
 ggplot() + geom_sf() + geom_sf(data=bana_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(bana_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(bana_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ba Na (Bahnar) Bơ Nâm, Roh, Kon Kde, Gơlar, Kriem, Jơlơng, Rơ Ngao, Tơlô")
 ggsave(filename = file.path("figures", "Dan toc", "4-Ba Na.png"), width = 16, height = 25)
 ```
@@ -783,10 +780,10 @@ brau_plotf <- brau %>%
 
 ggplot() + geom_sf() + geom_sf(data=brau_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(brau_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(brau_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Brâu Brao")
 ggsave(filename = file.path("figures", "Dan toc", "4-Brau.png"), width = 16, height = 25)
 ```
@@ -809,10 +806,10 @@ bru_plotf <- bru %>%
 
 ggplot() + geom_sf() + geom_sf(data=bru_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(bru_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(bru_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Bru - Vân Kiều (Bru) Bru, Vân Kiều, Ma Coong, Khùa, Trì")
 ggsave(filename = file.path("figures", "Dan toc", "4-Bru.png"), width = 16, height = 25)
 ```
@@ -835,10 +832,10 @@ choro_plotf <- choro %>%
 
 ggplot() + geom_sf() + geom_sf(data=choro_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(choro_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(choro_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Chơ Ro Châu Ro, Dơ Ro")
 ggsave(filename = file.path("figures", "Dan toc", "4-Choro.png"), width = 16, height = 25)
 ```
@@ -861,10 +858,10 @@ co_plotf <- co %>%
 
 ggplot() + geom_sf() + geom_sf(data=co_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(co_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(co_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Co (Cor) Trầu, Cùa, Col")
 ggsave(filename = file.path("figures", "Dan toc", "4-Co.png"), width = 16, height = 25)
 ```
@@ -887,10 +884,10 @@ coho_plotf <- coho %>%
 
 ggplot() + geom_sf() + geom_sf(data=coho_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(coho_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(coho_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Cơ Ho (Koho)")
 ggsave(filename = file.path("figures", "Dan toc", "4-Coho.png"), width = 16, height = 25)
 ```
@@ -913,10 +910,10 @@ cotu_plotf <- cotu %>%
 
 ggplot() + geom_sf() + geom_sf(data=cotu_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(cotu_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(cotu_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Cơ Tu (Katu) Ca Tu, Ca Tang, Cao, Hạ")
 ggsave(filename = file.path("figures", "Dan toc", "4-Cotu.png"), width = 16, height = 25)
 ```
@@ -939,10 +936,10 @@ gietrieng_plotf <- gietrieng %>%
 
 ggplot() + geom_sf() + geom_sf(data=gietrieng_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(gietrieng_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(gietrieng_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Gié Triêng Giang Rẫy, Brila, Cà Tang, Doãn")
 ggsave(filename = file.path("figures", "Dan toc", "4-Gietrieng.png"), width = 16, height = 25)
 ```
@@ -965,10 +962,10 @@ hre_plotf <- hre %>%
 
 ggplot() + geom_sf() + geom_sf(data=hre_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(hre_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(hre_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Hrê (H're) Chăm Rê, Thạch Bích")
 ggsave(filename = file.path("figures", "Dan toc", "4-Hre.png"), width = 16, height = 25)
 ```
@@ -991,10 +988,10 @@ khang_plotf <- khang %>%
 
 ggplot() + geom_sf() + geom_sf(data=khang_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(khang_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(khang_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Kháng Xá Khao, Xá Đón, Xá Tú Lăng")
 ggsave(filename = file.path("figures", "Dan toc", "4-Khang.png"), width = 16, height = 25)
 ```
@@ -1017,10 +1014,10 @@ khmer_plotf <- khmer %>%
 
 ggplot() + geom_sf() + geom_sf(data=khmer_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(khmer_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(khmer_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Khmer (Khmer)")
 ggsave(filename = file.path("figures", "Dan toc", "4-Khmer.png"), width = 16, height = 25)
 ```
@@ -1043,10 +1040,10 @@ khomu_plotf <- khomu %>%
 
 ggplot() + geom_sf() + geom_sf(data=khomu_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(khomu_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(khomu_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Khơ Mú (Khmu) Xá Cẩu, Pu Thênh, Tày Hạy, Việt Cang, Khá Klậu, Tênh")
 ggsave(filename = file.path("figures", "Dan toc", "4-Khomu.png"), width = 16, height = 25)
 ```
@@ -1069,10 +1066,10 @@ ma_plotf <- ma %>%
 
 ggplot() + geom_sf() + geom_sf(data=ma_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(ma_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(ma_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Mạ")
 ggsave(filename = file.path("figures", "Dan toc", "4-Ma.png"), width = 16, height = 25)
 ```
@@ -1095,10 +1092,10 @@ mang_plotf <- mang %>%
 
 ggplot() + geom_sf() + geom_sf(data=mang_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(mang_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(mang_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Mảng Mảng Ư, Xá Lá Vàng, Niễng O, Xa Mãng, Xá Cang Lai")
 ggsave(filename = file.path("figures", "Dan toc", "4-Mang.png"), width = 16, height = 25)
 ```
@@ -1121,10 +1118,10 @@ mnong_plotf <- mnong %>%
 
 ggplot() + geom_sf() + geom_sf(data=mnong_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(mnong_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(mnong_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("M'Nông (Mnong)")
 ggsave(filename = file.path("figures", "Dan toc", "4-Mnong.png"), width = 16, height = 25)
 ```
@@ -1147,10 +1144,10 @@ odu_plotf <- odu %>%
 
 ggplot() + geom_sf() + geom_sf(data=odu_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(odu_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(odu_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ơ Đu Tày Hạt")
 ggsave(filename = file.path("figures", "Dan toc", "4-Odu.png"), width = 16, height = 25)
 ```
@@ -1173,10 +1170,10 @@ romam_plotf <- romam %>%
 
 ggplot() + geom_sf() + geom_sf(data=romam_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(romam_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(romam_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Rơ Măm")
 ggsave(filename = file.path("figures", "Dan toc", "4-Romam.png"), width = 16, height = 25)
 ```
@@ -1199,10 +1196,10 @@ taoi_plotf <- taoi %>%
 
 ggplot() + geom_sf() + geom_sf(data=taoi_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(taoi_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(taoi_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Tà Ôi (Ta Oi, Tahoy) Tôi Ôi, Ta Hoi, Ta Ôih, Tà Uất, A tuất, Pa Cô")
 ggsave(filename = file.path("figures", "Dan toc", "4-Taoi.png"), width = 16, height = 25)
 ```
@@ -1225,10 +1222,10 @@ xinhmun_plotf <- xinhmun %>%
 
 ggplot() + geom_sf() + geom_sf(data=xinhmun_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(xinhmun_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(xinhmun_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Xinh Mun Puộc, Pụa, Xá")
 ggsave(filename = file.path("figures", "Dan toc", "4-Xinhmun.png"), width = 16, height = 25)
 ```
@@ -1251,10 +1248,10 @@ xodang_plotf <- xodang %>%
 
 ggplot() + geom_sf() + geom_sf(data=xodang_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(xodang_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(xodang_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Xơ Đăng (Sedang) Kmrâng, H'Đang, Con Lan, Brila, Ca Dong, Tơ-dra")
 ggsave(filename = file.path("figures", "Dan toc", "4-Xodang.png"), width = 16, height = 25)
 ```
@@ -1277,10 +1274,10 @@ xtieng_plotf <- xtieng %>%
 
 ggplot() + geom_sf() + geom_sf(data=xtieng_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(xtieng_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(xtieng_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("XTiêng (Stieng) Xa Điêng, Tà Mun")
 ggsave(filename = file.path("figures", "Dan toc", "4-Xtieng.png"), width = 16, height = 25)
 ```
@@ -1303,10 +1300,10 @@ hmongmien_plotf <- hmongmien %>%
 
 ggplot() + geom_sf() + geom_sf(data=hmongmien_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(hmongmien_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(hmongmien_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ H'Mông - Dao (Hmong–Mien)")
 ggsave(filename = file.path("figures", "Dan toc", "5-Hmong–Mien.png"), width = 16, height = 25)
 ```
@@ -1329,10 +1326,10 @@ dao_plotf <- dao %>%
 
 ggplot() + geom_sf() + geom_sf(data=dao_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(dao_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(dao_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Dao (Yao) Mán, Động, Trại, Dìu, Miến, Kiêm, Kìm Mùn")
 ggsave(filename = file.path("figures", "Dan toc", "5-Dao.png"), width = 16, height = 25)
 ```
@@ -1355,10 +1352,10 @@ hmong_plotf <- hmong %>%
 
 ggplot() + geom_sf() + geom_sf(data=hmong_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(hmong_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(hmong_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("H'Mông (Hmong) Mông, Mèo, Mẹo, Mán, Miêu Tộc")
 ggsave(filename = file.path("figures", "Dan toc", "5-Hmong.png"), width = 16, height = 25)
 ```
@@ -1381,10 +1378,10 @@ pathen_plotf <- pathen %>%
 
 ggplot() + geom_sf() + geom_sf(data=pathen_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(pathen_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(pathen_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Pà Thẻn Pà Hưng, Mán Pa Teng, Tống")
 ggsave(filename = file.path("figures", "Dan toc", "5-Pathen.png"), width = 16, height = 25)
 ```
@@ -1407,10 +1404,10 @@ malayopolynesia_plotf <- malayopolynesia %>%
 
 ggplot() + geom_sf() + geom_sf(data=malayopolynesia_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(malayopolynesia_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(malayopolynesia_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ Nam Đảo (Malayo-Polynesia)")
 ggsave(filename = file.path("figures", "Dan toc", "6-Malayo-Polynesia.png"), width = 16, height = 25)
 ```
@@ -1433,10 +1430,10 @@ cham_plotf <- cham %>%
 
 ggplot() + geom_sf() + geom_sf(data=cham_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(cham_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(cham_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Chăm Chiêm Thành, Chăm Pa, Hời, Chàm")
 ggsave(filename = file.path("figures", "Dan toc", "6-Cham.png"), width = 16, height = 25)
 ```
@@ -1459,10 +1456,10 @@ churu_plotf <- churu %>%
 
 ggplot() + geom_sf() + geom_sf(data=churu_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(churu_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(churu_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Chu Ru Chơ Ru, Kru")
 ggsave(filename = file.path("figures", "Dan toc", "6-Churu.png"), width = 16, height = 25)
 ```
@@ -1485,10 +1482,10 @@ ede_plotf <- ede %>%
 
 ggplot() + geom_sf() + geom_sf(data=ede_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(ede_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(ede_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ê Đê (Rhade) Ra đê")
 ggsave(filename = file.path("figures", "Dan toc", "6-Ede.png"), width = 16, height = 25)
 ```
@@ -1511,10 +1508,10 @@ giarai_plotf <- giarai %>%
 
 ggplot() + geom_sf() + geom_sf(data=giarai_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(giarai_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(giarai_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Gia Rai (Jarai)")
 ggsave(filename = file.path("figures", "Dan toc", "6-Giarai.png"), width = 16, height = 25)
 ```
@@ -1537,10 +1534,10 @@ raglai_plotf <- raglai %>%
 
 ggplot() + geom_sf() + geom_sf(data=raglai_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(raglai_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(raglai_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ra Glai (Roglai) Ra Glay, O Rang, Glai, Rô Glai, Radlai")
 ggsave(filename = file.path("figures", "Dan toc", "6-Raglai.png"), width = 16, height = 25)
 ```
@@ -1561,10 +1558,10 @@ austro_malay_plotf <- austro_malay %>%
 
 ggplot() + geom_sf() + geom_sf(data=austro_malay_plotf, aes(fill=prop), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
   scale_fill_viridis("Tỉ lệ (lần)", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Tỉ lệ mật độ Ngữ hệ Nam Á so với Nam Đảo")
 ggsave(filename = file.path("figures", "Dan toc", "Austro-Malayo.png"), width = 16, height = 25)
 ```
@@ -1585,10 +1582,10 @@ austro_malay_plotf <- austro_malay %>%
 
 ggplot() + geom_sf() + geom_sf(data=austro_malay_plotf, aes(fill=prop), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
   scale_fill_viridis("Tỉ lệ (lần)", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Tỉ lệ mật độ Ngữ hệ Nam Đảo so với Nam Á")
 ggsave(filename = file.path("figures", "Dan toc", "Malayo-Austro.png"), width = 16, height = 25)
 ```
@@ -1611,10 +1608,10 @@ sinitic_plotf <- sinitic %>%
 
 ggplot() + geom_sf() + geom_sf(data=sinitic_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(sinitic_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(sinitic_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ Hán (Sinitic)")
 ggsave(filename = file.path("figures", "Dan toc", "7-Sinitic.png"), width = 16, height = 25)
 ```
@@ -1637,10 +1634,10 @@ hoa_plotf <- hoa %>%
 
 ggplot() + geom_sf() + geom_sf(data=hoa_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(hoa_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(hoa_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Hoa (Overseas Chinese) Tiều, Hán")
 ggsave(filename = file.path("figures", "Dan toc", "7-Hoa.png"), width = 16, height = 25)
 ```
@@ -1663,10 +1660,10 @@ ngai_plotf <- ngai %>%
 
 ggplot() + geom_sf() + geom_sf(data=ngai_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(ngai_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(ngai_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngái (Hakka Chinese) Sán Ngái")
 ggsave(filename = file.path("figures", "Dan toc", "7-Ngai.png"), width = 16, height = 25)
 ```
@@ -1689,10 +1686,10 @@ sandiu_plotf <- sandiu %>%
 
 ggplot() + geom_sf() + geom_sf(data=sandiu_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(sandiu_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(sandiu_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Sán Dìu Trại, Trại Đát, Sán Rợ, Mán quần cộc, Mán váy xẻ")
 ggsave(filename = file.path("figures", "Dan toc", "7-San Diu.png"), width = 16, height = 25)
 ```
@@ -1715,10 +1712,10 @@ tibetburma_plotf <- tibetburma %>%
 
 ggplot() + geom_sf() + geom_sf(data=tibetburma_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(tibetburma_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(tibetburma_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Ngữ hệ Tạng-Miến (Tibet-Burma)")
 ggsave(filename = file.path("figures", "Dan toc", "8-Tibet-Burma.png"), width = 16, height = 25)
 ```
@@ -1741,10 +1738,10 @@ cong_plotf <- cong %>%
 
 ggplot() + geom_sf() + geom_sf(data=cong_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(cong_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(cong_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Cống (Phunoi)")
 ggsave(filename = file.path("figures", "Dan toc", "8-Cong.png"), width = 16, height = 25)
 ```
@@ -1767,10 +1764,10 @@ hanhi_plotf <- hanhi %>%
 
 ggplot() + geom_sf() + geom_sf(data=hanhi_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(hanhi_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(hanhi_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Hà Nhì (Hani) U Ní, Xá U Ní, Hà Nhì Già")
 ggsave(filename = file.path("figures", "Dan toc", "8-Ha Nhi.png"), width = 16, height = 25)
 ```
@@ -1793,10 +1790,10 @@ lahu_plotf <- lahu %>%
 
 ggplot() + geom_sf() + geom_sf(data=lahu_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(lahu_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(lahu_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("La Hủ (Lahu)")
 ggsave(filename = file.path("figures", "Dan toc", "8-La Hu.png"), width = 16, height = 25)
 ```
@@ -1819,10 +1816,10 @@ lolo_plotf <- lolo %>%
 
 ggplot() + geom_sf() + geom_sf(data=lolo_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(lolo_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(lolo_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Lô Lô (Yi) Mùn Di, Ô Man, Lu Lọc Màn, Di, Qua La, La La, Ma Di")
 ggsave(filename = file.path("figures", "Dan toc", "8-Lo Lo.png"), width = 16, height = 25)
 ```
@@ -1845,10 +1842,10 @@ phula_plotf <- phula %>%
 
 ggplot() + geom_sf() + geom_sf(data=phula_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(phula_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(phula_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Phù Lá Phú Lá (Xá Phó)")
 ggsave(filename = file.path("figures", "Dan toc", "8-Phu La.png"), width = 16, height = 25)
 ```
@@ -1871,10 +1868,10 @@ sila_plotf <- sila %>%
 
 ggplot() + geom_sf() + geom_sf(data=sila_plotf, aes(fill=songuoi), lwd=0) +
   geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=30, label= paste(as.numeric(sila_plotf$tong), "người", sep = " ")) +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(sila_plotf$tong), "người", sep = " ")) +
   scale_fill_viridis("Số người", direction = -1, option = "viridis") +
   theme_bw() +
-  theme(text = element_text(size=90), axis.text.x = element_text(size=60), axis.text.y = element_text(size=60), legend.text=element_text(size=60), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 90)) +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Si La Cú Đề Xừ")
 ggsave(filename = file.path("figures", "Dan toc", "8-Si La.png"), width = 16, height = 25)
 ```
