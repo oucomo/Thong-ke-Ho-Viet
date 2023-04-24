@@ -4,7 +4,7 @@ author: "Duc Du"
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output: html_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -276,10 +276,11 @@ ggsave(filename = file.path("figures", "Dan toc", "1-Kinh.png"), width = 16, hei
 ```{r}
 library(ggplot2)
 
-chut_sff1 <- merge(dat_sff1, chut_tong %>% select(chut, tong, NAME_1), by=c("NAME_1"))
+chut_sff <- merge(dat_sff, chut_tong %>% select(chut, tong, NAME_1), by=c("NAME_1"))
 
-chut <- chut_sff1 %>%
-  mutate(songuoi=chut)
+chut <- chut_sff %>%
+  mutate(danso=chut,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
   
 library(sf)
 
@@ -301,10 +302,11 @@ ggsave(filename = file.path("figures", "Dan toc", "1-Chut.png"), width = 16, hei
 ```{r}
 library(ggplot2)
 
-muong_sff1 <- merge(dat_sff1, muong_tong %>% select(muong, tong, NAME_1), by=c("NAME_1"))
+muong_sff <- merge(dat_sff, muong_tong %>% select(muong, tong, NAME_1), by=c("NAME_1"))
 
-muong <- muong_sff1 %>%
-  mutate(songuoi=muong)
+muong <- muong_sff %>%
+  mutate(danso=muong,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
   
 library(sf)
 
@@ -326,10 +328,11 @@ ggsave(filename = file.path("figures", "Dan toc", "1-Muong.png"), width = 16, he
 ```{r}
 library(ggplot2)
 
-tho_sff1 <- merge(dat_sff1, tho_tong %>% select(tho, tong, NAME_1), by=c("NAME_1"))
+tho_sff <- merge(dat_sff, tho_tong %>% select(tho, tong, NAME_1), by=c("NAME_1"))
 
-tho <- tho_sff1 %>%
-  mutate(songuoi=tho)
+tho <- tho_sff %>%
+  mutate(danso=tho,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
   
 library(sf)
 
