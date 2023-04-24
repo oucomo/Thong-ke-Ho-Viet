@@ -243,6 +243,236 @@ ggplot() + geom_sf() + geom_sf(data=vietic_plotf, aes(fill=songuoi), lwd=0) +
 ggsave(filename = file.path("figures", "Dan toc", "1-Vietic.png"), width = 16, height = 25)
 ```
 
+# 2. Tai–Kadai
+
+```{r}
+library(ggplot2)
+
+taikadai_sff <- merge(dat_sff, taikadai_tong %>% select(taikadai, tong, NAME_1), by=c("NAME_1"))
+
+taikadai <- taikadai_sff %>%
+  mutate(danso=taikadai,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+taikadai_plotf <- taikadai %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=taikadai_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(taikadai_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Ngữ hệ Tày - Thái (Tai–Kadai)")
+ggsave(filename = file.path("figures", "Dan toc", "1-2-Tai–Kadai.png"), width = 16, height = 25)
+```
+
+# 3. Kra
+
+```{r}
+library(ggplot2)
+
+kra_sff <- merge(dat_sff, kra_tong %>% select(kra, tong, NAME_1), by=c("NAME_1"))
+
+kra <- kra_sff %>%
+  mutate(danso=kra,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+kra_plotf <- kra %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=kra_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(kra_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Ngữ hệ Kadai (Kra)")
+ggsave(filename = file.path("figures", "Dan toc", "1-3-Kra.png"), width = 16, height = 25)
+```
+
+# 4. Austroasiatic
+
+```{r}
+library(ggplot2)
+
+austroasiatic_sff <- merge(dat_sff, austroasiatic_tong %>% select(austroasiatic, tong, NAME_1), by=c("NAME_1"))
+
+austroasiatic <- austroasiatic_sff %>%
+  mutate(danso=austroasiatic,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+austroasiatic_plotf <- austroasiatic %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=austroasiatic_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(austroasiatic_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Ngữ hệ Môn – Khmer (Nam Á) (Austroasiatic non-Vietic)")
+ggsave(filename = file.path("figures", "Dan toc", "1-4-Austroasiatic.png"), width = 16, height = 25)
+```
+
+# 5. Hmong–Mien
+
+```{r}
+library(ggplot2)
+
+hmongmien_sff <- merge(dat_sff, hmongmien_tong %>% select(hmongmien, tong, NAME_1), by=c("NAME_1"))
+
+hmongmien <- hmongmien_sff %>%
+  mutate(danso=hmongmien,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+hmongmien_plotf <- hmongmien %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=hmongmien_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(hmongmien_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Ngữ hệ H'Mông - Dao (Hmong–Mien)")
+ggsave(filename = file.path("figures", "Dan toc", "1-5-Hmong–Mien.png"), width = 16, height = 25)
+```
+
+# 6. Malayo-Polynesia
+
+```{r}
+library(ggplot2)
+
+malayopolynesia_sff <- merge(dat_sff, malayopolynesia_tong %>% select(malayopolynesia, tong, NAME_1), by=c("NAME_1"))
+
+malayopolynesia <- malayopolynesia_sff %>%
+  mutate(danso=malayopolynesia,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+malayopolynesia_plotf <- malayopolynesia %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=malayopolynesia_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(malayopolynesia_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Ngữ hệ Nam Đảo (Malayo-Polynesia)")
+ggsave(filename = file.path("figures", "Dan toc", "1-6-Malayo-Polynesia.png"), width = 16, height = 25)
+```
+
+# Austroasiatic/ Malayo-Polynesia
+
+```{r}
+library(ggplot2)
+
+austro_malay <- merge(austroasiatic %>% select(NAME_1, NAME_2, geometry, area_km, prop.area, songuoi, tong), malayopolynesia %>% select(NAME_1, NAME_2, songuoi, tong), by=c("NAME_1", "NAME_2")) %>%
+  mutate(prop=round((songuoi.x/songuoi.y),1),
+         prop.chung=round(tong.x/tong.y,1))
+
+library(sf)
+
+austro_malay_plotf <- austro_malay %>%
+  select(prop, prop.chung, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=austro_malay_plotf, aes(fill=prop), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
+  scale_fill_viridis("Tỉ lệ (lần)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Tỉ lệ mật độ Ngữ hệ Nam Á so với Nam Đảo")
+ggsave(filename = file.path("figures", "Dan toc", "Austro-Malayo.png"), width = 16, height = 25)
+```
+
+# Malayo-Polynesia/Austroasiatic
+
+```{r}
+library(ggplot2)
+
+austro_malay <- merge(austroasiatic %>% select(NAME_1, NAME_2, geometry, area_km, prop.area, songuoi, tong), malayopolynesia %>% select(NAME_1, NAME_2, songuoi, tong), by=c("NAME_1", "NAME_2")) %>%
+  mutate(prop=round((songuoi.y/songuoi.x),1),
+         prop.chung=round(tong.y/tong.x,1))
+
+library(sf)
+
+austro_malay_plotf <- austro_malay %>%
+  select(prop, prop.chung, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=austro_malay_plotf, aes(fill=prop), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
+  scale_fill_viridis("Tỉ lệ (lần)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Tỉ lệ mật độ Ngữ hệ Nam Đảo so với Nam Á")
+ggsave(filename = file.path("figures", "Dan toc", "Malayo-Austro.png"), width = 16, height = 25)
+```
+
+# 7. Sinitic
+
+```{r}
+library(ggplot2)
+
+sinitic_sff <- merge(dat_sff, sinitic_tong %>% select(sinitic, tong, NAME_1), by=c("NAME_1"))
+
+sinitic <- sinitic_sff %>%
+  mutate(danso=sinitic,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+sinitic_plotf <- sinitic %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=sinitic_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(sinitic_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Ngữ hệ Hán (Sinitic)")
+ggsave(filename = file.path("figures", "Dan toc", "1-7-Sinitic.png"), width = 16, height = 25)
+```
+
+# 8. Tibet-Burma
+
+```{r}
+library(ggplot2)
+
+tibetburma_sff <- merge(dat_sff, tibetburma_tong %>% select(tibetburma, tong, NAME_1), by=c("NAME_1"))
+
+tibetburma <- tibetburma_sff %>%
+  mutate(danso=tibetburma,
+         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
+  
+library(sf)
+
+tibetburma_plotf <- tibetburma %>%
+  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
+
+ggplot() + geom_sf() + geom_sf(data=tibetburma_plotf, aes(fill=songuoi), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(tibetburma_plotf$tong), "người", sep = " ")) +
+  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
+  ggtitle("Ngữ hệ Tạng-Miến (Tibet-Burma)")
+ggsave(filename = file.path("figures", "Dan toc", "8-Tibet-Burma.png"), width = 16, height = 25)
+```
+
 ## Kinh
 
 ```{r}
@@ -265,7 +495,7 @@ ggplot() + geom_sf() + geom_sf(data=kinh_plotf, aes(fill=songuoi), lwd=0) +
   theme_bw() +
   theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Kinh Việt")
-ggsave(filename = file.path("figures", "Dan toc", "1-Kinh.png"), width = 16, height = 25)
+ggsave(filename = file.path("figures", "Dan toc", "1-1-Kinh.png"), width = 16, height = 25)
 ```
 
 ## Chứt
@@ -344,32 +574,6 @@ ggplot() + geom_sf() + geom_sf(data=tho_plotf, aes(fill=songuoi), lwd=0) +
   theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Thổ Kẹo, Mọn, Họ, Cuối, Đan Lai, Ly Hà, Tày Poọng")
 ggsave(filename = file.path("figures", "Dan toc", "1-Tho.png"), width = 16, height = 25)
-```
-
-# 2. Tai–Kadai
-
-```{r}
-library(ggplot2)
-
-taikadai_sff <- merge(dat_sff, taikadai_tong %>% select(taikadai, tong, NAME_1), by=c("NAME_1"))
-
-taikadai <- taikadai_sff %>%
-  mutate(danso=taikadai,
-         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
-  
-library(sf)
-
-taikadai_plotf <- taikadai %>%
-  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=taikadai_plotf, aes(fill=songuoi), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(taikadai_plotf$tong), "người", sep = " ")) +
-  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Ngữ hệ Tày - Thái (Tai–Kadai)")
-ggsave(filename = file.path("figures", "Dan toc", "2-Tai–Kadai.png"), width = 16, height = 25)
 ```
 
 ## Bố Y
@@ -580,32 +784,6 @@ ggplot() + geom_sf() + geom_sf(data=thai_plotf, aes(fill=songuoi), lwd=0) +
 ggsave(filename = file.path("figures", "Dan toc", "2-Thai.png"), width = 16, height = 25)
 ```
 
-# 3. Kra
-
-```{r}
-library(ggplot2)
-
-kra_sff <- merge(dat_sff, kra_tong %>% select(kra, tong, NAME_1), by=c("NAME_1"))
-
-kra <- kra_sff %>%
-  mutate(danso=kra,
-         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
-  
-library(sf)
-
-kra_plotf <- kra %>%
-  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=kra_plotf, aes(fill=songuoi), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(kra_plotf$tong), "người", sep = " ")) +
-  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Ngữ hệ Kadai (Kra)")
-ggsave(filename = file.path("figures", "Dan toc", "3-Kra.png"), width = 16, height = 25)
-```
-
 ## Cờ Lao
 
 ```{r}
@@ -708,32 +886,6 @@ ggplot() + geom_sf() + geom_sf(data=pupeo_plotf, aes(fill=songuoi), lwd=0) +
   theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Pu Péo (Qabiao, Pubiao) Ka Bẻo, Pen Ti Lô Lô, La Quả, Mán")
 ggsave(filename = file.path("figures", "Dan toc", "3-Pu Peo.png"), width = 16, height = 25)
-```
-
-# 4. Austroasiatic
-
-```{r}
-library(ggplot2)
-
-austroasiatic_sff <- merge(dat_sff, austroasiatic_tong %>% select(austroasiatic, tong, NAME_1), by=c("NAME_1"))
-
-austroasiatic <- austroasiatic_sff %>%
-  mutate(danso=austroasiatic,
-         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
-  
-library(sf)
-
-austroasiatic_plotf <- austroasiatic %>%
-  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=austroasiatic_plotf, aes(fill=songuoi), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(austroasiatic_plotf$tong), "người", sep = " ")) +
-  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Ngữ hệ Môn – Khmer (Nam Á) (Austroasiatic non-Vietic)")
-ggsave(filename = file.path("figures", "Dan toc", "4-Austroasiatic.png"), width = 16, height = 25)
 ```
 
 ## Ba Na
@@ -1282,32 +1434,6 @@ ggplot() + geom_sf() + geom_sf(data=xtieng_plotf, aes(fill=songuoi), lwd=0) +
 ggsave(filename = file.path("figures", "Dan toc", "4-Xtieng.png"), width = 16, height = 25)
 ```
 
-# 5. Hmong–Mien
-
-```{r}
-library(ggplot2)
-
-hmongmien_sff <- merge(dat_sff, hmongmien_tong %>% select(hmongmien, tong, NAME_1), by=c("NAME_1"))
-
-hmongmien <- hmongmien_sff %>%
-  mutate(danso=hmongmien,
-         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
-  
-library(sf)
-
-hmongmien_plotf <- hmongmien %>%
-  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=hmongmien_plotf, aes(fill=songuoi), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(hmongmien_plotf$tong), "người", sep = " ")) +
-  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Ngữ hệ H'Mông - Dao (Hmong–Mien)")
-ggsave(filename = file.path("figures", "Dan toc", "5-Hmong–Mien.png"), width = 16, height = 25)
-```
-
 ## Dao
 
 ```{r}
@@ -1384,32 +1510,6 @@ ggplot() + geom_sf() + geom_sf(data=pathen_plotf, aes(fill=songuoi), lwd=0) +
   theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Pà Thẻn Pà Hưng, Mán Pa Teng, Tống")
 ggsave(filename = file.path("figures", "Dan toc", "5-Pathen.png"), width = 16, height = 25)
-```
-
-# 6. Malayo-Polynesia
-
-```{r}
-library(ggplot2)
-
-malayopolynesia_sff <- merge(dat_sff, malayopolynesia_tong %>% select(malayopolynesia, tong, NAME_1), by=c("NAME_1"))
-
-malayopolynesia <- malayopolynesia_sff %>%
-  mutate(danso=malayopolynesia,
-         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
-  
-library(sf)
-
-malayopolynesia_plotf <- malayopolynesia %>%
-  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=malayopolynesia_plotf, aes(fill=songuoi), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(malayopolynesia_plotf$tong), "người", sep = " ")) +
-  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Ngữ hệ Nam Đảo (Malayo-Polynesia)")
-ggsave(filename = file.path("figures", "Dan toc", "6-Malayo-Polynesia.png"), width = 16, height = 25)
 ```
 
 ## Chăm
@@ -1542,80 +1642,6 @@ ggplot() + geom_sf() + geom_sf(data=raglai_plotf, aes(fill=songuoi), lwd=0) +
 ggsave(filename = file.path("figures", "Dan toc", "6-Raglai.png"), width = 16, height = 25)
 ```
 
-# Austroasiatic/ Malayo-Polynesia
-
-```{r}
-library(ggplot2)
-
-austro_malay <- merge(austroasiatic %>% select(NAME_1, NAME_2, geometry, area_km, prop.area, songuoi, tong), malayopolynesia %>% select(NAME_1, NAME_2, songuoi, tong), by=c("NAME_1", "NAME_2")) %>%
-  mutate(prop=round((songuoi.x/songuoi.y),1),
-         prop.chung=round(tong.x/tong.y,1))
-
-library(sf)
-
-austro_malay_plotf <- austro_malay %>%
-  select(prop, prop.chung, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=austro_malay_plotf, aes(fill=prop), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
-  scale_fill_viridis("Tỉ lệ (lần)", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Tỉ lệ mật độ Ngữ hệ Nam Á so với Nam Đảo")
-ggsave(filename = file.path("figures", "Dan toc", "Austro-Malayo.png"), width = 16, height = 25)
-```
-
-# Malayo-Polynesia/Austroasiatic
-
-```{r}
-library(ggplot2)
-
-austro_malay <- merge(austroasiatic %>% select(NAME_1, NAME_2, geometry, area_km, prop.area, songuoi, tong), malayopolynesia %>% select(NAME_1, NAME_2, songuoi, tong), by=c("NAME_1", "NAME_2")) %>%
-  mutate(prop=round((songuoi.y/songuoi.x),1),
-         prop.chung=round(tong.y/tong.x,1))
-
-library(sf)
-
-austro_malay_plotf <- austro_malay %>%
-  select(prop, prop.chung, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=austro_malay_plotf, aes(fill=prop), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste("Tỉ lệ chung", as.numeric(austro_malay_plotf$prop.chung[1]), "lần", sep = " ")) +
-  scale_fill_viridis("Tỉ lệ (lần)", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Tỉ lệ mật độ Ngữ hệ Nam Đảo so với Nam Á")
-ggsave(filename = file.path("figures", "Dan toc", "Malayo-Austro.png"), width = 16, height = 25)
-```
-
-# 7. Sinitic
-
-```{r}
-library(ggplot2)
-
-sinitic_sff <- merge(dat_sff, sinitic_tong %>% select(sinitic, tong, NAME_1), by=c("NAME_1"))
-
-sinitic <- sinitic_sff %>%
-  mutate(danso=sinitic,
-         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
-  
-library(sf)
-
-sinitic_plotf <- sinitic %>%
-  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=sinitic_plotf, aes(fill=songuoi), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(sinitic_plotf$tong), "người", sep = " ")) +
-  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Ngữ hệ Hán (Sinitic)")
-ggsave(filename = file.path("figures", "Dan toc", "7-Sinitic.png"), width = 16, height = 25)
-```
-
 ## Hoa
 
 ```{r}
@@ -1692,32 +1718,6 @@ ggplot() + geom_sf() + geom_sf(data=sandiu_plotf, aes(fill=songuoi), lwd=0) +
   theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
   ggtitle("Sán Dìu Trại, Trại Đát, Sán Rợ, Mán quần cộc, Mán váy xẻ")
 ggsave(filename = file.path("figures", "Dan toc", "7-San Diu.png"), width = 16, height = 25)
-```
-
-# 8. Tibet-Burma
-
-```{r}
-library(ggplot2)
-
-tibetburma_sff <- merge(dat_sff, tibetburma_tong %>% select(tibetburma, tong, NAME_1), by=c("NAME_1"))
-
-tibetburma <- tibetburma_sff %>%
-  mutate(danso=tibetburma,
-         songuoi=as.numeric(round((danso*prop.area)/100, 0)))
-  
-library(sf)
-
-tibetburma_plotf <- tibetburma %>%
-  select(songuoi, tong, geometry) %>% st_as_sf(crs = 4326)
-
-ggplot() + geom_sf() + geom_sf(data=tibetburma_plotf, aes(fill=songuoi), lwd=0) +
-  geom_sf(data=river3, col="white") +
-  annotate(geom="text", x=108, y=23, color="red", size=10, label= paste(as.numeric(tibetburma_plotf$tong), "người", sep = " ")) +
-  scale_fill_viridis("Số người", direction = -1, option = "viridis") +
-  theme_bw() +
-  theme(text = element_text(size=30), axis.text.x = element_text(size=20), axis.text.y = element_text(size=20), legend.text=element_text(size=20), legend.key.size = unit(1, "cm"), plot.title = element_text(size = 30)) +
-  ggtitle("Ngữ hệ Tạng-Miến (Tibet-Burma)")
-ggsave(filename = file.path("figures", "Dan toc", "8-Tibet-Burma.png"), width = 16, height = 25)
 ```
 
 ## Cống
