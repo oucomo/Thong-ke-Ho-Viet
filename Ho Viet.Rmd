@@ -12175,3 +12175,28 @@ saveRDS(dat1, file = "data/dat1.rds")
 saveRDS(dat10, file = "data/dat10.rds")
 # saveRDS(dat20, file = "data/dat20.rds")
 ```
+
+```{r}
+dat_plot <- dat_sff %>% select(NAME_1, NAME_2, NAME_3, Ho, songuoi, danso, pro.pop, area_km, songuoi_km, geometry) %>% st_as_sf(crs = 4326)
+dat_plot$centroid <- sf::st_transform(dat_plot, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+dat <- dat_plot %>%
+  mutate(lng = map(centroid,1),
+         lat = map(centroid,2),
+         lng = round(as.numeric(lng), 2),
+         lat = round(as.numeric(lat), 2),
+         pro.pop=as.numeric(round(pro.pop, 2)),
+         area_km=as.numeric(round(area_km, 2)),
+         songuoi_km=as.numeric(round(songuoi_km, 2))) %>%
+  st_drop_geometry() %>%
+  select(NAME_1, NAME_2, NAME_3, Ho, songuoi, danso, pro.pop, area_km, songuoi_km, lng, lat)
+
+library(writexl)
+write_xlsx(dat, "dat.xlsx")
+# datatable(dat, colnames = c("STT", "Tỉnh/Thành phố", "Quận/Huyện", "Phường/Xã", "Họ", "Số người", "Dân số", "Tỉ lệ/xã phường", "Diện tích (km2)", "Mật độ (người/km2)", "Kinh độ", "Vĩ độ"))
+```
