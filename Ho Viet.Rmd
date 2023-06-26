@@ -10727,6 +10727,212 @@ render_snapshot(filename = "figures/3D2/Ma-PerPop.png", clear=T)
 rgl::rgl.close()
 ```
 
+```{r, message=FALSE, warning=FALSE}
+#3D
+#remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+
+#ma_bacbo_sf <- data_bacbo %>% filter(Ho=="Mã")
+ma_sff <- dat_sff %>% 
+  mutate(prop.ma=(sum(subset(., Ho=="Mã")[, "songuoi"])/sum(songuoi))*100) %>% 
+  filter(Ho=="Mã") %>% 
+  st_as_sf(crs = 4326)
+
+gg_ma = ggplot(ma_sff) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
+  geom_sf(data=river3, col="white") +
+  annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ma_sff$prop.ma[1],1), "% dân số", sep = "")) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  ggtitle("Họ Mã") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.position="none")
+
+plot_gg(gg_ma, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 300, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
+
+#render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ma.png")
+#render_movie("figures/3D/ma.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
+#render_snapshot(filename = "figures/3D/Ma.png", clear=T)
+render_snapshot(filename = "figures/3D2/Ma-PerPop(1).png", clear = T)
+
+# Close the window when you're done
+rgl::rgl.close()
+```
+## Họ Mã - Nga Sơn
+
+```{r, warning=FALSE, message=FALSE, lazy=FALSE}
+ma_ngason <- dat_sff %>% filter(Ho=="Mã" & NAME_1=="Thanh Hoa") %>% st_as_sf(crs = 4326)
+ma_ngason$centroid <- sf::st_transform(ma_ngason, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+ma_ngason <- ma_ngason %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Nga Thach" & NAME_2=="Nga Son"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+ma_ngason_data <- ma_ngason %>%
+  mutate(distm_km=round(as.numeric(distm_km), 2),
+         lng = map(centroid,1),
+         lat = map(centroid,2),
+         lng = round(as.numeric(lng), 2),
+         lat = round(as.numeric(lat), 2),
+         pro.pop=as.numeric(round(pro.pop, 2)),
+         area_km=as.numeric(round(area_km, 2)),
+         songuoi_km=as.numeric(round(songuoi_km, 2))) %>%
+  arrange(distm_km) %>%
+  st_drop_geometry() %>%
+  select(NAME_1, NAME_2, NAME_3, songuoi, danso, pro.pop, area_km, songuoi_km, lng, lat, distm_km)
+
+ma_ngason_peak <- ma_ngason %>% filter(NAME_3=="Xa Nga Thach" & NAME_2=="Nga Son")
+```
+
+```{r, warning=FALSE, message=FALSE, lazy=TRUE}
+ggplot() + geom_sf() + geom_sf(data=ma_ngason, aes(fill=pro.pop), color=NA) +
+  geom_sf_label(data=ma_ngason_peak, mapping = aes(label="Nga Thạch"), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Mã-Nga Sơn")
+ggsave(filename = file.path("figures", "3D2", "Ma-Nga Son.png"), width = 25, height = 16)
+```
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+# remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+library(rgl)
+
+gg_ma_ngason = ggplot(ma_ngason) +
+  geom_sf(aes(fill = pro.pop)) +
+  geom_sf_label(data=ma_ngason_peak, mapping = aes(label="Nga Thạch"), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  ggtitle("Mã-Nga Sơn") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.position="none")
+
+plot_gg(gg_ma_ngason, width = 7.5, height = 7.5, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+render_snapshot(filename = "figures/3D2/Ma-Nga Son-3D.png", clear = T)
+rgl::rgl.close()
+```
+
+## Họ Mã - Bắc Ninh
+
+```{r, warning=FALSE, message=FALSE, lazy=FALSE}
+ma_bacninh <- dat_sff %>% filter(Ho=="Mã" & NAME_1=="Bac Ninh") %>% st_as_sf(crs = 4326)
+ma_bacninh$centroid <- sf::st_transform(ma_bacninh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+ma_bacninh <- ma_bacninh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Thi tran Cho" & NAME_2=="Yen Phong"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+ma_bacninh_data <- ma_bacninh %>%
+  mutate(distm_km=round(as.numeric(distm_km), 2),
+         lng = map(centroid,1),
+         lat = map(centroid,2),
+         lng = round(as.numeric(lng), 2),
+         lat = round(as.numeric(lat), 2),
+         pro.pop=as.numeric(round(pro.pop, 2)),
+         area_km=as.numeric(round(area_km, 2)),
+         songuoi_km=as.numeric(round(songuoi_km, 2))) %>%
+  arrange(distm_km) %>%
+  st_drop_geometry() %>%
+  select(NAME_1, NAME_2, NAME_3, songuoi, danso, pro.pop, area_km, songuoi_km, lng, lat, distm_km)
+
+ma_bacninh_peak <- ma_bacninh %>% filter(NAME_3=="Thi tran Cho" & NAME_2=="Yen Phong")
+```
+
+```{r, warning=FALSE, message=FALSE, lazy=TRUE}
+ggplot() + geom_sf() + geom_sf(data=ma_bacninh, aes(fill=pro.pop), color=NA) +
+  geom_sf_label(data=ma_bacninh_peak, mapping = aes(label="Thị trấn Chờ"), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Mã-Bắc Ninh")
+ggsave(filename = file.path("figures", "3D2", "Ma-Bac Ninh.png"), width = 25, height = 16)
+```
+
+## Họ Mã - Hà Cối
+
+```{r, warning=FALSE, message=FALSE, lazy=FALSE}
+ma_hacoi <- dat_sff %>% filter(Ho=="Mã") %>% st_as_sf(crs = 4326)
+ma_hacoi$centroid <- sf::st_transform(ma_hacoi, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+ma_hacoi <- ma_hacoi %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Dong Thang" & NAME_2=="Dinh Lap"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var)) %>%
+  arrange(distm_km) %>%
+  filter(row_number()<=200)
+  
+ma_hacoi_peak <- ma_hacoi %>% filter(NAME_3=="Xa Dong Thang" & NAME_2=="Dinh Lap")
+```
+
+```{r, warning=FALSE, message=FALSE, lazy=TRUE}
+ggplot() + geom_sf() + geom_sf(data=ma_hacoi, aes(fill=pro.pop), color=NA) +
+  geom_sf_label(data=ma_hacoi_peak, mapping = aes(label="Đồng Thắng"), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Mã-Hà Cối")
+ggsave(filename = file.path("figures", "3D2", "Ma-Ha Coi.png"), width = 25, height = 16)
+```
+
+```{r, message=FALSE, warning=FALSE}
+#3D
+# remotes::install_github("tylermorganwall/rayshader")
+library(rayshader)
+library(sf)
+library(rgl)
+
+gg_ma_hacoi = ggplot(ma_hacoi) +
+  geom_sf(aes(fill = pro.pop)) +
+  geom_sf_label(data=ma_hacoi_peak, mapping = aes(label="Húc Động"), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  ggtitle("Mã-Hà Cối") +
+  theme_bw() +
+  theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
+  theme(legend.position="none")
+
+plot_gg(gg_ma_hacoi, width = 7.5, height = 7.5, windowsize = c(1400, 866), zoom = 0.6, phi = 30, theta = 30)
+render_snapshot(filename = "figures/3D2/Ma-Ha Coi-3D.png", clear = T)
+rgl::rgl.close()
+```
+
 ## Họ Phùng
 
 ```{r, message=FALSE, warning=FALSE}
