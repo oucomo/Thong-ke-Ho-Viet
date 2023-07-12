@@ -10671,15 +10671,15 @@ gg_mai = ggplot(mai_sff) +
   geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(mai_sff$prop.mai[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("Tỉ lệ (%)/dân số", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Mai") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_mai, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE, shadowcolor = "white", shadow_darkness=0)
 
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mai.png")
 #render_movie("figures/3D/mai.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
@@ -10740,7 +10740,7 @@ ma_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_ma = ggplot(ma_sff) +
-  geom_sf(aes(fill = pro.pop), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0.01) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ma_sff$prop.ma[1],1), "% dân số", sep = "")) +
   scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
@@ -10750,13 +10750,13 @@ gg_ma = ggplot(ma_sff) +
   theme(legend.position="none")
 
 plot_gg(gg_ma, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 300, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
        background = "white", shadow = FALSE)
 
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ma.png")
 #render_movie("figures/3D/ma.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 #render_snapshot(filename = "figures/3D/Ma.png", clear=T)
-render_snapshot(filename = "figures/3D2/Ma-PerPop(1).png", clear = T)
+render_snapshot(filename = "figures/3D2/Ma-PerPop.png(1)", clear = T)
 
 # Close the window when you're done
 rgl::rgl.close()
@@ -10948,18 +10948,18 @@ phung_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_phung = ggplot(phung_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(phung_sff$prop.phung[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Phùng") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_phung, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Phung.png")
 #render_movie("figures/3D/phung.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Phung-PerPop.png", clear=T)
@@ -10980,18 +10980,18 @@ ngo_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_ngo = ggplot(ngo_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ngo_sff$prop.ngo[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Ngô") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_ngo, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ngo.png")
 #render_movie("figures/3D/ngo.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Ngo-PerPop.png", clear=T)
@@ -11012,18 +11012,18 @@ khuc_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_khuc = ggplot(khuc_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(khuc_sff$prop.khuc[1],2), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Khúc") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_khuc, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Khuc.png")
 #render_movie("figures/3D/khuc.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Khuc-PerPop.png", clear=T)
@@ -11044,18 +11044,18 @@ tran_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_tran = ggplot(tran_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(tran_sff$prop.tran[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Trần") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_tran, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Tran.png")
 #render_movie("figures/3D/tran.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Tran-PerPop.png", clear=T)
@@ -11076,18 +11076,18 @@ duong_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_duong = ggplot(duong_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(duong_sff$prop.duong[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Dương") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_duong, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Duong.png")
 #render_movie("figures/3D/duong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Duong-PerPop.png", clear=T)
@@ -11108,18 +11108,18 @@ bui_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_bui = ggplot(bui_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(bui_sff$prop.bui[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Bùi") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_bui, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Bui.png")
 #render_movie("figures/3D/bui.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Bui-PerPop.png", clear=T)
@@ -11140,18 +11140,18 @@ dinh_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_dinh = ggplot(dinh_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(dinh_sff$prop.dinh[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Đinh") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_dinh, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Dinh.png")
 #render_movie("figures/3D/dinh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Dinh-PerPop.png", clear=T)
@@ -11172,18 +11172,18 @@ do_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_do = ggplot(do_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(do_sff$prop.do[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Đỗ") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_do, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Do.png")
 #render_movie("figures/3D/do.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Do-PerPop.png", clear=T)
@@ -11204,18 +11204,18 @@ dao_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_dao = ggplot(dao_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(dao_sff$prop.dao[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Đào") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_dao, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Dao.png")
 #render_movie("figures/3D/dao.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Dao-PerPop.png", clear=T)
@@ -11236,18 +11236,18 @@ doan_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_doan = ggplot(doan_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(doan_sff$prop.doan[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Đoàn") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_doan, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Doan.png")
 #render_movie("figures/3D/doan.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Doan-PerPop.png", clear=T)
@@ -11268,18 +11268,18 @@ du_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_du = ggplot(du_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(du_sff$prop.du[1],2), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Dư") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_du, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Du.png")
 #render_movie("figures/3D/du.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Du-PerPop.png", clear=T)
@@ -11300,18 +11300,18 @@ ho_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_ho = ggplot(ho_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ho_sff$prop.ho[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Hồ") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_ho, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ho.png")
 #render_movie("figures/3D/ho.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Ho-PerPop.png", clear=T)
@@ -11332,18 +11332,19 @@ hoang_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_hoang = ggplot(hoang_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(hoang_sff$prop.hoang[1],1), "% dân số", sep = "")) +
   scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Hoàng") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_hoang, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Hoang.png")
 #render_movie("figures/3D/hoang.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Hoang-PerPop.png", clear=T)
@@ -11364,18 +11365,18 @@ huynh_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_huynh = ggplot(huynh_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(huynh_sff$prop.huynh[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Huỳnh") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_huynh, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Huynh.png")
 #render_movie("figures/3D/huynh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Huynh-PerPop.png", clear=T)
@@ -11396,18 +11397,18 @@ la_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_la = ggplot(la_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(la_sff$prop.la[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Lã") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_la, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/La.png")
 #render_movie("figures/3D/la.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/La-PerPop.png", clear=T)
@@ -11428,18 +11429,18 @@ le_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_le = ggplot(le_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(le_sff$prop.le[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Lê") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_le, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Le.png")
 #render_movie("figures/3D/le.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Le-PerPop.png", clear=T)
@@ -11460,18 +11461,18 @@ luu_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_luu = ggplot(luu_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(luu_sff$prop.luu[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Lưu") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_luu, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Luu.png")
 #render_movie("figures/3D/luu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Luu-PerPop.png", clear=T)
@@ -11492,18 +11493,18 @@ luong_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_luong = ggplot(luong_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(luong_sff$prop.luong[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Lương") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_luong, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Luong.png")
 #render_movie("figures/3D/luong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Luong-PerPop.png", clear=T)
@@ -11524,18 +11525,18 @@ ly_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_ly = ggplot(ly_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ly_sff$prop.ly[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Lý") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_ly, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ly.png")
 #render_movie("figures/3D/ly.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Ly-PerPop.png", clear=T)
@@ -11556,18 +11557,18 @@ mac_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_mac = ggplot(mac_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(mac_sff$prop.mac[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Mạc") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_mac, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Mac.png")
 #render_movie("figures/3D/mac.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Mac-PerPop.png", clear=T)
@@ -11588,18 +11589,18 @@ nguyen_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_nguyen = ggplot(nguyen_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(nguyen_sff$prop.nguyen[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Nguyễn") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_nguyen, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Nguyen.png")
 #render_movie("figures/3D/nguyen.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Nguyen-PerPop.png", clear=T)
@@ -11620,18 +11621,18 @@ pham_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_pham = ggplot(pham_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(pham_sff$prop.pham[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Phạm") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_pham, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Pham.png")
 #render_movie("figures/3D/pham.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Pham-PerPop.png", clear=T)
@@ -11652,18 +11653,18 @@ phan_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_phan = ggplot(mai_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(phan_sff$prop.phan[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Phan") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_phan, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Phan.png")
 #render_movie("figures/3D/phan.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Phan-PerPop.png", clear=T)
@@ -11684,18 +11685,18 @@ quach_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_quach = ggplot(quach_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(quach_sff$prop.quach[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Quách") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_quach, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Quach.png")
 #render_movie("figures/3D/quach.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Quach-PerPop.png", clear=T)
@@ -11716,18 +11717,18 @@ ton_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_ton = ggplot(ton_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(ton_sff$prop.ton[1],2), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Tôn") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_ton, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Ton.png")
 #render_movie("figures/3D/ton.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Ton-PerPop.png", clear=T)
@@ -11748,18 +11749,18 @@ trieu_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_trieu = ggplot(trieu_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(trieu_sff$prop.trieu[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Triệu") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_trieu, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Trieu.png")
 #render_movie("figures/3D/trieu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Trieu-PerPop.png", clear=T)
@@ -11780,18 +11781,18 @@ trinh_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_trinh = ggplot(trinh_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(trinh_sff$prop.trinh[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Trịnh") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_trinh, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Trinh.png")
 #render_movie("figures/3D/trinh.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Trinh-PerPop.png", clear=T)
@@ -11812,18 +11813,18 @@ truong_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_truong = ggplot(truong_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(truong_sff$prop.truong[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Trương") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_truong, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Truong.png")
 #render_movie("figures/3D/truong.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Truong-PerPop.png", clear=T)
@@ -11844,18 +11845,18 @@ vi_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_vi = ggplot(vi_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(vi_sff$prop.vi[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Vi") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_vi, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Vi.png")
 #render_movie("figures/3D/vi.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Vi-PerPop.png", clear=T)
@@ -11876,18 +11877,18 @@ vo_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_vo = ggplot(vo_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(vo_sff$prop.vo[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Võ") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_vo, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Vo.png")
 #render_movie("figures/3D/vo.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Vo-PerPop.png", clear=T)
@@ -11908,23 +11909,22 @@ vu_sff <- dat_sff %>%
   st_as_sf(crs = 4326)
 
 gg_vu = ggplot(vu_sff) +
-  geom_sf(aes(fill = pro.pop_km), lwd=0) +
+  geom_sf(aes(fill = pro.pop), lwd=0) +
   geom_sf(data=river3, col="white") +
   annotate(geom="text", x=104.5, y=16, color="red", size=7.5, label= paste(round(vu_sff$prop.vu[1],1), "% dân số", sep = "")) +
-  scale_fill_viridis("% người/dân cư/km2", direction = -1, option = "viridis") +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   ggtitle("Họ Vũ") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_vu, multicore = TRUE, raytrace = T, width = 10, height = 15, 
-       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30, 
+       background = "white", shadow = FALSE)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Vu.png")
 #render_movie("figures/3D/vu.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Vu-PerPop.png", clear=T)
 ```
-
 # Phương trình hàm phân bố từng họ
 
 ## Họ Mai
@@ -12200,3 +12200,4 @@ library(writexl)
 write_xlsx(dat, "dat.xlsx")
 # datatable(dat, colnames = c("STT", "Tỉnh/Thành phố", "Quận/Huyện", "Phường/Xã", "Họ", "Số người", "Dân số", "Tỉ lệ/xã phường", "Diện tích (km2)", "Mật độ (người/km2)", "Kinh độ", "Vĩ độ"))
 ```
+
