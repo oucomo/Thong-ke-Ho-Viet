@@ -8554,6 +8554,103 @@ plot_df
 ggsave(filename = file.path("figures", "General", "La-Thai Binh-Density-2(2).jpeg"), width = 25, height = 16)
 ```
 
+## Họ Lã - Nam Định
+
+```{r}
+la_namdinh <- dat_sff %>% filter(Ho=="Lã" & NAME_1=="Nam Dinh") %>% st_as_sf(crs = 4326)
+la_namdinh$centroid <- sf::st_transform(la_namdinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+la_namdinh <- la_namdinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Yen Phuong"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+la_namdinh_radius <- la_namdinh %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+
+la_namdinh_peak <- la_namdinh %>% filter(NAME_3=="Xa Yen Phuong")
+ggsave(filename = file.path("figures", "General", "La-Thai Binh-Density-2(2).jpeg"), width = 25, height = 16)
+```
+
+```{r, warning=FALSE, message=FALSE, lazy = TRUE}
+ggplot() + geom_sf() + geom_sf(data=la_namdinh, aes(fill=pro.pop), color=NA) +
+  geom_sf_label(data=la_namdinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Lã-Nam Định")
+ggsave(filename = file.path("figures", "General", "La-Nam Dinh-PerPop.jpeg"), width = 25, height = 16)
+```
+
+```{r, lazy = TRUE}
+ggplot() + geom_sf() + geom_sf(data=la_namdinh, aes(fill=songuoi_km), color=NA) +
+  geom_sf_label(data=la_namdinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Mật độ (người/km2)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Lã-Nam Định")
+ggsave(filename = file.path("figures", "General", "La-Nam Dinh-PerArea.jpeg"), width = 25, height = 16)
+```
+
+## Họ Lã - Ninh Bình
+
+```{r}
+la_ninhbinh <- dat_sff %>% filter(Ho=="Lã" & NAME_1=="Ninh Binh") %>% st_as_sf(crs = 4326)
+la_ninhbinh$centroid <- sf::st_transform(la_ninhbinh, 2154) %>% 
+  st_centroid() %>% 
+  # this is the crs from d, which has no EPSG code:
+  st_transform(., '+proj=longlat +ellps=GRS80 +no_defs') %>%
+  # since you want the centroids in a second geometry col:
+  st_geometry()
+
+library(geosphere)
+la_ninhbinh <- la_ninhbinh %>%
+  mutate(centroid_0 = centroid[NAME_3=="Xa Khanh Thinh"],
+         distm = geosphere::distGeo(st_coordinates(centroid), st_coordinates(centroid_0)),
+         distm_km=distm/1000,
+         distm_km2=distm_km^2,
+         sum_distm_km2=sum(distm_km2),
+         var=sum_distm_km2/(n()-1),
+         sd=sqrt(var))
+
+la_ninhbinh_radius <- la_ninhbinh %>%
+  arrange(distm_km) %>%
+  mutate(rank=row_number())
+
+la_ninhbinh_peak <- la_ninhbinh %>% filter(NAME_3=="Xa Khanh Thinh")
+```
+
+```{r, warning=FALSE, message=FALSE, lazy = TRUE}
+ggplot() + geom_sf() + geom_sf(data=la_ninhbinh, aes(fill=pro.pop), color=NA) +
+  geom_sf_label(data=la_ninhbinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Lã-Ninh Bình")
+ggsave(filename = file.path("figures", "General", "La-Ninh Binh-PerPop.jpeg"), width = 25, height = 16)
+```
+
+```{r, lazy = TRUE}
+ggplot() + geom_sf() + geom_sf(data=la_ninhbinh, aes(fill=songuoi_km), color=NA) +
+  geom_sf_label(data=la_ninhbinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
+  scale_fill_viridis("Mật độ (người/km2)", direction = -1, option = "viridis") +
+  theme_bw() +
+  theme(text = element_text(size=45), axis.text.x = element_text(size=30), axis.text.y = element_text(size=30), legend.text=element_text(size=30), legend.key.size = unit(2, "cm"), plot.title = element_text(size = 45)) +
+  ggtitle("Lã-Ninh Bình")
+ggsave(filename = file.path("figures", "General", "La-Ninh Binh-PerArea.jpeg"), width = 25, height = 16)
+```
+
 ## Họ Lã - TPHCM
 
 ```{r}
