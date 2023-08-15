@@ -8584,7 +8584,7 @@ ggsave(filename = file.path("figures", "General", "La-Thai Binh-Density-2(2).jpe
 ```
 
 ```{r, warning=FALSE, message=FALSE, lazy = TRUE}
-ggplot() + geom_sf() + geom_sf(data=la_namdinh, aes(fill=pro.pop), color=NA) +
+ggplot() + geom_sf() + geom_sf(data=la_namdinh, aes(fill=pro.pop)) +
   geom_sf_label(data=la_namdinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
   scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   theme_bw() +
@@ -8594,7 +8594,7 @@ ggsave(filename = file.path("figures", "General", "La-Nam Dinh-PerPop.jpeg"), wi
 ```
 
 ```{r, lazy = TRUE}
-ggplot() + geom_sf() + geom_sf(data=la_namdinh, aes(fill=songuoi_km), color=NA) +
+ggplot() + geom_sf() + geom_sf(data=la_namdinh, aes(fill=songuoi_km)) +
   geom_sf_label(data=la_namdinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
   scale_fill_viridis("Mật độ (người/km2)", direction = -1, option = "viridis") +
   theme_bw() +
@@ -8632,7 +8632,7 @@ la_ninhbinh_peak <- la_ninhbinh %>% filter(NAME_3=="Xa Khanh Thinh")
 ```
 
 ```{r, warning=FALSE, message=FALSE, lazy = TRUE}
-ggplot() + geom_sf() + geom_sf(data=la_ninhbinh, aes(fill=pro.pop), color=NA) +
+ggplot() + geom_sf() + geom_sf(data=la_ninhbinh, aes(fill=pro.pop)) +
   geom_sf_label(data=la_ninhbinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
   scale_fill_viridis("Tỉ lệ (%)", direction = -1, option = "viridis") +
   theme_bw() +
@@ -8642,7 +8642,7 @@ ggsave(filename = file.path("figures", "General", "La-Ninh Binh-PerPop.jpeg"), w
 ```
 
 ```{r, lazy = TRUE}
-ggplot() + geom_sf() + geom_sf(data=la_ninhbinh, aes(fill=songuoi_km), color=NA) +
+ggplot() + geom_sf() + geom_sf(data=la_ninhbinh, aes(fill=songuoi_km)) +
   geom_sf_label(data=la_ninhbinh_peak, mapping = aes(label=NAME_3), color="red", size=6, stat = "sf_coordinates", hjust=-0.1, vjust=1, label.size = 0.5) +
   scale_fill_viridis("Mật độ (người/km2)", direction = -1, option = "viridis") +
   theme_bw() +
