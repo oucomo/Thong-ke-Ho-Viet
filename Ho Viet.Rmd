@@ -9737,6 +9737,7 @@ phung_sff <- dat_sff %>%
   filter(Ho=="Phùng") %>% 
   st_as_sf(crs = 4326)
 
+options(bitmapType='cairo')
 gg_phung = ggplot(phung_sff) +
   geom_sf(aes(fill = songuoi_km), lwd=0) +
   geom_sf(data=river3, col="white") +
@@ -9745,17 +9746,20 @@ gg_phung = ggplot(phung_sff) +
   ggtitle("Họ Phùng") +
   theme_bw() +
   theme(text = element_text(size=15), axis.text.x = element_text(size=15), axis.text.y = element_text(size=15), legend.text=element_text(size=15)) +
-  theme(legend.key.height = unit(10, "mm"),
-        legend.key.width = unit(1, "mm"))
+  theme(legend.position="none")
 
 plot_gg(gg_phung, multicore = TRUE, raytrace = T, width = 10, height = 15, 
        scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = 30)
 render_movie("figures/3D2/phung(2).mp4",type = "custom", frames = 360, zoom = zoomvecfull, phi = phivecfull, theta = thetavec)
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Phung.png")
 #render_movie("figures/3D/phung.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
-render_snapshot(filename = "figures/3D2/Phung-PerArea.png", clear=T)
+render_snapshot(filename = "figures/3D2/Phung-PerArea(1).png", clear=T)
 # Close the window when you're done
 rgl::rgl.close()
+
+plot_gg(gg_phung, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = -30)
+render_snapshot(filename = "figures/3D2/Phung-PerArea(2).png", clear=T)
 ```
 
 ## Họ Ngô
@@ -11060,6 +11064,16 @@ plot_gg(gg_phung, multicore = TRUE, raytrace = T, width = 10, height = 15,
 #render_depth(focallength=100,focus=0.72, filename = "figures/3D/Phung.png")
 #render_movie("figures/3D/phung.mp4",frames = 720, fps=30,zoom=0.6,fov = 30)
 render_snapshot(filename = "figures/3D2/Phung-PerPop.png", clear=T)
+rgl::rgl.close()
+
+render_snapshot(filename = "figures/3D2/Phung-PerPop(1).png", clear=T)
+rgl::rgl.close()
+
+plot_gg(gg_phung, multicore = TRUE, raytrace = T, width = 10, height = 15, 
+       scale = 500, windowsize = c(3500, 2165), zoom = 0.6, phi = 30, theta = -30, 
+       background = "white", shadow = FALSE)
+render_snapshot(filename = "figures/3D2/Phung-PerPop(2).png", clear=T)
+rgl::rgl.close()
 ```
 
 ## Họ Ngô
